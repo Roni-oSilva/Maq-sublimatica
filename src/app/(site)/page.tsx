@@ -272,7 +272,7 @@ export default async function HomePage() {
                         <li key={`${copy}-${i}`} className="group flex h-28 w-56 shrink-0 items-center justify-center rounded-3xl border border-line bg-white px-4 transition duration-300 hover:-translate-y-1 hover:border-brand hover:shadow-lg sm:h-32 sm:w-72">
                           {c.logo_url ? (
                             <span className="relative block h-full w-full">
-                              <MediaImage src={c.logo_url} alt={copy === 0 ? c.name : ""} fit="contain" sizes="240px" className="p-5 opacity-80 transition duration-300 group-hover:scale-105 group-hover:opacity-100" />
+                              <MediaImage src={c.logo_url} alt={copy === 0 ? c.name : ""} fit="contain" sizes="240px" className="p-5 transition duration-300 group-hover:scale-105" />
                             </span>
                           ) : (
                             <span className="text-center font-display text-2xl uppercase leading-none text-ink-muted transition group-hover:text-ink">{c.name}</span>
