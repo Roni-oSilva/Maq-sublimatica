@@ -78,7 +78,12 @@ const imageUrl = z
   .string()
   .optional()
   .transform((v) => (v ? cleanText(v) : null))
-  .pipe(z.string().url("URL de imagem inválida.").nullable());
+  .pipe(
+    z
+      .string()
+      .refine((u) => /^https?:\/\/\S+$/i.test(u) || /^\/[^\s/][^\s]*$/.test(u), "URL de imagem inválida.")
+      .nullable(),
+  );
 
 function priceRule<T extends { price: number | null; price_on_request: boolean }>(v: T, ctx: z.RefinementCtx) {
   if (!v.price_on_request && v.price === null) {

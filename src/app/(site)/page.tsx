@@ -269,10 +269,10 @@ export default async function HomePage() {
                   {[0, 1].map((copy) => (
                     <ul key={copy} className="flex gap-4" aria-hidden={copy === 1}>
                       {track.map((c, i) => (
-                        <li key={`${copy}-${i}`} className="group flex h-24 w-52 shrink-0 items-center justify-center rounded-3xl border border-line bg-white px-6 transition duration-300 hover:-translate-y-1 hover:border-brand hover:shadow-lg sm:w-60">
+                        <li key={`${copy}-${i}`} className="group flex h-28 w-56 shrink-0 items-center justify-center rounded-3xl border border-line bg-white px-4 transition duration-300 hover:-translate-y-1 hover:border-brand hover:shadow-lg sm:h-32 sm:w-72">
                           {c.logo_url ? (
                             <span className="relative block h-full w-full">
-                              <MediaImage src={c.logo_url} alt={copy === 0 ? c.name : ""} fit="contain" sizes="240px" className="p-4 opacity-60 grayscale transition duration-300 group-hover:opacity-100 group-hover:grayscale-0" />
+                              <MediaImage src={c.logo_url} alt={copy === 0 ? c.name : ""} fit="contain" sizes="240px" className="p-5 opacity-80 transition duration-300 group-hover:scale-105 group-hover:opacity-100" />
                             </span>
                           ) : (
                             <span className="text-center font-display text-2xl uppercase leading-none text-ink-muted transition group-hover:text-ink">{c.name}</span>
