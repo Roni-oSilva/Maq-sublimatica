@@ -1,7 +1,9 @@
-import { ArrowRight, BadgePercent, Brush, Clock, Coffee, Frame, Layers, MessageCircle, PackageCheck, Palette, Printer, Shirt, Sparkles, Store } from "lucide-react";
+import { ArrowRight, ArrowUpRight, BadgePercent, Brush, Clock, Coffee, Frame, Layers, MessageCircle, PackageCheck, Palette, Printer, Shirt, Sparkles, Store } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { AccentTitle, ArtworkCard, ProductCard, SectionHeader, ServiceCard } from "@/components/site/cards";
-import { Chevrons } from "@/components/site/logo";
+import { Chevrons, Logo } from "@/components/site/logo";
+import { navItems } from "@/components/site/nav";
 import { Parallax } from "@/components/site/motion";
 import { MediaImage } from "@/components/site/media";
 import { WhatsAppLink } from "@/components/site/whatsapp-buttons";
@@ -29,6 +31,7 @@ export default async function HomePage() {
   ]);
   const ctx = { whatsappNumber: settings.whatsapp_number, storeName: settings.store_name, t: c };
   const hero = banners.find((b) => b.placement === "hero");
+  const heroImage = hero?.image_url ?? (c.hero_image || null);
   const promos = banners.filter((b) => b.placement === "promo");
   const BENEFITS = [
     { icon: Store, title: c.benefit1_title, text: c.benefit1_text },
@@ -40,76 +43,101 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="grain relative overflow-hidden bg-ink text-white">
-        <div className="pointer-events-none absolute -right-32 top-0 hidden h-full w-1/2 skew-x-[-12deg] bg-gradient-to-b from-brand/25 to-transparent lg:block" aria-hidden />
-        <div className="orb -left-24 top-10 h-72 w-72 bg-brand/30" aria-hidden />
-        <div className="orb bottom-0 left-1/3 h-60 w-60 bg-lime/15 [animation-delay:-6s]" aria-hidden />
-        <div className="container relative grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-[1.15fr_1fr]">
-          <div>
-            <p className="pop inline-flex items-center gap-2 rounded-full bg-lime px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-ink" style={{ "--i": 0 } as React.CSSProperties}>
-              <Sparkles className="h-3.5 w-3.5" aria-hidden /> {c.hero_eyebrow}
-            </p>
-            {hero ? (
-              <h1 className="mt-5 text-[clamp(3rem,8.5vw,6.25rem)] leading-[0.95] text-cream">
-                <span className="line"><span className="text-brand italic" style={{ "--i": 1 } as React.CSSProperties}>{hero.title.split(" ")[0]}</span></span>
-                <span className="line"><span style={{ "--i": 2 } as React.CSSProperties}>{hero.title.split(" ").slice(1).join(" ")}</span></span>
-              </h1>
-            ) : (
-              <h1 className="mt-5 text-[clamp(3rem,8.5vw,6.25rem)] leading-[0.95] text-cream">
-                <span className="line"><span className="text-brand italic" style={{ "--i": 1 } as React.CSSProperties}>{c.hero_line1}</span></span>
-                <span className="line">
-                  <span style={{ "--i": 2 } as React.CSSProperties}>
-                    {c.hero_line2} <span className="font-script text-[1.15em] normal-case text-lime">{c.hero_script}</span>
-                  </span>
-                </span>
-                <span className="line"><span style={{ "--i": 3 } as React.CSSProperties}>{c.hero_line3}</span></span>
-              </h1>
+      {/* Hero: moldura branca com painel arredondado, menu e botão integrados */}
+      <section className="mx-3 mt-3 sm:mx-5 sm:mt-5" aria-label="Destaque">
+        <div className="relative rounded-[2rem] bg-white p-2.5 shadow-sm sm:rounded-[2.75rem] sm:p-3.5">
+          <div className="grain relative flex min-h-[560px] items-center justify-center overflow-hidden rounded-[1.5rem] bg-ink text-white sm:min-h-[640px] sm:rounded-[2.25rem] lg:min-h-[700px]">
+            {heroImage && (
+              <>
+                <div className="absolute inset-0" aria-hidden><MediaImage src={heroImage} alt="" sizes="100vw" priority /></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/45 to-ink/80" aria-hidden />
+              </>
             )}
-            <p className="rise mt-6 max-w-xl text-lg text-white/75" style={{ "--i": 4 } as React.CSSProperties}>
-              {hero?.subtitle ?? c.hero_subtitle}
-            </p>
-            <div className="rise mt-8 flex flex-wrap gap-3" style={{ "--i": 5 } as React.CSSProperties}>
-              <Link
-                href={hero?.cta_href ?? c.hero_cta_href}
-                className={cn(buttonVariants({ variant: "primary", size: "lg" }))}
-                {...(hero?.cta_href?.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-              >
-                {hero?.cta_label ?? c.hero_cta_label} <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1.5" aria-hidden />
-              </Link>
-              <Link href={c.hero_cta2_href} className={cn(buttonVariants({ variant: "outline", size: "lg" }), "border-cream/40 bg-transparent text-cream hover:bg-cream/10")}>
-                {c.hero_cta2_label}
+            {!heroImage && (
+              <>
+                <div className="orb -left-24 top-10 h-80 w-80 bg-brand/35" aria-hidden />
+                <div className="orb -right-10 bottom-0 h-72 w-72 bg-lime/20 [animation-delay:-6s]" aria-hidden />
+                <Parallax className="pointer-events-none absolute inset-0 hidden lg:block" >
+                  <div data-depth="1.2" className="absolute left-[7%] top-[34%]"><div className="float-a flex h-36 w-36 items-center justify-center rounded-[2rem] bg-brand"><Coffee className="h-16 w-16 text-ink" strokeWidth={1.5} /></div></div>
+                  <div data-depth="0.7" className="absolute bottom-[9%] left-[8%]"><div className="float-b flex h-28 w-28 items-center justify-center rounded-[1.75rem] bg-cream"><Shirt className="h-12 w-12 text-ink" strokeWidth={1.5} /></div></div>
+                  <div data-depth="0.9" className="absolute right-[8%] top-[30%]"><div className="float-c flex h-32 w-32 items-center justify-center rounded-[2rem] border-2 border-cream/40"><Frame className="h-14 w-14 text-cream" strokeWidth={1.5} /></div></div>
+                  <div data-depth="1.4" className="absolute bottom-[12%] right-[10%]"><div className="float-a rounded-full bg-lime px-6 py-3 text-ink"><span className="font-script text-3xl">{c.hero_tile_script}</span></div></div>
+                </Parallax>
+              </>
+            )}
+
+            {/* Recorte do logo (canto superior esquerdo) */}
+            <div className="absolute left-0 top-0 z-20 hidden rounded-br-[1.75rem] bg-white pb-3 pl-2.5 pr-8 pt-2.5 lg:block" style={{ borderTopLeftRadius: 0 }}>
+              <Link href="/" aria-label={`${settings.store_name} — início`} className="block">
+                {settings.logo_url ? (
+                  <Image src={settings.logo_url} alt={settings.store_name} width={160} height={40} className="h-9 w-auto max-w-[170px] object-contain sm:h-11" unoptimized />
+                ) : (
+                  <Logo className="h-9 w-auto sm:h-11" />
+                )}
               </Link>
             </div>
-          </div>
 
-          <div className="relative mx-auto hidden w-full max-w-md md:block lg:max-w-none" aria-hidden={!(hero?.image_url || c.hero_image)}>
-            {hero?.image_url || c.hero_image ? (
-              <div className="relative aspect-square overflow-hidden rounded-[2rem] border-2 border-cream/20">
-                <MediaImage src={hero?.image_url ?? c.hero_image} alt={hero?.title ?? c.hero_line1} sizes="480px" priority />
+            {/* Menu central (desktop) */}
+            <nav aria-label="Menu do topo" className="absolute inset-x-0 top-0 z-10 hidden justify-center pt-7 lg:flex">
+              <ul className="flex items-center gap-9 text-sm font-semibold text-white">
+                {navItems(c).filter((n) => n.href !== "/").map((n) => (
+                  <li key={n.href}><Link href={n.href} className="link-draw pb-1 drop-shadow">{n.label}</Link></li>
+                ))}
+              </ul>
+            </nav>
+
+            {/* Recorte do botão de contato (canto superior direito) */}
+            {settings.whatsapp_number && (
+              <div className="absolute right-0 top-0 z-20 hidden items-center gap-2 rounded-bl-[1.75rem] bg-white pb-3 pl-6 pr-3 pt-3 sm:flex">
+                <WhatsAppLink number={settings.whatsapp_number} message={settings.default_whatsapp_message} variant="dark" label="Topo da página inicial">
+                  {c.hero_notch_cta}
+                </WhatsAppLink>
+                <WhatsAppLink number={settings.whatsapp_number} message={settings.default_whatsapp_message} variant="dark" size="icon" label="Abrir WhatsApp" className="h-11 w-11">
+                  <ArrowUpRight className="h-5 w-5" aria-hidden />
+                </WhatsAppLink>
               </div>
-            ) : (
-              <Parallax className="grid aspect-square grid-cols-2 grid-rows-[1fr_auto_1fr] gap-4">
-                <div data-depth="1.2" className="pop" style={{ "--i": 2 } as React.CSSProperties}>
-                  <div className="float-a flex h-full items-center justify-center rounded-[2rem] bg-brand transition hover:rotate-3 hover:scale-105"><Coffee className="h-24 w-24 text-ink" strokeWidth={1.5} /></div>
-                </div>
-                <div data-depth="0.7" className="pop" style={{ "--i": 3 } as React.CSSProperties}>
-                  <div className="float-b flex h-full items-center justify-center rounded-[2rem] bg-cream transition hover:-rotate-3 hover:scale-105"><Shirt className="h-24 w-24 text-ink" strokeWidth={1.5} /></div>
-                </div>
-                <div data-depth="0.9" className="pop col-span-2" style={{ "--i": 4 } as React.CSSProperties}>
-                  <div className="group flex items-center justify-between rounded-full bg-lime px-7 py-3 text-ink">
-                    <span className="font-display text-2xl uppercase">{c.hero_tile_strip}</span>
-                    <Chevrons className="h-7 w-auto text-ink transition-transform duration-300 group-hover:translate-x-2" />
-                  </div>
-                </div>
-                <div data-depth="0.5" className="pop" style={{ "--i": 5 } as React.CSSProperties}>
-                  <div className="float-c flex h-full items-center justify-center rounded-[2rem] border-2 border-cream/40 transition hover:rotate-3 hover:scale-105"><Frame className="h-24 w-24 text-cream" strokeWidth={1.5} /></div>
-                </div>
-                <div data-depth="1.5" className="pop" style={{ "--i": 6 } as React.CSSProperties}>
-                  <div className="float-a flex h-full items-center justify-center rounded-[2rem] bg-brand/90 transition hover:-rotate-3 hover:scale-105"><span className="font-script text-5xl text-ink">{c.hero_tile_script}</span></div>
-                </div>
-              </Parallax>
             )}
+
+            {/* Conteúdo central */}
+            <div className="relative z-10 mx-auto max-w-4xl px-5 pb-10 pt-16 text-center lg:pt-24">
+              <p className="pop inline-flex max-w-full items-center gap-2 rounded-full bg-lime px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-ink sm:text-xs sm:tracking-[0.2em]" style={{ "--i": 0 } as React.CSSProperties}>
+                <Sparkles className="h-3.5 w-3.5 shrink-0" aria-hidden /> {c.hero_eyebrow}
+              </p>
+              {hero ? (
+                <h1 className="mt-5 text-[clamp(3rem,9vw,6.75rem)] leading-[0.95] text-cream">
+                  <span className="line"><span className="text-brand italic" style={{ "--i": 1 } as React.CSSProperties}>{hero.title.split(" ")[0]}</span></span>
+                  <span className="line"><span style={{ "--i": 2 } as React.CSSProperties}>{hero.title.split(" ").slice(1).join(" ")}</span></span>
+                </h1>
+              ) : (
+                <h1 className="mt-5 text-[clamp(3rem,9vw,6.75rem)] leading-[0.95] text-cream">
+                  <span className="line"><span className="text-brand italic" style={{ "--i": 1 } as React.CSSProperties}>{c.hero_line1}</span></span>
+                  <span className="line">
+                    <span style={{ "--i": 2 } as React.CSSProperties}>
+                      {c.hero_line2} <span className="font-script text-[1.15em] normal-case text-lime">{c.hero_script}</span>
+                    </span>
+                  </span>
+                  <span className="line"><span style={{ "--i": 3 } as React.CSSProperties}>{c.hero_line3}</span></span>
+                </h1>
+              )}
+              <p className="rise mx-auto mt-6 max-w-xl text-base text-white/80 sm:text-lg" style={{ "--i": 4 } as React.CSSProperties}>
+                {hero?.subtitle ?? c.hero_subtitle}
+              </p>
+              <div className="rise mt-8 flex flex-wrap items-center justify-center gap-3" style={{ "--i": 5 } as React.CSSProperties}>
+                <Link
+                  href={hero?.cta_href ?? c.hero_cta_href}
+                  {...(hero?.cta_href?.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  className="shine group relative inline-flex h-14 items-center gap-4 overflow-hidden rounded-full bg-brand py-1.5 pl-7 pr-1.5 text-base font-bold text-ink transition duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/30"
+                >
+                  {hero?.cta_label ?? c.hero_cta_label}
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-ink transition-transform duration-300 group-hover:rotate-45">
+                    <ArrowUpRight className="h-5 w-5" aria-hidden />
+                  </span>
+                </Link>
+                <Link href={c.hero_cta2_href} className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-14 border-cream/40 bg-transparent px-7 text-cream hover:bg-cream/10")}>
+                  {c.hero_cta2_label}
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

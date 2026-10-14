@@ -67,6 +67,7 @@ export const CONTENT_GROUPS: ContentGroup[] = [
       t("hero_cta2_label", "Botão secundário: texto", "Pedir orçamento", undefined, 40),
       link("hero_cta2_href", "Botão secundário: link", "/personalizar"),
       img("hero_image", "Imagem do topo", "Opcional. Substitui os blocos coloridos à direita do título."),
+      t("hero_notch_cta", "Botão escuro do canto superior direito", "Fale conosco", "Abre o WhatsApp com a mensagem padrão.", 30),
       t("hero_tile_strip", "Bloco verde-limão: texto", "Do seu jeito", undefined, 30),
       t("hero_tile_script", "Bloco laranja: frase manuscrita", "feito pra você", undefined, 30),
     ],
