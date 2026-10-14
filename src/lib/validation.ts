@@ -162,6 +162,15 @@ export const bannerSchema = z.object({
     .optional()
     .transform((v) => (v ? cleanText(v) : undefined))
     .pipe(z.string().regex(/^(\/|https?:\/\/)\S*$/, "Use um caminho (/loja) ou um link completo.").optional()),
+  placement: z.enum(["hero", "promo"]).default("promo"),
+  display_order: z.preprocess((v) => Number(v) || 0, z.number().int().min(-9999).max(9999)),
+  active: bool,
+});
+
+export const clientSchema = z.object({
+  id,
+  name: text(2, 80, "Nome"),
+  logo_url: imageUrl,
   display_order: z.preprocess((v) => Number(v) || 0, z.number().int().min(-9999).max(9999)),
   active: bool,
 });
@@ -202,6 +211,7 @@ export const settingsSchema = z.object({
   hours: optionalText(200, "Horário de atendimento"),
   about_text: optionalText(8000, "Sobre a empresa"),
   policies_text: optionalText(12000, "Políticas da loja"),
+  payment_methods: optionalText(600, "Formas de pagamento"),
 });
 
 export const recordUpdateSchema = z.object({

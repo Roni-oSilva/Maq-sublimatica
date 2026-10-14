@@ -16,12 +16,12 @@ export default async function BannersAdminPage() {
   const items = (data ?? []) as Banner[];
   return (
     <>
-      <PageTitle title="Banners" subtitle="O primeiro banner ativo vira o destaque principal da página inicial; os demais aparecem como promoções." action={{ href: "/admin/banners/novo", label: "Novo banner" }} />
+      <PageTitle title="Banners" subtitle="Banners “Destaque” trocam o título do topo da página inicial; “Promoção” aparecem como cartões." action={{ href: "/admin/banners/novo", label: "Novo banner" }} />
       {items.length === 0 ? (
         <EmptyState title="Nenhum banner">Sem banners, a página inicial usa o destaque padrão.</EmptyState>
       ) : (
         <TableWrap>
-          <thead className="border-b border-line bg-paper"><tr><th className={th}>Banner</th><th className={th}>Ordem</th><th className={th}>Link</th><th className={th}>Status</th><th className={th}><span className="sr-only">Ações</span></th></tr></thead>
+          <thead className="border-b border-line bg-paper"><tr><th className={th}>Banner</th><th className={th}>Posição</th><th className={th}>Ordem</th><th className={th}>Link</th><th className={th}>Status</th><th className={th}><span className="sr-only">Ações</span></th></tr></thead>
           <tbody className="divide-y divide-line">
             {items.map((b) => (
               <tr key={b.id}>
@@ -31,6 +31,7 @@ export default async function BannersAdminPage() {
                     <Link href={`/admin/banners/${b.id}`} className="font-semibold hover:text-brand-text">{b.title}</Link>
                   </div>
                 </td>
+                <td className={td}>{b.placement === "hero" ? "Destaque" : "Promoção"}</td>
                 <td className={td}>{b.display_order}</td>
                 <td className={`${td} text-xs`}>{b.cta_href ?? "—"}</td>
                 <td className={td}><Badge tone={b.active ? "success" : "neutral"}>{b.active ? "Ativo" : "Inativo"}</Badge></td>

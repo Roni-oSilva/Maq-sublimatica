@@ -1,4 +1,4 @@
-import { ArrowRight, Brush, Coffee, Frame, Layers, MessageCircle, PackageCheck, Palette, Printer, Shirt, Sparkles } from "lucide-react";
+import { ArrowRight, BadgePercent, Brush, Clock, Coffee, Frame, Layers, MessageCircle, PackageCheck, Palette, Printer, Shirt, Sparkles, Store } from "lucide-react";
 import Link from "next/link";
 import { AccentTitle, ArtworkCard, ProductCard, SectionHeader, ServiceCard } from "@/components/site/cards";
 import { Chevrons } from "@/components/site/logo";
@@ -7,23 +7,16 @@ import { MediaImage } from "@/components/site/media";
 import { WhatsAppLink } from "@/components/site/whatsapp-buttons";
 import { buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/misc";
-import { getArtworks, getBanners, getCategories, getPopularProducts, getProducts, getServices, getSettings } from "@/lib/data";
+import { getArtworks, getBanners, getCategories, getClients, getPopularProducts, getProducts, getServices, getSettings } from "@/lib/data";
 import { isSupabaseConfigured } from "@/lib/supabase/public";
 import { cn } from "@/lib/utils";
 
 export const revalidate = 60;
 
-const BENEFITS = [
-  { icon: MessageCircle, title: "Atendimento direto", text: "Tire dúvidas e feche seu pedido conversando pelo WhatsApp." },
-  { icon: Brush, title: "Orçamento sob medida", text: "Descreva livremente o que deseja personalizar e receba uma proposta." },
-  { icon: Palette, title: "Artes prontas", text: "Galeria de artes disponíveis para personalização ou aquisição." },
-  { icon: PackageCheck, title: "Pedido sem burocracia", text: "Disponibilidade, pagamento e frete combinados na própria conversa." },
-];
-
 const CATEGORY_ICONS = [Printer, Layers, Sparkles, Palette, Brush, PackageCheck];
 
 export default async function HomePage() {
-  const [settings, banners, categories, popular, newest, artworks, services] = await Promise.all([
+  const [settings, banners, categories, popular, newest, artworks, services, clients] = await Promise.all([
     getSettings(),
     getBanners(),
     getCategories("product"),
@@ -31,10 +24,17 @@ export default async function HomePage() {
     getProducts({ sort: "newest", limit: 4 }),
     getArtworks({ limit: 4 }),
     getServices(),
+    getClients(),
   ]);
   const ctx = { whatsappNumber: settings.whatsapp_number, storeName: settings.store_name };
-  const hero = banners[0];
-  const promos = banners.slice(1);
+  const hero = banners.find((b) => b.placement === "hero");
+  const promos = banners.filter((b) => b.placement === "promo");
+  const BENEFITS = [
+    { icon: Store, title: "Retirada disponível", text: "Peça e retire seu pedido direto na loja." },
+    { icon: BadgePercent, title: "Preços baixos sem perder qualidade", text: "Bom preço e acabamento caprichado em cada produto." },
+    { icon: Clock, title: "Horário de atendimento", text: settings.contact_information.hours ?? "Segunda a sábado, das 8h às 18h." },
+    { icon: MessageCircle, title: "Atendimento direto", text: "Tire dúvidas e feche seu pedido pelo WhatsApp." },
+  ];
   const empty = !popular.length && !newest.length && !artworks.length && !services.length;
 
   return (
@@ -140,18 +140,43 @@ export default async function HomePage() {
       )}
 
       {promos.length > 0 && (
-        <section data-reveal className="container mt-12" aria-label="Promoções">
-          <div className="grid gap-4 md:grid-cols-2">
-            {promos.map((b) => (
-              <Link key={b.id} href={b.cta_href ?? "/loja"} className="card-lift group relative flex min-h-40 items-end overflow-hidden rounded-3xl bg-ink p-6 text-white">
-                {b.image_url && <MediaImage src={b.image_url} alt="" className="opacity-50 transition group-hover:scale-105" sizes="50vw" />}
-                <div className="relative">
-                  <h3 className="text-xl font-extrabold">{b.title}</h3>
-                  {b.subtitle && <p className="mt-1 text-sm text-white/80">{b.subtitle}</p>}
-                  <span className="mt-2 inline-block text-sm font-semibold text-lime">{b.cta_label ?? "Saiba mais"} →</span>
-                </div>
-              </Link>
-            ))}
+        <section className="container mt-12" aria-label="Promoções">
+          <div className="grid gap-5 md:grid-cols-2">
+            {promos.map((b, i) => {
+              const dark = i % 2 === 1;
+              return (
+                <Link
+                  key={b.id}
+                  href={b.cta_href ?? "/loja"}
+                  data-reveal="scale"
+                  {...(b.cta_href?.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  className={cn(
+                    "card-lift group relative flex min-h-[260px] flex-col justify-end overflow-hidden rounded-[2rem] p-7 sm:p-9",
+                    dark ? "bg-ink text-cream" : "bg-brand text-ink",
+                  )}
+                >
+                  {b.image_url ? (
+                    <>
+                      <MediaImage src={b.image_url} alt="" className="transition duration-700 group-hover:scale-110" sizes="(min-width: 768px) 50vw, 100vw" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/40 to-transparent" aria-hidden />
+                    </>
+                  ) : (
+                    <>
+                      <div className={cn("float-b absolute -right-10 -top-10 h-52 w-52 rounded-full", dark ? "bg-brand" : "bg-cream/70")} aria-hidden />
+                      <div className={cn("float-c absolute right-24 top-24 h-16 w-16 rounded-2xl", dark ? "bg-lime" : "bg-ink")} aria-hidden />
+                      <Chevrons className={cn("absolute right-7 top-7 h-9 w-auto transition-transform duration-300 group-hover:translate-x-2", dark ? "text-ink" : "text-ink")} />
+                    </>
+                  )}
+                  <div className={cn("relative z-10", b.image_url && "text-white")}>
+                    <h3 className="max-w-md font-display text-4xl font-normal uppercase leading-[0.98] tracking-tight sm:text-5xl">{b.title}</h3>
+                    {b.subtitle && <p className="mt-3 max-w-sm text-base font-medium opacity-90">{b.subtitle}</p>}
+                    <span className={cn("mt-5 inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold transition group-hover:gap-3", dark && !b.image_url ? "bg-lime text-ink" : "bg-ink text-white")}>
+                      {b.cta_label ?? "Saiba mais"} <ArrowRight className="h-4 w-4" aria-hidden />
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </section>
       )}
@@ -228,6 +253,39 @@ export default async function HomePage() {
         <div className="container mt-12">
           <EmptyState title="Catálogo em preparação">Em breve novos produtos, artes e serviços. Enquanto isso, fale com a gente pelo WhatsApp.</EmptyState>
         </div>
+      )}
+
+      {clients.length > 0 && (
+        <section className="mt-20" aria-label="Nossos clientes">
+          <div className="container">
+            <SectionHeader eyebrow="Quem confia" title="Nossos clientes" />
+          </div>
+          <div className="marquee-pause overflow-hidden py-2 [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
+            {(() => {
+              const reps = Math.max(1, Math.ceil(8 / clients.length));
+              const track = Array.from({ length: reps }, () => clients).flat();
+              return (
+                <div className="flex w-max animate-marquee gap-4" style={{ animationDuration: `${Math.max(track.length * 4, 24)}s` }}>
+                  {[0, 1].map((copy) => (
+                    <ul key={copy} className="flex gap-4" aria-hidden={copy === 1}>
+                      {track.map((c, i) => (
+                        <li key={`${copy}-${i}`} className="group flex h-24 w-52 shrink-0 items-center justify-center rounded-3xl border border-line bg-white px-6 transition duration-300 hover:-translate-y-1 hover:border-brand hover:shadow-lg sm:w-60">
+                          {c.logo_url ? (
+                            <span className="relative block h-full w-full">
+                              <MediaImage src={c.logo_url} alt={copy === 0 ? c.name : ""} fit="contain" sizes="240px" className="p-4 opacity-60 grayscale transition duration-300 group-hover:opacity-100 group-hover:grayscale-0" />
+                            </span>
+                          ) : (
+                            <span className="text-center font-display text-2xl uppercase leading-none text-ink-muted transition group-hover:text-ink">{c.name}</span>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  ))}
+                </div>
+              );
+            })()}
+          </div>
+        </section>
       )}
 
       {/* CTA final */}

@@ -5,6 +5,7 @@ import {
   type Artwork,
   type Banner,
   type Category,
+  type Client,
   type CategoryKind,
   type Product,
   type ProductImage,
@@ -33,6 +34,12 @@ export async function getBanners(): Promise<Banner[]> {
   const db = createPublicClient();
   if (!db) return [];
   return unwrap(await db.from("banners").select("*").eq("active", true).order("display_order").order("created_at"), []);
+}
+
+export async function getClients(): Promise<Client[]> {
+  const db = createPublicClient();
+  if (!db) return [];
+  return unwrap(await db.from("clients").select("*").eq("active", true).order("display_order").order("created_at"), []);
 }
 
 export async function getCategories(kind: CategoryKind = "product"): Promise<Category[]> {

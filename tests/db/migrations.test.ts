@@ -103,6 +103,31 @@ describe("RLS", () => {
   });
 });
 
+describe("clientes, banners e conteúdo inicial", () => {
+  it("conteúdo inicial foi carregado e o visitante só lê ativos", async () => {
+    await as("postgres", null, async () => {
+      await db.query("insert into public.clients (name, active) values ('Oculto', false)");
+    });
+    await as("anon", null, async () => {
+      const c = await db.query<{ name: string }>("select name from public.clients order by display_order");
+      expect(c.rows.map((r) => r.name)).toEqual(["Ipiranga", "Symplá", "Rede Inova Drogarias", "Pagrisa", "Solar Maxx"]);
+      const b = await db.query<{ placement: string }>("select placement from public.banners");
+      expect(b.rows).toHaveLength(2);
+      const st = await db.query<{ payment_methods: string; contact_information: { phone: string } }>("select * from public.store_settings");
+      expect(st.rows[0].payment_methods).toContain("Mercado Pago");
+      expect(st.rows[0].contact_information.phone).toBe("(91) 98108-6722");
+      await expect(db.query("insert into public.clients (name) values ('Hack')")).rejects.toThrow(/permission denied/);
+    });
+    await as("authenticated", USER, async () => {
+      await expect(db.query("insert into public.clients (name) values ('Hack')")).rejects.toThrow(/row-level security/);
+    });
+    await as("authenticated", ADMIN, async () => {
+      const r = await db.query("select * from public.clients");
+      expect(r.rows).toHaveLength(6);
+    });
+  });
+});
+
 describe("constraints", () => {
   it("exige preço quando não é sob consulta", async () => {
     await as("postgres", null, async () => {

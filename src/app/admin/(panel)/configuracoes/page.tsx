@@ -36,6 +36,10 @@ export default async function SettingsPage() {
           <F name="address" label="Endereço"><Input id="address" name="address" defaultValue={s.contact_information.address ?? ""} maxLength={300} /></F>
           <F name="hours" label="Horário de atendimento"><Input id="hours" name="hours" defaultValue={s.contact_information.hours ?? ""} maxLength={200} /></F>
 
+          <F name="payment_methods" label="Formas de pagamento aceitas" hint="Uma por linha. Aparecem no rodapé.">
+            <Textarea id="payment_methods" name="payment_methods" rows={4} defaultValue={s.payment_methods ?? ""} maxLength={600} />
+          </F>
+
           <h2 className="pt-4 text-lg font-bold">Redes sociais</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <F name="instagram" label="Instagram"><Input id="instagram" name="instagram" type="url" defaultValue={s.social_links.instagram ?? ""} placeholder="https://instagram.com/…" /></F>

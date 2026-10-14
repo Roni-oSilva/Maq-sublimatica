@@ -14,6 +14,7 @@ const SOCIAL_LABELS: Record<string, string> = {
 
 export function Footer({ settings }: { settings: StoreSettings }) {
   const c = settings.contact_information;
+  const payments = (settings.payment_methods ?? "").split("\n").map((m) => m.trim()).filter(Boolean);
   const socials = Object.entries(settings.social_links).filter(([, v]) => v);
   return (
     <footer className="grain mt-24 overflow-hidden rounded-t-[2.5rem] bg-ink text-white/80">
@@ -109,6 +110,19 @@ export function Footer({ settings }: { settings: StoreSettings }) {
           </ul>
         </div>
       </div>
+      {payments.length > 0 && (
+        <div className="border-t border-white/10 py-6">
+          <div className="container flex flex-col items-center gap-3 text-center">
+            <h2 className="font-display text-lg uppercase tracking-wide text-brand">Formas de pagamento aceitas</h2>
+            <ul className="flex flex-wrap justify-center gap-2">
+              {payments.map((m) => (
+                <li key={m} className="rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-sm font-semibold text-cream transition hover:-translate-y-0.5 hover:bg-white/10">{m}</li>
+              ))}
+            </ul>
+            <p className="text-xs text-white/50">Pagamento e frete combinados com a nossa equipe no atendimento.</p>
+          </div>
+        </div>
+      )}
       <div className="border-t border-white/10 py-5 text-center text-xs text-white/60">
         © {new Date().getFullYear()} {settings.store_name}. Todos os direitos reservados.
       </div>

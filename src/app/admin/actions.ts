@@ -12,6 +12,7 @@ import {
   artworkSchema,
   bannerSchema,
   categorySchema,
+  clientSchema,
   ensureSlug,
   flattenErrors,
   productSchema,
@@ -143,7 +144,7 @@ export async function saveProductAction(_: ActionResult, fd: FormData): Promise<
   }) as Promise<ActionResult>;
 }
 
-const CONTENT_TABLES = ["products", "artworks", "services", "banners", "categories"] as const;
+const CONTENT_TABLES = ["products", "artworks", "services", "banners", "categories", "clients"] as const;
 type ContentTable = (typeof CONTENT_TABLES)[number];
 
 export async function toggleActiveAction(table: ContentTable, id: string, active: boolean): Promise<ActionResult> {
@@ -235,6 +236,20 @@ export async function saveBannerAction(_: ActionResult, fd: FormData): Promise<A
   }) as Promise<ActionResult>;
 }
 
+// ---------- Clientes ----------
+export async function saveClientAction(_: ActionResult, fd: FormData): Promise<ActionResult> {
+  return guard(async () => {
+    const { supabase } = await assertAdmin();
+    const p = parse(clientSchema, fd);
+    if (!p.ok) return p.res;
+    const { id, ...row } = p.data;
+    const { data, error } = await (id ? supabase.from("clients").update(row).eq("id", id) : supabase.from("clients").insert(row)).select("id").single();
+    if (error) return fail(dbError(error.message));
+    refresh();
+    return { ok: true, id: data.id };
+  }) as Promise<ActionResult>;
+}
+
 // ---------- Configurações ----------
 export async function saveSettingsAction(_: ActionResult, fd: FormData): Promise<ActionResult> {
   return guard(async () => {
@@ -255,6 +270,7 @@ export async function saveSettingsAction(_: ActionResult, fd: FormData): Promise
         contact_information: compact({ email: d.email, phone: d.phone, address: d.address, hours: d.hours }),
         about_text: d.about_text ?? null,
         policies_text: d.policies_text ?? null,
+        payment_methods: d.payment_methods ?? null,
       })
       .eq("id", 1);
     if (error) return fail(dbError(error.message));

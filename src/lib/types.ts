@@ -71,7 +71,10 @@ export type Banner = {
   cta_href: string | null;
   display_order: number;
   active: boolean;
+  placement: "hero" | "promo";
 };
+
+export type Client = { id: string; name: string; logo_url: string | null; display_order: number; active: boolean };
 
 export type SocialLinks = { instagram?: string; facebook?: string; tiktok?: string; youtube?: string };
 export type ContactInfo = { email?: string; phone?: string; address?: string; hours?: string };
@@ -85,6 +88,7 @@ export type StoreSettings = {
   contact_information: ContactInfo;
   about_text: string | null;
   policies_text: string | null;
+  payment_methods: string | null;
 };
 
 export const ORDER_STATUSES = ["new", "in_progress", "awaiting_payment", "confirmed", "completed", "cancelled"] as const;
@@ -167,4 +171,5 @@ export const DEFAULT_SETTINGS: StoreSettings = {
   contact_information: {},
   about_text: null,
   policies_text: null,
+  payment_methods: null,
 };

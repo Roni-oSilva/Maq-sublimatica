@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { saveBannerAction } from "@/app/admin/actions";
 import { ActionForm, F, ImageField } from "@/components/admin/forms";
 import { PageTitle, Panel } from "@/components/admin/shared";
-import { Checkbox, Input } from "@/components/ui/form";
+import { Checkbox, Input, Select } from "@/components/ui/form";
 import { requireAdmin } from "@/lib/admin";
 import type { Banner } from "@/lib/types";
 
@@ -21,6 +21,11 @@ export default async function BannerFormPage({ params }: { params: Promise<{ id:
       <Panel className="max-w-xl">
         <ActionForm action={saveBannerAction} redirectTo="/admin/banners" successMessage="Banner salvo.">
           {b && <input type="hidden" name="id" value={b.id} />}
+          <F name="placement" label="Onde exibir" hint="“Destaque” substitui o título principal da página inicial (usa o primeiro ativo). “Promoção” aparece como cartão abaixo do topo.">
+            <Select id="placement" name="placement" defaultValue={b?.placement ?? "promo"}>
+              <option value="promo">Promoção (cartões)</option><option value="hero">Destaque principal (topo)</option>
+            </Select>
+          </F>
           <F name="title" label="Título" required><Input id="title" name="title" defaultValue={b?.title} maxLength={120} required /></F>
           <F name="subtitle" label="Subtítulo"><Input id="subtitle" name="subtitle" defaultValue={b?.subtitle ?? ""} maxLength={300} /></F>
           <ImageField name="image_url" label="Imagem" folder="banners" defaultValue={b?.image_url} />

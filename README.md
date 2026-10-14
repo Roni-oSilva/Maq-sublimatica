@@ -8,7 +8,7 @@ Loja profissional (Next.js 15 + TypeScript + Tailwind + Supabase) em que **todo 
 - **WhatsApp:** links `https://wa.me/55DDDNUMERO?text=...`. Preço sob consulta nunca vira valor inventado. O número é configurável e validado (painel → Configurações).
 - **Pedidos × cliques × vendas:** ao clicar em “Pedir pelo WhatsApp”, o pedido é registrado com status **Novo** (preço/total calculados **no banco**, nunca pelo navegador) e o protocolo (`PED-2026-000001`) vai na mensagem. Cliques gerais no WhatsApp são contados à parte e **não são vendas**. O status (Novo → Em atendimento → Aguardando pagamento → Confirmado → Concluído/Cancelado) é atualizado **manualmente** pelo administrador; o sistema não lê as conversas do WhatsApp.
 - **Personalizar:** formulário com validação; registra o orçamento (`ORC-2026-000001`) e abre o WhatsApp com a mensagem estruturada. Anexos: o cliente é orientado a enviá-los direto na conversa (não há upload público).
-- **Admin:** login Supabase Auth (e-mail/senha) + tabela `admins`; dashboard com 12 meses (meses sem dados = 0); CRUD de produtos (imagens, estoque, destaque, sob consulta), categorias, artes, serviços, banners; pedidos/orçamentos com filtros (tipo, status, período); configurações da loja.
+- **Admin:** login Supabase Auth (e-mail/senha) + tabela `admins`; dashboard com 12 meses (meses sem dados = 0); CRUD de produtos (imagens, estoque, destaque, sob consulta), categorias, artes, serviços, banners (destaque ou promoção) e clientes (barra rolante “Nossos clientes”); pedidos/orçamentos com filtros (tipo, status, período); configurações da loja.
 - **Segurança:** RLS em todas as tabelas; visitantes só leem conteúdo ativo; pedidos/orçamentos só por funções RPC; autorização no servidor em toda Server Action; validação com Zod; upload com checagem de tipo real (bytes) e limite de 4 MB; nenhuma chave `service_role`.
 - **Não implementado (de propósito):** checkout/pagamento online e carrinho (fechamento é pelo WhatsApp).
 
@@ -16,7 +16,8 @@ Loja profissional (Next.js 15 + TypeScript + Tailwind + Supabase) em que **todo 
 
 1. Crie um projeto em <https://supabase.com>.
 2. No **SQL Editor**, execute **na ordem** os arquivos de `supabase/migrations/`:
-   `20260101000000_schema.sql` → `…0100_rls.sql` → `…0200_functions.sql` → `…0300_storage.sql`
+   `20260101000000_schema.sql` → `…0100_rls.sql` → `…0200_functions.sql` → `…0300_storage.sql` → `…0400_clients_banners.sql` → `…0500_initial_content.sql`
+   (a última carrega o conteúdo do site anterior: endereço, telefone, horário, formas de pagamento, 2 banners promocionais e a lista de clientes — tudo editável no painel)
    (ou, com a Supabase CLI: `supabase link --project-ref SEU_REF && supabase db push`).
 3. *(Opcional)* execute `supabase/seed.sql` para dados de exemplo.
 4. **Authentication → Users → Add user**: crie o administrador (e-mail + senha). Em **Authentication → Providers → Email**, desative “Allow new users to sign up” (o painel não tem cadastro público).
