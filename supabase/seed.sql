@@ -1,8 +1,17 @@
 -- OPCIONAL: dados de exemplo para conhecer o sistema. Apague pelo painel antes de publicar.
 insert into public.categories (kind, name, slug, display_order) values
-  ('product', 'Equipamentos para Sublimação', 'equipamentos-para-sublimacao', 1),
-  ('product', 'Insumos e Papéis', 'insumos-e-papeis', 2),
-  ('product', 'Produtos para Personalizar', 'produtos-para-personalizar', 3),
+  ('product', 'Papelaria', 'papelaria', 1),
+  ('product', 'Quadros', 'quadros', 2),
+  ('product', 'Gráfica', 'grafica', 3),
+  ('product', 'Canecas', 'canecas', 4),
+  ('product', 'Vestuário', 'vestuario', 5),
+  ('product', 'Embalagens', 'embalagens', 6),
+  ('product', 'Festas', 'festas', 7),
+  ('product', 'Chaveiros', 'chaveiros', 8),
+  ('product', 'Decoração', 'decoracao', 9),
+  ('product', 'Infantil', 'infantil', 10),
+  ('product', 'Equipamentos para Sublimação', 'equipamentos-para-sublimacao', 11),
+  ('product', 'Insumos e Papéis', 'insumos-e-papeis', 12),
   ('artwork', 'Datas Comemorativas', 'datas-comemorativas', 1),
   ('service', 'Personalização de produtos', 'personalizacao-de-produtos', 1),
   ('service', 'Criação de artes', 'criacao-de-artes', 2)

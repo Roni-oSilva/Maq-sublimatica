@@ -127,14 +127,14 @@ export default async function HomePage() {
       {categories.length > 0 && (
         <section className="container mt-16">
           <SectionHeader eyebrow="Explore" title="Categorias em destaque" href="/loja" hrefLabel="Ver toda a loja" />
-          <ul className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
-            {categories.slice(0, 6).map((c, i) => {
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {categories.slice(0, 10).map((c, i) => {
               const Icon = CATEGORY_ICONS[i % CATEGORY_ICONS.length];
               return (
                 <li key={c.id}>
                   <Link
                     href={`/loja?categoria=${c.slug}`}
-                    className="card-lift flex h-full flex-col items-center gap-3 rounded-2xl border border-line bg-white p-5 text-center"
+                    className="card-lift flex h-full items-center gap-3 rounded-2xl border border-line bg-white p-4"
                   >
                     <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-light text-brand">
                       <Icon className="h-6 w-6" aria-hidden />
