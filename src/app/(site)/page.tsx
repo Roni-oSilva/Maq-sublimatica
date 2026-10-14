@@ -1,9 +1,7 @@
 import { ArrowRight, ArrowUpRight, BadgePercent, Brush, Clock, Coffee, Frame, Layers, MessageCircle, PackageCheck, Palette, Printer, Shirt, Sparkles, Store } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { AccentTitle, ArtworkCard, ProductCard, SectionHeader, ServiceCard } from "@/components/site/cards";
-import { Chevrons, Logo } from "@/components/site/logo";
-import { navItems } from "@/components/site/nav";
+import { Chevrons } from "@/components/site/logo";
 import { Parallax } from "@/components/site/motion";
 import { MediaImage } from "@/components/site/media";
 import { WhatsAppLink } from "@/components/site/whatsapp-buttons";
@@ -66,40 +64,8 @@ export default async function HomePage() {
               </>
             )}
 
-            {/* Recorte do logo (canto superior esquerdo) */}
-            <div className="absolute left-0 top-0 z-20 hidden rounded-br-[1.75rem] bg-white pb-3 pl-2.5 pr-8 pt-2.5 lg:block" style={{ borderTopLeftRadius: 0 }}>
-              <Link href="/" aria-label={`${settings.store_name} — início`} className="block">
-                {settings.logo_url ? (
-                  <Image src={settings.logo_url} alt={settings.store_name} width={160} height={40} className="h-9 w-auto max-w-[170px] object-contain sm:h-11" unoptimized />
-                ) : (
-                  <Logo className="h-9 w-auto sm:h-11" />
-                )}
-              </Link>
-            </div>
-
-            {/* Menu central (desktop) */}
-            <nav aria-label="Menu do topo" className="absolute inset-x-0 top-0 z-10 hidden justify-center pt-7 lg:flex">
-              <ul className="flex items-center gap-9 text-sm font-semibold text-white">
-                {navItems(c).filter((n) => n.href !== "/").map((n) => (
-                  <li key={n.href}><Link href={n.href} className="link-draw pb-1 drop-shadow">{n.label}</Link></li>
-                ))}
-              </ul>
-            </nav>
-
-            {/* Recorte do botão de contato (canto superior direito) */}
-            {settings.whatsapp_number && (
-              <div className="absolute right-0 top-0 z-20 hidden items-center gap-2 rounded-bl-[1.75rem] bg-white pb-3 pl-6 pr-3 pt-3 sm:flex">
-                <WhatsAppLink number={settings.whatsapp_number} message={settings.default_whatsapp_message} variant="dark" label="Topo da página inicial">
-                  {c.hero_notch_cta}
-                </WhatsAppLink>
-                <WhatsAppLink number={settings.whatsapp_number} message={settings.default_whatsapp_message} variant="dark" size="icon" label="Abrir WhatsApp" className="h-11 w-11">
-                  <ArrowUpRight className="h-5 w-5" aria-hidden />
-                </WhatsAppLink>
-              </div>
-            )}
-
             {/* Conteúdo central */}
-            <div className="relative z-10 mx-auto max-w-4xl px-5 pb-10 pt-16 text-center lg:pt-24">
+            <div className="relative z-10 mx-auto max-w-4xl px-5 py-14 text-center lg:py-20">
               <p className="pop inline-flex max-w-full items-center gap-2 rounded-full bg-lime px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-ink sm:text-xs sm:tracking-[0.2em]" style={{ "--i": 0 } as React.CSSProperties}>
                 <Sparkles className="h-3.5 w-3.5 shrink-0" aria-hidden /> {c.hero_eyebrow}
               </p>

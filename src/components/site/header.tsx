@@ -28,22 +28,13 @@ export function Header({
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const isHome = pathname === "/";
-  const scrolled = useScrolled(isHome ? 380 : 16);
-  const tucked = isHome && !scrolled && !open;
+  const scrolled = useScrolled();
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
   const wa = whatsappNumber ? buildWhatsappUrl(whatsappNumber, defaultMessage) : null;
 
   return (
-    <header
-      className={cn(
-        "top-0 z-40 border-b bg-white/95 backdrop-blur transition-[transform,box-shadow] duration-300",
-        isHome ? "sticky inset-x-0 lg:fixed" : "sticky",
-        tucked && "lg:invisible lg:-translate-y-full",
-        isHome && scrolled ? "border-transparent shadow-lg shadow-ink/10" : scrolled ? "border-transparent shadow-lg shadow-ink/10" : "border-line",
-      )}
-    >
-      <div className={cn("container flex items-center justify-between gap-4 transition-all duration-300", scrolled && !isHome ? "h-14" : isHome ? "h-14" : "h-[72px]")}>
+    <header className={cn("sticky top-0 z-40 border-b bg-white/95 backdrop-blur transition-shadow duration-300", scrolled ? "border-transparent shadow-lg shadow-ink/10" : "border-line")}>
+      <div className={cn("container flex items-center justify-between gap-4 transition-all duration-300", scrolled ? "h-14" : "h-[72px]")}>
         <Link href="/" className="flex shrink-0 items-center" aria-label={`${storeName} — página inicial`}>
           {logoUrl ? (
             <Image src={logoUrl} alt={storeName} width={160} height={40} className="h-10 w-auto max-w-[180px] object-contain" />
