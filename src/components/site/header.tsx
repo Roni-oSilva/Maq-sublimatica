@@ -46,7 +46,7 @@ export function Header({
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className={cn(
-                    "rounded-lg px-3.5 py-2 text-sm font-semibold transition hover:bg-ink/5",
+                    "rounded-full px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5 hover:bg-ink/5",
                     isActive(item.href) ? "bg-ink text-white" : "text-ink-soft",
                   )}
                 >
@@ -65,7 +65,7 @@ export function Header({
               rel="noopener noreferrer"
               aria-label="Falar no WhatsApp"
               onClick={() => void trackGeneralClickAction({ label: "Cabeçalho" })}
-              className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#128c4a] px-3.5 text-sm font-semibold text-white transition hover:bg-[#0e7a3f]"
+              className="inline-flex h-10 items-center gap-2 rounded-full bg-[#128c4a] px-3.5 text-sm font-semibold text-white transition hover:bg-[#0e7a3f]"
             >
               <MessageCircle className="h-5 w-5" aria-hidden />
               <span className="hidden md:inline">WhatsApp</span>
@@ -73,7 +73,7 @@ export function Header({
           )}
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-line lg:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line lg:hidden"
             aria-expanded={open}
             aria-controls="menu-mobile"
             aria-label={open ? "Fechar menu" : "Abrir menu"}
@@ -94,7 +94,7 @@ export function Header({
                   onClick={() => setOpen(false)}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className={cn(
-                    "flex min-h-12 items-center rounded-xl px-4 text-base font-semibold",
+                    "flex min-h-12 items-center rounded-2xl px-4 text-base font-semibold",
                     isActive(item.href) ? "bg-ink text-white" : "hover:bg-ink/5",
                   )}
                 >

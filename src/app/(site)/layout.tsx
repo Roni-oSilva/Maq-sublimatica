@@ -1,6 +1,7 @@
 import { MessageCircle } from "lucide-react";
 import { Footer } from "@/components/site/footer";
 import { Header } from "@/components/site/header";
+import { RevealObserver } from "@/components/site/reveal";
 import { WhatsAppLink } from "@/components/site/whatsapp-buttons";
 import { getSettings } from "@/lib/data";
 
@@ -19,10 +20,11 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         whatsappNumber={settings.whatsapp_number}
         defaultMessage={settings.default_whatsapp_message}
       />
-      <main id="conteudo">{children}</main>
+      <RevealObserver />
+      <main id="conteudo" className="animate-fade-up">{children}</main>
       <Footer settings={settings} />
       {settings.whatsapp_number && (
-        <div className="fixed bottom-4 right-4 z-30 sm:bottom-6 sm:right-6">
+        <div className="pulse-ring fixed bottom-4 right-4 z-30 rounded-full sm:bottom-6 sm:right-6">
           <WhatsAppLink
             number={settings.whatsapp_number}
             message={settings.default_whatsapp_message}

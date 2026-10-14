@@ -20,12 +20,12 @@ export function Badge({ className, tone, ...props }: React.HTMLAttributes<HTMLSp
 }
 
 export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("rounded-2xl border border-line bg-white shadow-sm", className)} {...props} />;
+  return <div className={cn("rounded-3xl border border-line bg-white shadow-sm", className)} {...props} />;
 }
 
 export function EmptyState({ title, children, icon }: { title: string; children?: React.ReactNode; icon?: React.ReactNode }) {
   return (
-    <div className="flex flex-col items-center rounded-2xl border border-dashed border-line bg-white px-6 py-14 text-center">
+    <div className="flex flex-col items-center rounded-3xl border border-dashed border-line bg-white px-6 py-14 text-center">
       {icon && <div className="mb-3 text-ink-muted">{icon}</div>}
       <h3 className="text-lg font-bold">{title}</h3>
       {children && <div className="mt-2 max-w-md text-sm text-ink-muted">{children}</div>}

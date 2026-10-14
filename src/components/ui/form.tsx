@@ -2,7 +2,7 @@ import { forwardRef, type InputHTMLAttributes, type LabelHTMLAttributes, type Se
 import { cn } from "@/lib/utils";
 
 const field =
-  "w-full rounded-xl border border-line bg-white px-3.5 text-sm text-ink placeholder:text-ink-muted/70 transition focus:border-brand disabled:cursor-not-allowed disabled:bg-ink/5";
+  "w-full rounded-2xl border border-line bg-white px-4 text-sm text-ink placeholder:text-ink-muted/70 transition focus:border-brand disabled:cursor-not-allowed disabled:bg-ink/5";
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(function Input(
   { className, ...props },

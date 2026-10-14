@@ -21,9 +21,12 @@ const config: Config = {
       },
       keyframes: {
         "fade-up": { from: { opacity: "0", transform: "translateY(14px)" }, to: { opacity: "1", transform: "none" } },
+        float: { "0%,100%": { transform: "translateY(0) rotate(0deg)" }, "50%": { transform: "translateY(-14px) rotate(1.5deg)" } },
+        ring: { "0%": { transform: "scale(1)", opacity: ".55" }, "100%": { transform: "scale(1.9)", opacity: "0" } },
+        wiggle: { "0%,100%": { transform: "rotate(0)" }, "25%": { transform: "rotate(-6deg)" }, "75%": { transform: "rotate(6deg)" } },
         marquee: { from: { transform: "translateX(0)" }, to: { transform: "translateX(-50%)" } },
       },
-      animation: { "fade-up": "fade-up .6s ease-out both", marquee: "marquee 28s linear infinite" },
+      animation: { "fade-up": "fade-up .7s cubic-bezier(.2,.7,.2,1) both", wiggle: "wiggle .5s ease-in-out", marquee: "marquee 28s linear infinite" },
     },
   },
   plugins: [],

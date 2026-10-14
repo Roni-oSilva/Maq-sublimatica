@@ -26,9 +26,9 @@ export function ProductCard({ product, ctx }: { product: Product; ctx: Ctx }) {
   const available = isProductAvailable(product);
   const href = `/loja/${product.slug}`;
   return (
-    <article className="card-lift flex flex-col overflow-hidden rounded-2xl border border-line bg-white">
+    <article data-reveal className="card-lift flex flex-col overflow-hidden rounded-3xl border border-line bg-white">
       <Link href={href} className="relative block aspect-square overflow-hidden bg-paper" aria-label={`Ver ${product.name}`}>
-        <MediaImage src={product.image_url} alt={product.name} className="transition duration-500 hover:scale-105" />
+        <MediaImage src={product.image_url} alt={product.name} className="transition duration-700 hover:scale-110" />
         <div className="absolute left-3 top-3 flex flex-col gap-1.5">
           {product.featured && <Badge tone="brand">Destaque</Badge>}
           {!available && <Badge tone="warning">Consulte disponibilidade</Badge>}
@@ -71,7 +71,7 @@ export function ProductCard({ product, ctx }: { product: Product; ctx: Ctx }) {
 
 export function ArtworkCard({ artwork, ctx }: { artwork: Artwork; ctx: Ctx }) {
   return (
-    <article className="card-lift flex flex-col overflow-hidden rounded-2xl border border-line bg-white">
+    <article data-reveal className="card-lift flex flex-col overflow-hidden rounded-3xl border border-line bg-white">
       <div className="relative aspect-[4/5] overflow-hidden bg-paper">
         <MediaImage src={artwork.image_url} alt={artwork.name} />
         <Badge className="absolute left-3 top-3 bg-white/95 font-mono">Cód. {artwork.code}</Badge>
@@ -105,7 +105,7 @@ export function ArtworkCard({ artwork, ctx }: { artwork: Artwork; ctx: Ctx }) {
 export function ServiceCard({ service, ctx }: { service: Service; ctx: Ctx }) {
   const specs = (service.specifications ?? "").split("\n").map((s) => s.trim()).filter(Boolean);
   return (
-    <article className="card-lift flex flex-col overflow-hidden rounded-2xl border border-line bg-white">
+    <article data-reveal className="card-lift flex flex-col overflow-hidden rounded-3xl border border-line bg-white">
       <div className="relative aspect-[16/10] overflow-hidden bg-paper">
         <MediaImage src={service.image_url} alt={service.name} sizes="(min-width: 1024px) 33vw, 100vw" />
         {service.category && <Badge className="absolute left-3 top-3 bg-white/95">{service.category.name}</Badge>}
@@ -166,7 +166,7 @@ export function SectionHeader({
   hrefLabel?: string;
 }) {
   return (
-    <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
+    <div data-reveal className="mb-8 flex flex-wrap items-end justify-between gap-3">
       <div>
         {eyebrow && <p className="eyebrow">{eyebrow}</p>}
         <h2 className="section-title mt-1">{title}</h2>
@@ -182,10 +182,10 @@ export function SectionHeader({
 
 export function PageHero({ eyebrow, title, children }: { eyebrow: string; title: string; children?: React.ReactNode }) {
   return (
-    <section className="grain relative overflow-hidden bg-ink text-white">
+    <section className="grain relative overflow-hidden rounded-b-[2.5rem] bg-ink text-white">
       <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/3 skew-x-[-14deg] translate-x-16 bg-brand sm:block" aria-hidden />
       <div className="pointer-events-none absolute bottom-0 right-[30%] hidden h-3 w-24 bg-lime sm:block" aria-hidden />
-      <div className="container relative py-12 sm:py-16">
+      <div className="container relative py-12 sm:py-16 animate-fade-up">
         <p className="text-xs font-bold uppercase tracking-[0.2em] text-lime">{eyebrow}</p>
         <h1 className="mt-2 max-w-2xl text-4xl leading-[1.02] text-cream sm:text-6xl">{title}</h1>
         {children && <div className="mt-4 max-w-xl text-white/75 sm:max-w-2xl">{children}</div>}

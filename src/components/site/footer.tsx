@@ -16,7 +16,7 @@ export function Footer({ settings }: { settings: StoreSettings }) {
   const c = settings.contact_information;
   const socials = Object.entries(settings.social_links).filter(([, v]) => v);
   return (
-    <footer className="grain mt-24 bg-ink text-white/80">
+    <footer className="grain mt-24 overflow-hidden rounded-t-[2.5rem] bg-ink text-white/80">
       <div className="h-2 bg-brand" aria-hidden />
       <div className="container grid gap-10 py-14 md:grid-cols-4">
         <div className="md:col-span-1">
@@ -87,7 +87,7 @@ export function Footer({ settings }: { settings: StoreSettings }) {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-white/20 px-3 py-1.5 text-sm hover:bg-white/10"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-white/20 px-3.5 py-1.5 text-sm transition hover:-translate-y-0.5 hover:bg-white/10"
                   >
                     {SOCIAL_LABELS[key] ?? key} <ExternalLink className="h-3.5 w-3.5" aria-hidden />
                   </a>

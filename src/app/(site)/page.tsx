@@ -43,7 +43,7 @@ export default async function HomePage() {
         <div className="pointer-events-none absolute -right-32 top-0 hidden h-full w-1/2 skew-x-[-12deg] bg-gradient-to-b from-brand/25 to-transparent lg:block" aria-hidden />
         <div className="container relative grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-[1.15fr_1fr]">
           <div className="animate-fade-up">
-            <p className="inline-flex items-center gap-2 bg-lime px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-ink">
+            <p className="inline-flex items-center gap-2 rounded-full bg-lime px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-ink">
               <Sparkles className="h-3.5 w-3.5" aria-hidden /> Sublimação & personalização
             </p>
             {hero ? (
@@ -69,7 +69,7 @@ export default async function HomePage() {
                 className={cn(buttonVariants({ variant: "primary", size: "lg" }))}
                 {...(hero?.cta_href?.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               >
-                {hero?.cta_label ?? "Conhecer a loja"} <ArrowRight className="h-5 w-5" aria-hidden />
+                {hero?.cta_label ?? "Conhecer a loja"} <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1.5" aria-hidden />
               </Link>
               <Link href="/personalizar" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "border-cream/40 bg-transparent text-cream hover:bg-cream/10")}>
                 Pedir orçamento
@@ -79,19 +79,19 @@ export default async function HomePage() {
 
           <div className="relative mx-auto hidden w-full max-w-md md:block lg:max-w-none" aria-hidden={!hero?.image_url}>
             {hero?.image_url ? (
-              <div className="relative aspect-square overflow-hidden border-2 border-cream/20">
+              <div className="relative aspect-square overflow-hidden rounded-[2rem] border-2 border-cream/20">
                 <MediaImage src={hero.image_url} alt={hero.title} sizes="480px" priority />
               </div>
             ) : (
-              <div className="grid aspect-square grid-cols-2 grid-rows-[1fr_auto_1fr] gap-3">
-                <div className="flex items-center justify-center bg-brand"><Coffee className="h-24 w-24 text-ink" strokeWidth={1.5} /></div>
-                <div className="flex items-center justify-center bg-cream"><Shirt className="h-24 w-24 text-ink" strokeWidth={1.5} /></div>
-                <div className="col-span-2 flex items-center justify-between bg-lime px-5 py-3 text-ink">
+              <div className="grid aspect-square grid-cols-2 grid-rows-[1fr_auto_1fr] gap-4">
+                <div className="float-a flex items-center justify-center rounded-[2rem] bg-brand transition hover:rotate-3 hover:scale-105"><Coffee className="h-24 w-24 text-ink" strokeWidth={1.5} /></div>
+                <div className="float-b flex items-center justify-center rounded-[2rem] bg-cream transition hover:-rotate-3 hover:scale-105"><Shirt className="h-24 w-24 text-ink" strokeWidth={1.5} /></div>
+                <div className="group col-span-2 flex items-center justify-between rounded-full bg-lime px-7 py-3 text-ink">
                   <span className="font-display text-2xl uppercase">Do seu jeito</span>
-                  <Chevrons className="h-7 w-auto" color="#171717" />
+                  <Chevrons className="h-7 w-auto transition-transform duration-300 group-hover:translate-x-2" color="#171717" />
                 </div>
-                <div className="flex items-center justify-center border-2 border-cream/40"><Frame className="h-24 w-24 text-cream" strokeWidth={1.5} /></div>
-                <div className="flex items-center justify-center bg-brand/90"><span className="font-script text-5xl text-ink">feito pra você</span></div>
+                <div className="float-c flex items-center justify-center rounded-[2rem] border-2 border-cream/40 transition hover:rotate-3 hover:scale-105"><Frame className="h-24 w-24 text-cream" strokeWidth={1.5} /></div>
+                <div className="float-a flex items-center justify-center rounded-[2rem] bg-brand/90 transition hover:-rotate-3 hover:scale-105"><span className="font-script text-5xl text-ink">feito pra você</span></div>
               </div>
             )}
           </div>
@@ -99,7 +99,7 @@ export default async function HomePage() {
       </section>
 
       {/* Faixa */}
-      <div className="overflow-hidden bg-brand py-3 text-ink" aria-hidden>
+      <div className="marquee-pause mx-3 my-5 overflow-hidden rounded-full bg-brand py-3 text-ink sm:mx-6" aria-hidden>
         <div className="flex w-max animate-marquee gap-8 whitespace-nowrap font-display text-xl uppercase">
           {[0, 1].map((k) => (
             <div key={k} className="flex gap-8">
@@ -115,8 +115,8 @@ export default async function HomePage() {
       <section className="border-b border-line bg-white" aria-label="Diferenciais">
         <ul className="container grid gap-6 py-8 sm:grid-cols-2 lg:grid-cols-4">
           {BENEFITS.map(({ icon: Icon, title, text }) => (
-            <li key={title} className="flex gap-3">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center bg-ink text-lime">
+            <li key={title} data-reveal className="group flex gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-ink text-lime transition group-hover:rotate-6 group-hover:bg-brand group-hover:text-ink">
                 <Icon className="h-5 w-5" aria-hidden />
               </span>
               <div>
@@ -137,10 +137,10 @@ export default async function HomePage() {
       )}
 
       {promos.length > 0 && (
-        <section className="container mt-12" aria-label="Promoções">
+        <section data-reveal className="container mt-12" aria-label="Promoções">
           <div className="grid gap-4 md:grid-cols-2">
             {promos.map((b) => (
-              <Link key={b.id} href={b.cta_href ?? "/loja"} className="card-lift group relative flex min-h-40 items-end overflow-hidden rounded-2xl bg-ink p-6 text-white">
+              <Link key={b.id} href={b.cta_href ?? "/loja"} className="card-lift group relative flex min-h-40 items-end overflow-hidden rounded-3xl bg-ink p-6 text-white">
                 {b.image_url && <MediaImage src={b.image_url} alt="" className="opacity-50 transition group-hover:scale-105" sizes="50vw" />}
                 <div className="relative">
                   <h3 className="text-xl font-extrabold">{b.title}</h3>
@@ -154,16 +154,16 @@ export default async function HomePage() {
       )}
 
       {categories.length > 0 && (
-        <section className="container mt-16">
+        <section data-reveal className="container mt-16">
           <SectionHeader eyebrow="Explore" title="Categorias em destaque" href="/loja" hrefLabel="Ver toda a loja" />
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {categories.slice(0, 10).map((c, i) => {
               const Icon = CATEGORY_ICONS[i % CATEGORY_ICONS.length];
               return (
-                <li key={c.id}>
+                <li key={c.id} data-reveal>
                   <Link
                     href={`/loja?categoria=${c.slug}`}
-                    className="card-lift group flex h-full items-center gap-3 rounded-2xl border border-line bg-white p-4"
+                    className="card-lift group flex h-full items-center gap-3 rounded-3xl border border-line bg-white p-4"
                   >
                     <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-light text-brand-text">
                       <Icon className="h-6 w-6" aria-hidden />
@@ -178,7 +178,7 @@ export default async function HomePage() {
       )}
 
       {popular.length > 0 && (
-        <section className="container mt-16">
+        <section data-reveal className="container mt-16">
           <SectionHeader eyebrow="Em alta" title="Produtos mais procurados" href="/loja" />
           <div className="grid grid-cols-1 gap-5 min-[480px]:grid-cols-2 lg:grid-cols-4">
             {popular.map((p) => (
@@ -189,7 +189,7 @@ export default async function HomePage() {
       )}
 
       {newest.length > 0 && (
-        <section className="container mt-16">
+        <section data-reveal className="container mt-16">
           <SectionHeader eyebrow="Novidades" title="Recém-cadastrados" href="/loja?ordem=newest" />
           <div className="grid grid-cols-1 gap-5 min-[480px]:grid-cols-2 lg:grid-cols-4">
             {newest.map((p) => (
@@ -200,7 +200,7 @@ export default async function HomePage() {
       )}
 
       {artworks.length > 0 && (
-        <section className="container mt-16">
+        <section data-reveal className="container mt-16">
           <SectionHeader eyebrow="Criatividade" title="Artes prontas" href="/artes-prontas" />
           <div className="grid grid-cols-1 gap-5 min-[480px]:grid-cols-2 lg:grid-cols-4">
             {artworks.map((a) => (
@@ -211,7 +211,7 @@ export default async function HomePage() {
       )}
 
       {services.length > 0 && (
-        <section className="container mt-16">
+        <section data-reveal className="container mt-16">
           <SectionHeader eyebrow="Personalização" title="Nossos serviços" href="/servicos" />
           <div className="grid gap-5 md:grid-cols-3">
             {services.slice(0, 3).map((s) => (
@@ -229,8 +229,8 @@ export default async function HomePage() {
 
       {/* CTA final */}
       <section className="container mt-20">
-        <div className="grain relative overflow-hidden bg-brand p-8 text-ink sm:p-12">
-          <Chevrons className="absolute -right-4 top-6 hidden h-32 w-auto opacity-20 sm:block" color="#171717" />
+        <div data-reveal className="grain relative overflow-hidden rounded-[2.5rem] bg-brand p-8 text-ink sm:p-12">
+          <Chevrons className="float-b absolute -right-4 top-6 hidden h-32 w-auto opacity-20 sm:block" color="#171717" />
           <h2 className="max-w-2xl text-4xl leading-none sm:text-6xl">Não encontrou o que procura?</h2>
           <p className="mt-4 max-w-xl text-lg font-medium">Conte para nós o que você quer produzir ou personalizar e receba um orçamento pelo WhatsApp.</p>
           <div className="mt-7 flex flex-wrap gap-3">

@@ -4,7 +4,7 @@ import { forwardRef, type ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-bold transition disabled:pointer-events-none disabled:opacity-50 active:scale-[.98]",
+  "group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-bold transition duration-200 hover:-translate-y-0.5 hover:shadow-lg disabled:pointer-events-none disabled:opacity-50 active:translate-y-0 active:scale-[.97] [&_svg]:transition-transform hover:[&_svg]:scale-110",
   {
     variants: {
       variant: {

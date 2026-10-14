@@ -81,7 +81,7 @@ export function QuoteForm({ whatsappNumber, storeName }: { whatsappNumber: strin
 
   if (done) {
     return (
-      <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6 sm:p-8" role="status">
+      <div className="rounded-3xl border border-emerald-200 bg-emerald-50 p-6 sm:p-8" role="status">
         <CheckCircle2 className="h-10 w-10 text-emerald-600" aria-hidden />
         <h2 className="mt-3 text-2xl font-extrabold">{done.protocol ? "Solicitação registrada!" : "Mensagem pronta!"}</h2>
         {done.protocol && (
@@ -117,7 +117,7 @@ export function QuoteForm({ whatsappNumber, storeName }: { whatsappNumber: strin
   }
 
   return (
-    <form onSubmit={submit} noValidate className="space-y-5 rounded-2xl border border-line bg-white p-5 shadow-sm sm:p-8">
+    <form onSubmit={submit} noValidate className="space-y-5 rounded-3xl border border-line bg-white p-5 shadow-sm sm:p-8">
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Seu nome" htmlFor="customerName" required error={err("customerName")}>
           <Input id="customerName" name="customerName" autoComplete="name" value={values.customerName} onChange={set("customerName")} maxLength={120} {...aria("customerName")} />
