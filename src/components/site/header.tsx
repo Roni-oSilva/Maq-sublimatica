@@ -9,6 +9,7 @@ import { trackGeneralClickAction } from "@/app/actions/public";
 import { buildWhatsappUrl } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
+import { useScrolled } from "./motion";
 import { NAV } from "./nav";
 
 export function Header({
@@ -24,17 +25,18 @@ export function Header({
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const scrolled = useScrolled();
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
   const wa = whatsappNumber ? buildWhatsappUrl(whatsappNumber, defaultMessage) : null;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
-      <div className="container flex h-[72px] items-center justify-between gap-4">
+    <header className={cn("sticky top-0 z-40 border-b bg-white/95 backdrop-blur transition-shadow duration-300", scrolled ? "border-transparent shadow-lg shadow-ink/10" : "border-line")}>
+      <div className={cn("container flex items-center justify-between gap-4 transition-all duration-300", scrolled ? "h-14" : "h-[72px]")}>
         <Link href="/" className="flex shrink-0 items-center" aria-label={`${storeName} — página inicial`}>
           {logoUrl ? (
             <Image src={logoUrl} alt={storeName} width={160} height={40} className="h-10 w-auto max-w-[180px] object-contain" />
           ) : (
-            <Logo className="h-9 w-auto sm:h-10" />
+            <Logo className={cn("w-auto transition-all duration-300", scrolled ? "h-8" : "h-9 sm:h-10")} />
           )}
         </Link>
 

@@ -4,9 +4,10 @@
 
 @layer base {
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-  body { @apply bg-paper text-ink antialiased; font-synthesis-weight: none; }
-  h1, h2 { @apply font-display uppercase tracking-tight; font-weight: 400; }
-  h3, h4 { @apply font-sans font-semibold tracking-tight; }
+  body { @apply bg-paper text-ink antialiased; font-synthesis-weight: none; line-height: 1.65; font-feature-settings: "kern", "liga"; text-rendering: optimizeLegibility; }
+  h1, h2 { @apply font-display uppercase; font-weight: 400; letter-spacing: -0.005em; line-height: 1; text-wrap: balance; }
+  h3, h4 { @apply font-sans font-bold; letter-spacing: -0.015em; line-height: 1.25; text-wrap: balance; }
+  p { text-wrap: pretty; }
   :focus-visible { @apply outline-none ring-2 ring-brand ring-offset-2 ring-offset-white; }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
@@ -14,8 +15,11 @@
 }
 
 @layer components {
-  .section-title { @apply text-3xl leading-none sm:text-4xl; }
-  .eyebrow { @apply text-xs font-bold uppercase tracking-[0.2em] text-brand-text; }
+  .section-title { @apply text-4xl sm:text-5xl; }
+  .accent { @apply italic text-brand-text; }
+  .accent-on-dark { @apply italic text-brand; }
+  .eyebrow { @apply inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-brand-text; }
+  .eyebrow::before { content: ""; width: 1.75rem; height: 3px; border-radius: 9999px; background: #F25623; }
   .card-lift { @apply transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/10; }
   /* Painel admin: títulos legíveis (sem caixa alta condensada) */
   .admin-area h1, .admin-area h2 { @apply font-sans font-extrabold normal-case tracking-tight; }
@@ -29,6 +33,18 @@
   /* Entrada ao rolar (ativada por RevealObserver) */
   .reveal-ready [data-reveal]:not(.in) { opacity: 0; }
   .reveal-ready [data-reveal].in { animation: fade-up .75s cubic-bezier(.2,.7,.2,1) var(--d, 0ms) backwards; }
+  /* Título que sobe linha a linha */
+  .line { display: block; overflow: hidden; padding: 0.06em 0.1em 0.1em; margin: -0.06em -0.1em -0.1em; }
+  .line > span { display: inline-block; animation: slide-up .95s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i, 0) * 110ms + 150ms); }
+  .rise { animation: fade-up .8s cubic-bezier(.2,.7,.2,1) both; animation-delay: calc(var(--i, 0) * 110ms + 150ms); }
+  .pop { animation: pop .8s cubic-bezier(.2,.9,.3,1.2) both; animation-delay: calc(var(--i, 0) * 110ms + 250ms); }
+  .reveal-ready [data-reveal="left"].in { animation-name: fade-left; }
+  .reveal-ready [data-reveal="scale"].in { animation-name: scale-in; }
+  .orb { position: absolute; border-radius: 9999px; filter: blur(70px); pointer-events: none; animation: drift 14s ease-in-out infinite alternate; }
+  .shine::before { content: ""; position: absolute; inset: 0; pointer-events: none; transform: translateX(-120%) skewX(-20deg); background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent); transition: transform .8s ease; }
+  .shine:hover::before { transform: translateX(120%) skewX(-20deg); }
+  .link-draw { background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat; transition: background-size .3s ease; }
+  .link-draw:hover { background-size: 100% 2px; }
   .float-a { animation: float 6s ease-in-out infinite; }
   .float-b { animation: float 7s ease-in-out -2s infinite; }
   .float-c { animation: float 8s ease-in-out -4s infinite; }
@@ -40,3 +56,8 @@
 @keyframes fade-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-14px) rotate(1.5deg); } }
 @keyframes ring { 0% { transform: scale(1); opacity: .55; } 100% { transform: scale(1.9); opacity: 0; } }
+@keyframes slide-up { from { transform: translateY(110%) rotate(2deg); } to { transform: none; } }
+@keyframes fade-left { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+@keyframes scale-in { from { opacity: 0; transform: scale(.9); } to { opacity: 1; transform: none; } }
+@keyframes pop { from { opacity: 0; transform: scale(.6) rotate(-6deg); } to { opacity: 1; transform: none; } }
+@keyframes drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(60px, 40px) scale(1.2); } }

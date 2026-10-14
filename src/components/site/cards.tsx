@@ -36,7 +36,7 @@ export function ProductCard({ product, ctx }: { product: Product; ctx: Ctx }) {
       </Link>
       <div className="flex flex-1 flex-col p-4">
         {product.category && <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{product.category.name}</p>}
-        <h3 className="mt-1 line-clamp-2 min-h-[2.75rem] text-base font-bold leading-snug">
+        <h3 className="mt-1 line-clamp-2 min-h-[2.75rem] text-[17px]">
           <Link href={href} className="hover:text-brand-text">
             {product.name}
           </Link>
@@ -78,7 +78,7 @@ export function ArtworkCard({ artwork, ctx }: { artwork: Artwork; ctx: Ctx }) {
       </div>
       <div className="flex flex-1 flex-col p-4">
         {artwork.category && <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{artwork.category.name}</p>}
-        <h3 className="mt-1 text-base font-bold leading-snug">{artwork.name}</h3>
+        <h3 className="mt-1 text-[17px]">{artwork.name}</h3>
         {artwork.description && <p className="mt-1 line-clamp-2 text-sm text-ink-muted">{artwork.description}</p>}
         <PriceTag price={artwork.price} onRequest={artwork.price_on_request} className="mt-2" />
         <OrderButton
@@ -111,7 +111,7 @@ export function ServiceCard({ service, ctx }: { service: Service; ctx: Ctx }) {
         {service.category && <Badge className="absolute left-3 top-3 bg-white/95">{service.category.name}</Badge>}
       </div>
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="text-lg font-bold">{service.name}</h3>
+        <h3 className="text-xl">{service.name}</h3>
         {service.description && <p className="mt-2 text-sm leading-relaxed text-ink-muted">{service.description}</p>}
         {specs.length > 0 && (
           <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-ink-soft">
@@ -154,6 +154,18 @@ export function ServiceCard({ service, ctx }: { service: Service; ctx: Ctx }) {
   );
 }
 
+/** Destaca a última palavra do título em itálico laranja. */
+export function AccentTitle({ text, onDark }: { text: string; onDark?: boolean }) {
+  const words = text.trim().split(" ");
+  if (words.length < 2) return <>{text}</>;
+  const last = words.pop();
+  return (
+    <>
+      {words.join(" ")} <span className={onDark ? "accent-on-dark" : "accent"}>{last}</span>
+    </>
+  );
+}
+
 export function SectionHeader({
   eyebrow,
   title,
@@ -166,13 +178,13 @@ export function SectionHeader({
   hrefLabel?: string;
 }) {
   return (
-    <div data-reveal className="mb-8 flex flex-wrap items-end justify-between gap-3">
+    <div data-reveal="left" className="mb-8 flex flex-wrap items-end justify-between gap-3">
       <div>
         {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-        <h2 className="section-title mt-1">{title}</h2>
+        <h2 className="section-title mt-2"><AccentTitle text={title} /></h2>
       </div>
       {href && (
-        <Link href={href} className="text-sm font-semibold text-brand-text hover:underline">
+        <Link href={href} className="link-draw pb-0.5 text-sm font-bold text-brand-text">
           {hrefLabel} →
         </Link>
       )}
@@ -186,8 +198,8 @@ export function PageHero({ eyebrow, title, children }: { eyebrow: string; title:
       <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/3 skew-x-[-14deg] translate-x-16 bg-brand sm:block" aria-hidden />
       <div className="pointer-events-none absolute bottom-0 right-[30%] hidden h-3 w-24 bg-lime sm:block" aria-hidden />
       <div className="container relative py-12 sm:py-16 animate-fade-up">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-lime">{eyebrow}</p>
-        <h1 className="mt-2 max-w-2xl text-4xl leading-[1.02] text-cream sm:text-6xl">{title}</h1>
+        <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-lime"><span className="h-[3px] w-7 rounded-full bg-lime" aria-hidden />{eyebrow}</p>
+        <h1 className="mt-3 max-w-3xl text-5xl text-cream sm:text-7xl"><AccentTitle text={title} onDark /></h1>
         {children && <div className="mt-4 max-w-xl text-white/75 sm:max-w-2xl">{children}</div>}
       </div>
     </section>

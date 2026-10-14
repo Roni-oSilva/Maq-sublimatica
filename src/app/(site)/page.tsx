@@ -1,7 +1,8 @@
 import { ArrowRight, Brush, Coffee, Frame, Layers, MessageCircle, PackageCheck, Palette, Printer, Shirt, Sparkles } from "lucide-react";
 import Link from "next/link";
-import { ArtworkCard, ProductCard, SectionHeader, ServiceCard } from "@/components/site/cards";
+import { AccentTitle, ArtworkCard, ProductCard, SectionHeader, ServiceCard } from "@/components/site/cards";
 import { Chevrons } from "@/components/site/logo";
+import { Parallax } from "@/components/site/motion";
 import { MediaImage } from "@/components/site/media";
 import { WhatsAppLink } from "@/components/site/whatsapp-buttons";
 import { buttonVariants } from "@/components/ui/button";
@@ -41,29 +42,34 @@ export default async function HomePage() {
       {/* Hero */}
       <section className="grain relative overflow-hidden bg-ink text-white">
         <div className="pointer-events-none absolute -right-32 top-0 hidden h-full w-1/2 skew-x-[-12deg] bg-gradient-to-b from-brand/25 to-transparent lg:block" aria-hidden />
+        <div className="orb -left-24 top-10 h-72 w-72 bg-brand/30" aria-hidden />
+        <div className="orb bottom-0 left-1/3 h-60 w-60 bg-lime/15 [animation-delay:-6s]" aria-hidden />
         <div className="container relative grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-[1.15fr_1fr]">
-          <div className="animate-fade-up">
-            <p className="inline-flex items-center gap-2 rounded-full bg-lime px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-ink">
+          <div>
+            <p className="pop inline-flex items-center gap-2 rounded-full bg-lime px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-ink" style={{ "--i": 0 } as React.CSSProperties}>
               <Sparkles className="h-3.5 w-3.5" aria-hidden /> Sublimação & personalização
             </p>
             {hero ? (
-              <h1 className="mt-5 text-[clamp(2.75rem,8vw,5.75rem)] leading-[0.95] text-cream">
-                <span className="text-brand italic">{hero.title.split(" ")[0]}</span> {hero.title.split(" ").slice(1).join(" ")}
+              <h1 className="mt-5 text-[clamp(3rem,8.5vw,6.25rem)] leading-[0.95] text-cream">
+                <span className="line"><span className="text-brand italic" style={{ "--i": 1 } as React.CSSProperties}>{hero.title.split(" ")[0]}</span></span>
+                <span className="line"><span style={{ "--i": 2 } as React.CSSProperties}>{hero.title.split(" ").slice(1).join(" ")}</span></span>
               </h1>
             ) : (
-              <h1 className="mt-5 text-[clamp(2.75rem,8vw,5.75rem)] leading-[0.95] text-cream">
-                <span className="block text-brand italic">Tudo para</span>
-                <span className="block">
-                  sublimar <span className="font-script text-[1.15em] normal-case text-lime">e</span>
+              <h1 className="mt-5 text-[clamp(3rem,8.5vw,6.25rem)] leading-[0.95] text-cream">
+                <span className="line"><span className="text-brand italic" style={{ "--i": 1 } as React.CSSProperties}>Tudo para</span></span>
+                <span className="line">
+                  <span style={{ "--i": 2 } as React.CSSProperties}>
+                    sublimar <span className="font-script text-[1.15em] normal-case text-lime">e</span>
+                  </span>
                 </span>
-                <span className="block">personalizar</span>
+                <span className="line"><span style={{ "--i": 3 } as React.CSSProperties}>personalizar</span></span>
               </h1>
             )}
-            <p className="mt-6 max-w-xl text-lg text-white/75">
+            <p className="rise mt-6 max-w-xl text-lg text-white/75" style={{ "--i": 4 } as React.CSSProperties}>
               {hero?.subtitle ??
                 "Equipamentos, insumos, artes prontas e serviços sob medida. Escolha o que precisa e feche seu pedido direto no WhatsApp."}
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="rise mt-8 flex flex-wrap gap-3" style={{ "--i": 5 } as React.CSSProperties}>
               <Link
                 href={hero?.cta_href ?? "/loja"}
                 className={cn(buttonVariants({ variant: "primary", size: "lg" }))}
@@ -83,44 +89,41 @@ export default async function HomePage() {
                 <MediaImage src={hero.image_url} alt={hero.title} sizes="480px" priority />
               </div>
             ) : (
-              <div className="grid aspect-square grid-cols-2 grid-rows-[1fr_auto_1fr] gap-4">
-                <div className="float-a flex items-center justify-center rounded-[2rem] bg-brand transition hover:rotate-3 hover:scale-105"><Coffee className="h-24 w-24 text-ink" strokeWidth={1.5} /></div>
-                <div className="float-b flex items-center justify-center rounded-[2rem] bg-cream transition hover:-rotate-3 hover:scale-105"><Shirt className="h-24 w-24 text-ink" strokeWidth={1.5} /></div>
-                <div className="group col-span-2 flex items-center justify-between rounded-full bg-lime px-7 py-3 text-ink">
-                  <span className="font-display text-2xl uppercase">Do seu jeito</span>
-                  <Chevrons className="h-7 w-auto transition-transform duration-300 group-hover:translate-x-2" color="#171717" />
+              <Parallax className="grid aspect-square grid-cols-2 grid-rows-[1fr_auto_1fr] gap-4">
+                <div data-depth="1.2" className="pop" style={{ "--i": 2 } as React.CSSProperties}>
+                  <div className="float-a flex h-full items-center justify-center rounded-[2rem] bg-brand transition hover:rotate-3 hover:scale-105"><Coffee className="h-24 w-24 text-ink" strokeWidth={1.5} /></div>
                 </div>
-                <div className="float-c flex items-center justify-center rounded-[2rem] border-2 border-cream/40 transition hover:rotate-3 hover:scale-105"><Frame className="h-24 w-24 text-cream" strokeWidth={1.5} /></div>
-                <div className="float-a flex items-center justify-center rounded-[2rem] bg-brand/90 transition hover:-rotate-3 hover:scale-105"><span className="font-script text-5xl text-ink">feito pra você</span></div>
-              </div>
+                <div data-depth="0.7" className="pop" style={{ "--i": 3 } as React.CSSProperties}>
+                  <div className="float-b flex h-full items-center justify-center rounded-[2rem] bg-cream transition hover:-rotate-3 hover:scale-105"><Shirt className="h-24 w-24 text-ink" strokeWidth={1.5} /></div>
+                </div>
+                <div data-depth="0.9" className="pop col-span-2" style={{ "--i": 4 } as React.CSSProperties}>
+                  <div className="group flex items-center justify-between rounded-full bg-lime px-7 py-3 text-ink">
+                    <span className="font-display text-2xl uppercase">Do seu jeito</span>
+                    <Chevrons className="h-7 w-auto transition-transform duration-300 group-hover:translate-x-2" color="#171717" />
+                  </div>
+                </div>
+                <div data-depth="0.5" className="pop" style={{ "--i": 5 } as React.CSSProperties}>
+                  <div className="float-c flex h-full items-center justify-center rounded-[2rem] border-2 border-cream/40 transition hover:rotate-3 hover:scale-105"><Frame className="h-24 w-24 text-cream" strokeWidth={1.5} /></div>
+                </div>
+                <div data-depth="1.5" className="pop" style={{ "--i": 6 } as React.CSSProperties}>
+                  <div className="float-a flex h-full items-center justify-center rounded-[2rem] bg-brand/90 transition hover:-rotate-3 hover:scale-105"><span className="font-script text-5xl text-ink">feito pra você</span></div>
+                </div>
+              </Parallax>
             )}
           </div>
         </div>
       </section>
 
-      {/* Faixa */}
-      <div className="marquee-pause mx-3 my-5 overflow-hidden rounded-full bg-brand py-3 text-ink sm:mx-6" aria-hidden>
-        <div className="flex w-max animate-marquee gap-8 whitespace-nowrap font-display text-xl uppercase">
-          {[0, 1].map((k) => (
-            <div key={k} className="flex gap-8">
-              {["Sublimação", "Personalização", "Canecas", "Camisetas", "Quadros", "Brindes", "Artes prontas"].map((w) => (
-                <span key={`${k}-${w}`} className="flex items-center gap-8">{w} <Sparkles className="h-4 w-4" /></span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Benefícios */}
       <section className="border-b border-line bg-white" aria-label="Diferenciais">
         <ul className="container grid gap-6 py-8 sm:grid-cols-2 lg:grid-cols-4">
           {BENEFITS.map(({ icon: Icon, title, text }) => (
-            <li key={title} data-reveal className="group flex gap-3">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-ink text-lime transition group-hover:rotate-6 group-hover:bg-brand group-hover:text-ink">
+            <li key={title} data-reveal="scale" className="group flex gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-ink text-lime transition group-hover:animate-wiggle group-hover:bg-brand group-hover:text-ink">
                 <Icon className="h-5 w-5" aria-hidden />
               </span>
               <div>
-                <h2 className="font-sans text-sm font-bold normal-case tracking-normal">{title}</h2>
+                <h3 className="text-[15px]">{title}</h3>
                 <p className="mt-0.5 text-sm text-ink-muted">{text}</p>
               </div>
             </li>
@@ -229,9 +232,9 @@ export default async function HomePage() {
 
       {/* CTA final */}
       <section className="container mt-20">
-        <div data-reveal className="grain relative overflow-hidden rounded-[2.5rem] bg-brand p-8 text-ink sm:p-12">
+        <div data-reveal="scale" className="grain relative overflow-hidden rounded-[2.5rem] bg-brand p-8 text-ink sm:p-12">
           <Chevrons className="float-b absolute -right-4 top-6 hidden h-32 w-auto opacity-20 sm:block" color="#171717" />
-          <h2 className="max-w-2xl text-4xl leading-none sm:text-6xl">Não encontrou o que procura?</h2>
+          <h2 className="max-w-2xl text-5xl sm:text-7xl">Não encontrou o que <span className="italic text-cream">procura?</span></h2>
           <p className="mt-4 max-w-xl text-lg font-medium">Conte para nós o que você quer produzir ou personalizar e receba um orçamento pelo WhatsApp.</p>
           <div className="mt-7 flex flex-wrap gap-3">
             <Link href="/personalizar" className={cn(buttonVariants({ variant: "dark", size: "lg" }))}>
