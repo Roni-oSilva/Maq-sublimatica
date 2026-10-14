@@ -66,10 +66,10 @@ export function ActionForm({
 }
 
 /** Campo que lê automaticamente o erro do servidor pelo `name`. */
-export function F({ name, label, hint, required, children, className }: { name: string; label: string; hint?: string; required?: boolean; children: React.ReactNode; className?: string }) {
+export function F({ name, label, hint, reference, required, children, className }: { name: string; label: string; hint?: string; reference?: { text: string; href?: string }; required?: boolean; children: React.ReactNode; className?: string }) {
   const errors = useContext(ErrorsCtx);
   return (
-    <Field label={label} htmlFor={name} error={errors[name]} hint={hint} required={required} className={className}>
+    <Field label={label} htmlFor={name} error={errors[name]} hint={hint} reference={reference} required={required} className={className}>
       {children}
     </Field>
   );
@@ -107,12 +107,12 @@ async function upload(file: File, folder: string): Promise<string | null> {
 }
 
 /** Upload de uma imagem; o valor vai em um input hidden com o `name` informado. */
-export function ImageField({ name, label, folder, defaultValue }: { name: string; label: string; folder: string; defaultValue?: string | null }) {
+export function ImageField({ name, label, folder, defaultValue, reference }: { name: string; label: string; folder: string; defaultValue?: string | null; reference?: { text: string; href?: string } }) {
   const [url, setUrl] = useState(defaultValue ?? "");
   const [busy, startTransition] = useTransition();
   const inputRef = useRef<HTMLInputElement>(null);
   return (
-    <F name={name} label={label} hint="JPG, PNG, WebP ou AVIF até 4 MB.">
+    <F name={name} label={label} hint="JPG, PNG, WebP ou AVIF até 4 MB." reference={reference}>
       <input type="hidden" name={name} value={url} />
       <div className="flex flex-wrap items-center gap-3">
         {url && <ImageThumb url={url} onRemove={() => setUrl("")} />}
@@ -177,11 +177,11 @@ export function GalleryField({ name = "gallery", folder, defaultValue = [] }: { 
 }
 
 /** Seletor de cor com campo hexadecimal sincronizado. */
-export function ColorField({ name, label, hint, defaultValue }: { name: string; label: string; hint?: string; defaultValue: string }) {
+export function ColorField({ name, label, hint, defaultValue, reference }: { name: string; label: string; hint?: string; defaultValue: string; reference?: { text: string; href?: string } }) {
   const [value, setValue] = useState(defaultValue);
   const valid = /^#[0-9a-fA-F]{6}$/.test(value);
   return (
-    <F name={name} label={label} hint={hint}>
+    <F name={name} label={label} hint={hint} reference={reference}>
       <div className="flex items-center gap-3">
         <input type="color" aria-label={`${label} (seletor)`} value={valid ? value : defaultValue} onChange={(e) => setValue(e.target.value)} className="h-11 w-14 cursor-pointer rounded-xl border border-line bg-white p-1" />
         <input id={name} name={name} value={value} onChange={(e) => setValue(e.target.value)} maxLength={7} spellCheck={false} className="h-11 w-32 rounded-2xl border border-line bg-white px-4 font-mono text-sm" />

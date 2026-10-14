@@ -35,6 +35,7 @@ export function Field({
   htmlFor,
   error,
   hint,
+  reference,
   required,
   children,
   className,
@@ -43,6 +44,8 @@ export function Field({
   htmlFor: string;
   error?: string;
   hint?: string;
+  /** Onde este campo aparece no site (texto e link opcionais). */
+  reference?: { text: string; href?: string };
   required?: boolean;
   children: React.ReactNode;
   className?: string;
@@ -53,6 +56,17 @@ export function Field({
         {label}
         {required && <span className="text-brand-text" aria-hidden> *</span>}
       </Label>
+      {reference && (
+        <p className="-mt-1 mb-1.5 text-xs font-medium text-brand-text">
+          {reference.href ? (
+            <a href={reference.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 hover:underline">
+              <span aria-hidden>📍</span> Aparece em: {reference.text} <span aria-hidden>↗</span>
+            </a>
+          ) : (
+            <span><span aria-hidden>📍</span> Aparece em: {reference.text}</span>
+          )}
+        </p>
+      )}
       {children}
       {hint && !error && <p className="mt-1 text-xs text-ink-muted">{hint}</p>}
       {error && (

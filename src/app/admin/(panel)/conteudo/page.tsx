@@ -18,6 +18,11 @@ export default async function ContentAdminPage({ searchParams }: { searchParams:
   const values = mergeContent(data);
   const customized = new Set((data ?? []).map((r) => r.key as string));
   const short = (s: string) => (s.length > 90 ? `${s.slice(0, 90)}…` : s);
+  // Referência de cada caixa: grupo + parte do rótulo antes dos dois-pontos (ex.: "Menu", "Botão principal").
+  const refOf = (label: string) => {
+    const part = label.includes(":") ? label.split(":")[0].trim() : "";
+    return { text: part && !group.where.includes(part) ? `${group.where} › ${part}` : group.where, href: group.path };
+  };
 
   return (
     <>
@@ -48,6 +53,9 @@ export default async function ContentAdminPage({ searchParams }: { searchParams:
             <div>
               <h2 className="text-xl">{group.title}</h2>
               <p className="max-w-2xl text-sm text-ink-muted">{group.description}</p>
+              <a href={group.path} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center gap-1 rounded-full bg-brand-light px-3 py-1 text-xs font-bold text-brand-text hover:underline">
+                Ver no site: {group.where} ↗
+              </a>
             </div>
             <ConfirmDelete
               action={resetContentGroupAction.bind(null, group.id)}
@@ -67,22 +75,22 @@ export default async function ContentAdminPage({ searchParams }: { searchParams:
                 if (f.type === "image") {
                   return (
                     <div key={f.key} className="sm:col-span-2">
-                      <ImageField name={f.key} label={f.label} folder="site" defaultValue={values[f.key] || null} />
+                      <ImageField name={f.key} label={f.label} folder="site" defaultValue={values[f.key] || null} reference={refOf(f.label)} />
                       {f.hint && <p className="-mt-1 text-xs text-ink-muted">{f.hint}</p>}
                     </div>
                   );
                 }
-                if (f.type === "color") return <ColorField key={f.key} name={f.key} label={f.label} hint={f.hint} defaultValue={values[f.key]} />;
+                if (f.type === "color") return <ColorField key={f.key} name={f.key} label={f.label} hint={f.hint} defaultValue={values[f.key]} reference={refOf(f.label)} />;
                 if (f.type === "textarea") {
                   return (
-                    <F key={f.key} name={f.key} label={f.label} hint={hint} className="sm:col-span-2">
-                      <Textarea id={f.key} name={f.key} rows={3} defaultValue={values[f.key]} maxLength={f.max} />
+                    <F key={f.key} name={f.key} label={f.label} hint={hint} reference={refOf(f.label)} className="sm:col-span-2">
+                      <Textarea id={f.key} name={f.key} rows={3} defaultValue={values[f.key]} maxLength={f.max} placeholder={f.default} />
                     </F>
                   );
                 }
                 return (
-                  <F key={f.key} name={f.key} label={f.label} hint={hint}>
-                    <Input id={f.key} name={f.key} defaultValue={values[f.key]} maxLength={f.max} />
+                  <F key={f.key} name={f.key} label={f.label} hint={hint} reference={refOf(f.label)}>
+                    <Input id={f.key} name={f.key} defaultValue={values[f.key]} maxLength={f.max} placeholder={f.default} />
                   </F>
                 );
               })}

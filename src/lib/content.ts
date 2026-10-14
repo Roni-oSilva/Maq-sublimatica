@@ -6,7 +6,16 @@
 export type FieldType = "text" | "textarea" | "image" | "link" | "color";
 
 export type ContentField = { key: string; label: string; type: FieldType; default: string; hint?: string; max?: number };
-export type ContentGroup = { id: string; title: string; description: string; fields: ContentField[] };
+export type ContentGroup = {
+  id: string;
+  title: string;
+  description: string;
+  /** Página do site onde esses textos aparecem (para o link “ver no site”). */
+  path: string;
+  /** Descrição curta do local, exibida como referência em cada caixa de texto. */
+  where: string;
+  fields: ContentField[];
+};
 
 const t = (key: string, label: string, def: string, hint?: string, max = 200): ContentField => ({ key, label, type: "text", default: def, hint, max });
 const ta = (key: string, label: string, def: string, hint?: string, max = 1500): ContentField => ({ key, label, type: "textarea", default: def, hint, max });
@@ -29,6 +38,8 @@ const benefit = (n: number, title: string, text: string): ContentField[] => [
 export const CONTENT_GROUPS: ContentGroup[] = [
   {
     id: "cabecalho-rodape",
+    path: "/",
+    where: "Menu e rodapé (todas as páginas)",
     title: "Cabeçalho e rodapé",
     description: "Menu de navegação e textos do rodapé. Endereço, telefone, redes e pagamentos ficam em Configurações.",
     fields: [
@@ -53,18 +64,20 @@ export const CONTENT_GROUPS: ContentGroup[] = [
   },
   {
     id: "inicio-topo",
+    path: "/",
+    where: "Página inicial · topo",
     title: "Início: topo (hero)",
     description: "A primeira dobra da página inicial. Um banner “Destaque” cadastrado em Banners tem prioridade sobre o título.",
     fields: [
-      t("hero_eyebrow", "Etiqueta (pílula verde-limão)", "Sublimação & personalização"),
-      t("hero_line1", "Título: linha 1 (laranja)", "Tudo para", undefined, 40),
-      t("hero_line2", "Título: linha 2", "sublimar", undefined, 40),
-      t("hero_script", "Título: palavra manuscrita", "e", "Palavra curta em letra manuscrita, ao lado da linha 2.", 12),
-      t("hero_line3", "Título: linha 3", "personalizar", undefined, 40),
-      ta("hero_subtitle", "Texto de apoio", "Equipamentos, insumos, artes prontas e serviços sob medida. Escolha o que precisa e feche seu pedido direto no WhatsApp.", undefined, 400),
-      t("hero_cta_label", "Botão principal: texto", "Conhecer a loja", undefined, 40),
+      t("hero_eyebrow", "Etiqueta (pílula verde-limão)", "Sublimação e presentes personalizados"),
+      t("hero_line1", "Título: linha 1 (laranja)", "Transforme", undefined, 40),
+      t("hero_line2", "Título: linha 2", "sua ideia", undefined, 40),
+      t("hero_script", "Título: palavra manuscrita", "em", "Palavra curta em letra manuscrita, ao lado da linha 2.", 12),
+      t("hero_line3", "Título: linha 3", "produto", undefined, 40),
+      ta("hero_subtitle", "Texto de apoio", "Canecas, camisetas, quadros, brindes e impressos com a sua arte ou a sua marca. Escolha, peça pelo WhatsApp e receba atendimento direto da nossa equipe.", undefined, 400),
+      t("hero_cta_label", "Botão principal: texto", "Ver produtos", undefined, 40),
       link("hero_cta_href", "Botão principal: link", "/loja"),
-      t("hero_cta2_label", "Botão secundário: texto", "Pedir orçamento", undefined, 40),
+      t("hero_cta2_label", "Botão secundário: texto", "Quero personalizar", undefined, 40),
       link("hero_cta2_href", "Botão secundário: link", "/personalizar"),
       img("hero_image", "Imagem do topo", "Opcional. Substitui os blocos coloridos à direita do título."),
       t("hero_notch_cta", "Botão escuro do canto superior direito", "Fale conosco", "Abre o WhatsApp com a mensagem padrão.", 30),
@@ -74,6 +87,8 @@ export const CONTENT_GROUPS: ContentGroup[] = [
   },
   {
     id: "inicio-secoes",
+    path: "/",
+    where: "Página inicial · seções",
     title: "Início: seções e diferenciais",
     description: "Títulos de cada seção da página inicial e os quatro diferenciais abaixo do topo.",
     fields: [
@@ -101,6 +116,8 @@ export const CONTENT_GROUPS: ContentGroup[] = [
   },
   {
     id: "inicio-chamada",
+    path: "/",
+    where: "Página inicial · bloco laranja final",
     title: "Início: chamada final",
     description: "O bloco laranja no fim da página inicial.",
     fields: [
@@ -113,6 +130,8 @@ export const CONTENT_GROUPS: ContentGroup[] = [
   },
   {
     id: "loja",
+    path: "/loja",
+    where: "Página Loja",
     title: "Página Loja",
     description: "Catálogo de produtos e página de cada produto.",
     fields: [
@@ -135,6 +154,8 @@ export const CONTENT_GROUPS: ContentGroup[] = [
   },
   {
     id: "artes",
+    path: "/artes-prontas",
+    where: "Página Artes Prontas",
     title: "Página Artes Prontas",
     description: "Galeria de artes.",
     fields: [
@@ -146,6 +167,8 @@ export const CONTENT_GROUPS: ContentGroup[] = [
   },
   {
     id: "servicos",
+    path: "/servicos",
+    where: "Página Serviços",
     title: "Página Serviços",
     description: "Lista de serviços.",
     fields: [
@@ -157,6 +180,8 @@ export const CONTENT_GROUPS: ContentGroup[] = [
   },
   {
     id: "personalizar",
+    path: "/personalizar",
+    where: "Página Personalizar",
     title: "Página Personalizar",
     description: "Formulário de orçamento.",
     fields: [
@@ -177,6 +202,8 @@ export const CONTENT_GROUPS: ContentGroup[] = [
   },
   {
     id: "sobre-politicas",
+    path: "/sobre",
+    where: "Páginas Sobre e Políticas",
     title: "Sobre e Políticas",
     description: "O texto principal de “Sobre” e das “Políticas” continua em Configurações. Aqui ficam títulos e imagem.",
     fields: [
@@ -189,6 +216,8 @@ export const CONTENT_GROUPS: ContentGroup[] = [
   },
   {
     id: "whatsapp",
+    path: "/loja",
+    where: "Mensagem enviada ao WhatsApp",
     title: "Mensagens do WhatsApp",
     description: "Frases fixas das mensagens enviadas ao WhatsApp (os dados do produto, preço e especificações são sempre inseridos automaticamente). Use {loja} e, no serviço, {servico}.",
     fields: [
@@ -204,6 +233,8 @@ export const CONTENT_GROUPS: ContentGroup[] = [
   },
   {
     id: "imagens-gerais",
+    path: "/",
+    where: "Vários lugares do site",
     title: "Imagens gerais",
     description: "Imagens usadas em vários lugares do site. O logotipo está em Configurações.",
     fields: [
@@ -213,6 +244,8 @@ export const CONTENT_GROUPS: ContentGroup[] = [
   },
   {
     id: "cores",
+    path: "/",
+    where: "Todo o site",
     title: "Cores do site",
     description: "Troque a paleta inteira. Atenção ao contraste: o texto sobre a cor principal é sempre a cor “escura”.",
     fields: [
