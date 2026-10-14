@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --c-brand: 242 86 35; --c-brand-dark: 198 70 29; --c-brand-light: 253 238 232; --c-brand-text: 191 58 10;
+    --c-ink: 23 23 23; --c-ink-soft: 49 49 49; --c-lime: 205 232 42; --c-cream: 241 243 220; --c-paper: 248 246 241;
+  }
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   body { @apply bg-paper text-ink antialiased; font-synthesis-weight: none; line-height: 1.65; font-feature-settings: "kern", "liga"; text-rendering: optimizeLegibility; }
   h1, h2 { @apply font-display uppercase; font-weight: 400; letter-spacing: -0.005em; line-height: 1; text-wrap: balance; }
@@ -19,7 +23,7 @@
   .accent { @apply italic text-brand-text; }
   .accent-on-dark { @apply italic text-brand; }
   .eyebrow { @apply inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-brand-text; }
-  .eyebrow::before { content: ""; width: 1.75rem; height: 3px; border-radius: 9999px; background: #F25623; }
+  .eyebrow::before { content: ""; width: 1.75rem; height: 3px; border-radius: 9999px; background: rgb(var(--c-brand)); }
   .card-lift { @apply transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/10; }
   /* Painel admin: títulos legíveis (sem caixa alta condensada) */
   .admin-area h1, .admin-area h2 { @apply font-sans font-extrabold normal-case tracking-tight; }
@@ -50,6 +54,10 @@
   .float-c { animation: float 8s ease-in-out -4s infinite; }
   .marquee-pause:hover > * { animation-play-state: paused; }
   .pulse-ring::before { content: ""; position: absolute; inset: 0; border-radius: 9999px; background: #128c4a; animation: ring 2.4s ease-out infinite; z-index: -1; }
+  /* Imagem padrão editável para itens sem foto */
+  html[data-ph-custom] .ph-mark { display: none; }
+  .ph-bg { background-size: cover; background-position: center; }
+  html[data-ph-custom] .ph-bg { background-image: var(--ph-image); }
   .stripes { background-image: repeating-linear-gradient(-45deg, rgba(255,255,255,.06) 0 2px, transparent 2px 12px); }
 }
 

@@ -7,7 +7,7 @@ import { MediaImage } from "@/components/site/media";
 import { WhatsAppLink } from "@/components/site/whatsapp-buttons";
 import { buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/misc";
-import { getArtworks, getBanners, getCategories, getClients, getPopularProducts, getProducts, getServices, getSettings } from "@/lib/data";
+import { getArtworks, getBanners, getCategories, getClients, getContent, getPopularProducts, getProducts, getServices, getSettings } from "@/lib/data";
 import { isSupabaseConfigured } from "@/lib/supabase/public";
 import { cn } from "@/lib/utils";
 
@@ -16,8 +16,9 @@ export const revalidate = 60;
 const CATEGORY_ICONS = [Printer, Layers, Sparkles, Palette, Brush, PackageCheck];
 
 export default async function HomePage() {
-  const [settings, banners, categories, popular, newest, artworks, services, clients] = await Promise.all([
+  const [settings, c, banners, categories, popular, newest, artworks, services, clients] = await Promise.all([
     getSettings(),
+    getContent(),
     getBanners(),
     getCategories("product"),
     getPopularProducts(4),
@@ -26,14 +27,14 @@ export default async function HomePage() {
     getServices(),
     getClients(),
   ]);
-  const ctx = { whatsappNumber: settings.whatsapp_number, storeName: settings.store_name };
+  const ctx = { whatsappNumber: settings.whatsapp_number, storeName: settings.store_name, t: c };
   const hero = banners.find((b) => b.placement === "hero");
   const promos = banners.filter((b) => b.placement === "promo");
   const BENEFITS = [
-    { icon: Store, title: "Retirada disponível", text: "Peça e retire seu pedido direto na loja." },
-    { icon: BadgePercent, title: "Preços baixos sem perder qualidade", text: "Bom preço e acabamento caprichado em cada produto." },
-    { icon: Clock, title: "Horário de atendimento", text: settings.contact_information.hours ?? "Segunda a sábado, das 8h às 18h." },
-    { icon: MessageCircle, title: "Atendimento direto", text: "Tire dúvidas e feche seu pedido pelo WhatsApp." },
+    { icon: Store, title: c.benefit1_title, text: c.benefit1_text },
+    { icon: BadgePercent, title: c.benefit2_title, text: c.benefit2_text },
+    { icon: Clock, title: c.benefit3_title, text: c.benefit3_text },
+    { icon: MessageCircle, title: c.benefit4_title, text: c.benefit4_text },
   ];
   const empty = !popular.length && !newest.length && !artworks.length && !services.length;
 
@@ -47,7 +48,7 @@ export default async function HomePage() {
         <div className="container relative grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-[1.15fr_1fr]">
           <div>
             <p className="pop inline-flex items-center gap-2 rounded-full bg-lime px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-ink" style={{ "--i": 0 } as React.CSSProperties}>
-              <Sparkles className="h-3.5 w-3.5" aria-hidden /> Sublimação & personalização
+              <Sparkles className="h-3.5 w-3.5" aria-hidden /> {c.hero_eyebrow}
             </p>
             {hero ? (
               <h1 className="mt-5 text-[clamp(3rem,8.5vw,6.25rem)] leading-[0.95] text-cream">
@@ -56,37 +57,36 @@ export default async function HomePage() {
               </h1>
             ) : (
               <h1 className="mt-5 text-[clamp(3rem,8.5vw,6.25rem)] leading-[0.95] text-cream">
-                <span className="line"><span className="text-brand italic" style={{ "--i": 1 } as React.CSSProperties}>Tudo para</span></span>
+                <span className="line"><span className="text-brand italic" style={{ "--i": 1 } as React.CSSProperties}>{c.hero_line1}</span></span>
                 <span className="line">
                   <span style={{ "--i": 2 } as React.CSSProperties}>
-                    sublimar <span className="font-script text-[1.15em] normal-case text-lime">e</span>
+                    {c.hero_line2} <span className="font-script text-[1.15em] normal-case text-lime">{c.hero_script}</span>
                   </span>
                 </span>
-                <span className="line"><span style={{ "--i": 3 } as React.CSSProperties}>personalizar</span></span>
+                <span className="line"><span style={{ "--i": 3 } as React.CSSProperties}>{c.hero_line3}</span></span>
               </h1>
             )}
             <p className="rise mt-6 max-w-xl text-lg text-white/75" style={{ "--i": 4 } as React.CSSProperties}>
-              {hero?.subtitle ??
-                "Equipamentos, insumos, artes prontas e serviços sob medida. Escolha o que precisa e feche seu pedido direto no WhatsApp."}
+              {hero?.subtitle ?? c.hero_subtitle}
             </p>
             <div className="rise mt-8 flex flex-wrap gap-3" style={{ "--i": 5 } as React.CSSProperties}>
               <Link
-                href={hero?.cta_href ?? "/loja"}
+                href={hero?.cta_href ?? c.hero_cta_href}
                 className={cn(buttonVariants({ variant: "primary", size: "lg" }))}
                 {...(hero?.cta_href?.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               >
-                {hero?.cta_label ?? "Conhecer a loja"} <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1.5" aria-hidden />
+                {hero?.cta_label ?? c.hero_cta_label} <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1.5" aria-hidden />
               </Link>
-              <Link href="/personalizar" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "border-cream/40 bg-transparent text-cream hover:bg-cream/10")}>
-                Pedir orçamento
+              <Link href={c.hero_cta2_href} className={cn(buttonVariants({ variant: "outline", size: "lg" }), "border-cream/40 bg-transparent text-cream hover:bg-cream/10")}>
+                {c.hero_cta2_label}
               </Link>
             </div>
           </div>
 
-          <div className="relative mx-auto hidden w-full max-w-md md:block lg:max-w-none" aria-hidden={!hero?.image_url}>
-            {hero?.image_url ? (
+          <div className="relative mx-auto hidden w-full max-w-md md:block lg:max-w-none" aria-hidden={!(hero?.image_url || c.hero_image)}>
+            {hero?.image_url || c.hero_image ? (
               <div className="relative aspect-square overflow-hidden rounded-[2rem] border-2 border-cream/20">
-                <MediaImage src={hero.image_url} alt={hero.title} sizes="480px" priority />
+                <MediaImage src={hero?.image_url ?? c.hero_image} alt={hero?.title ?? c.hero_line1} sizes="480px" priority />
               </div>
             ) : (
               <Parallax className="grid aspect-square grid-cols-2 grid-rows-[1fr_auto_1fr] gap-4">
@@ -98,15 +98,15 @@ export default async function HomePage() {
                 </div>
                 <div data-depth="0.9" className="pop col-span-2" style={{ "--i": 4 } as React.CSSProperties}>
                   <div className="group flex items-center justify-between rounded-full bg-lime px-7 py-3 text-ink">
-                    <span className="font-display text-2xl uppercase">Do seu jeito</span>
-                    <Chevrons className="h-7 w-auto transition-transform duration-300 group-hover:translate-x-2" color="#171717" />
+                    <span className="font-display text-2xl uppercase">{c.hero_tile_strip}</span>
+                    <Chevrons className="h-7 w-auto text-ink transition-transform duration-300 group-hover:translate-x-2" />
                   </div>
                 </div>
                 <div data-depth="0.5" className="pop" style={{ "--i": 5 } as React.CSSProperties}>
                   <div className="float-c flex h-full items-center justify-center rounded-[2rem] border-2 border-cream/40 transition hover:rotate-3 hover:scale-105"><Frame className="h-24 w-24 text-cream" strokeWidth={1.5} /></div>
                 </div>
                 <div data-depth="1.5" className="pop" style={{ "--i": 6 } as React.CSSProperties}>
-                  <div className="float-a flex h-full items-center justify-center rounded-[2rem] bg-brand/90 transition hover:-rotate-3 hover:scale-105"><span className="font-script text-5xl text-ink">feito pra você</span></div>
+                  <div className="float-a flex h-full items-center justify-center rounded-[2rem] bg-brand/90 transition hover:-rotate-3 hover:scale-105"><span className="font-script text-5xl text-ink">{c.hero_tile_script}</span></div>
                 </div>
               </Parallax>
             )}
@@ -164,7 +164,7 @@ export default async function HomePage() {
                     <>
                       <div className={cn("float-b absolute -right-10 -top-10 h-52 w-52 rounded-full", dark ? "bg-brand" : "bg-cream/70")} aria-hidden />
                       <div className={cn("float-c absolute right-24 top-24 h-16 w-16 rounded-2xl", dark ? "bg-lime" : "bg-ink")} aria-hidden />
-                      <Chevrons className={cn("absolute right-7 top-7 h-9 w-auto transition-transform duration-300 group-hover:translate-x-2", dark ? "text-ink" : "text-ink")} />
+                      <Chevrons className="absolute right-7 top-7 h-9 w-auto text-ink transition-transform duration-300 group-hover:translate-x-2" />
                     </>
                   )}
                   <div className={cn("relative z-10", b.image_url && "text-white")}>
@@ -183,7 +183,7 @@ export default async function HomePage() {
 
       {categories.length > 0 && (
         <section data-reveal className="container mt-16">
-          <SectionHeader eyebrow="Explore" title="Categorias em destaque" href="/loja" hrefLabel="Ver toda a loja" />
+          <SectionHeader eyebrow={c.cat_eyebrow} title={c.cat_title} href="/loja" hrefLabel={c.cat_link} />
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {categories.slice(0, 10).map((c, i) => {
               const Icon = CATEGORY_ICONS[i % CATEGORY_ICONS.length];
@@ -207,7 +207,7 @@ export default async function HomePage() {
 
       {popular.length > 0 && (
         <section data-reveal className="container mt-16">
-          <SectionHeader eyebrow="Em alta" title="Produtos mais procurados" href="/loja" />
+          <SectionHeader eyebrow={c.popular_eyebrow} title={c.popular_title} href="/loja" hrefLabel={c.see_all} />
           <div className="grid grid-cols-1 gap-5 min-[480px]:grid-cols-2 lg:grid-cols-4">
             {popular.map((p) => (
               <ProductCard key={p.id} product={p} ctx={ctx} />
@@ -218,7 +218,7 @@ export default async function HomePage() {
 
       {newest.length > 0 && (
         <section data-reveal className="container mt-16">
-          <SectionHeader eyebrow="Novidades" title="Recém-cadastrados" href="/loja?ordem=newest" />
+          <SectionHeader eyebrow={c.newest_eyebrow} title={c.newest_title} href="/loja?ordem=newest" hrefLabel={c.see_all} />
           <div className="grid grid-cols-1 gap-5 min-[480px]:grid-cols-2 lg:grid-cols-4">
             {newest.map((p) => (
               <ProductCard key={p.id} product={p} ctx={ctx} />
@@ -229,7 +229,7 @@ export default async function HomePage() {
 
       {artworks.length > 0 && (
         <section data-reveal className="container mt-16">
-          <SectionHeader eyebrow="Criatividade" title="Artes prontas" href="/artes-prontas" />
+          <SectionHeader eyebrow={c.artworks_eyebrow} title={c.artworks_title} href="/artes-prontas" hrefLabel={c.see_all} />
           <div className="grid grid-cols-1 gap-5 min-[480px]:grid-cols-2 lg:grid-cols-4">
             {artworks.map((a) => (
               <ArtworkCard key={a.id} artwork={a} ctx={ctx} />
@@ -240,7 +240,7 @@ export default async function HomePage() {
 
       {services.length > 0 && (
         <section data-reveal className="container mt-16">
-          <SectionHeader eyebrow="Personalização" title="Nossos serviços" href="/servicos" />
+          <SectionHeader eyebrow={c.services_eyebrow} title={c.services_title} href="/servicos" hrefLabel={c.see_all} />
           <div className="grid gap-5 md:grid-cols-3">
             {services.slice(0, 3).map((s) => (
               <ServiceCard key={s.id} service={s} ctx={ctx} />
@@ -251,14 +251,14 @@ export default async function HomePage() {
 
       {empty && isSupabaseConfigured() && (
         <div className="container mt-12">
-          <EmptyState title="Catálogo em preparação">Em breve novos produtos, artes e serviços. Enquanto isso, fale com a gente pelo WhatsApp.</EmptyState>
+          <EmptyState title={c.home_empty_title}>{c.home_empty_text}</EmptyState>
         </div>
       )}
 
       {clients.length > 0 && (
         <section className="mt-20" aria-label="Nossos clientes">
           <div className="container">
-            <SectionHeader eyebrow="Quem confia" title="Nossos clientes" />
+            <SectionHeader eyebrow={c.clients_eyebrow} title={c.clients_title} />
           </div>
           <div className="marquee-pause overflow-hidden py-2 [mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
             {(() => {
@@ -291,14 +291,16 @@ export default async function HomePage() {
       {/* CTA final */}
       <section className="container mt-20">
         <div data-reveal="scale" className="grain relative overflow-hidden rounded-[2.5rem] bg-brand p-8 text-ink sm:p-12">
-          <Chevrons className="float-b absolute -right-4 top-6 hidden h-32 w-auto opacity-20 sm:block" color="#171717" />
-          <h2 className="max-w-2xl text-5xl sm:text-7xl">Não encontrou o que <span className="italic text-cream">procura?</span></h2>
-          <p className="mt-4 max-w-xl text-lg font-medium">Conte para nós o que você quer produzir ou personalizar e receba um orçamento pelo WhatsApp.</p>
+          <Chevrons className="float-b absolute -right-4 top-6 hidden h-32 w-auto text-ink opacity-20 sm:block" />
+          <h2 className="max-w-2xl text-5xl sm:text-7xl"><AccentTitle text={c.cta_title} onDark /></h2>
+          <p className="mt-4 max-w-xl text-lg font-medium">{c.cta_text}</p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <Link href="/personalizar" className={cn(buttonVariants({ variant: "dark", size: "lg" }))}>
-              Solicitar orçamento
+            <Link href={c.cta_btn1_href} className={cn(buttonVariants({ variant: "dark", size: "lg" }))}>
+              {c.cta_btn1_label}
             </Link>
-            <WhatsAppLink number={settings.whatsapp_number} message={settings.default_whatsapp_message} size="lg" label="Chamada final da página inicial" />
+            <WhatsAppLink number={settings.whatsapp_number} message={settings.default_whatsapp_message} size="lg" label="Chamada final da página inicial">
+              {c.cta_btn2_label}
+            </WhatsAppLink>
           </div>
         </div>
       </section>

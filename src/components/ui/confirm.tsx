@@ -13,12 +13,16 @@ export function ConfirmDelete({
   title = "Excluir este item?",
   description = "Esta ação não pode ser desfeita.",
   label = "Excluir",
+  confirmLabel = "Excluir",
+  successMessage = "Item excluído.",
   iconOnly,
 }: {
   action: () => Promise<{ ok: boolean; error?: string }>;
   title?: string;
   description?: string;
   label?: string;
+  confirmLabel?: string;
+  successMessage?: string;
   iconOnly?: boolean;
 }) {
   const [pending, start] = useTransition();
@@ -45,12 +49,12 @@ export function ConfirmDelete({
               onClick={() =>
                 start(async () => {
                   const res = await action();
-                  if (res.ok) toast.success("Item excluído.");
+                  if (res.ok) toast.success(successMessage);
                   else toast.error(res.error ?? "Não foi possível excluir.");
                 })
               }
             >
-              {pending && <Spinner />} Excluir
+              {pending && <Spinner />} {confirmLabel}
             </Button>
           </div>
         </AlertDialog.Content>

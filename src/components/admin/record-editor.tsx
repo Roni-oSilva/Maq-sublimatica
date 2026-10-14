@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect, useRef } from "react";
+import { startTransition, useActionState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { updateRecordAction, type ActionResult } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
@@ -37,7 +37,14 @@ export function RecordEditor({
 
   const sid = `status-${id}`;
   return (
-    <form action={action} className="grid gap-3 sm:grid-cols-2">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        const fd = new FormData(e.currentTarget);
+        startTransition(() => action(fd));
+      }}
+      className="grid gap-3 sm:grid-cols-2"
+    >
       <input type="hidden" name="id" value={id} />
       <input type="hidden" name="table" value={table} />
       <div>

@@ -29,12 +29,12 @@ export function MediaImage({
   if (!src) {
     return (
       <div
-        className={cn("stripes flex h-full w-full items-center justify-center bg-ink", className)}
+        className={cn("stripes ph-bg flex h-full w-full items-center justify-center bg-ink", className)}
         role="img"
         aria-label={`${alt} (sem imagem)`}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-mark.png" alt="" width={88} height={60} className="w-1/4 min-w-10 max-w-20 opacity-90" />
+        <img src="/logo-mark.png" alt="" width={88} height={60} className="ph-mark w-1/4 min-w-10 max-w-20 opacity-90" />
       </div>
     );
   }

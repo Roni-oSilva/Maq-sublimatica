@@ -12,11 +12,16 @@ Loja profissional (Next.js 15 + TypeScript + Tailwind + Supabase) em que **todo 
 - **Segurança:** RLS em todas as tabelas; visitantes só leem conteúdo ativo; pedidos/orçamentos só por funções RPC; autorização no servidor em toda Server Action; validação com Zod; upload com checagem de tipo real (bytes) e limite de 4 MB; nenhuma chave `service_role`.
 - **Não implementado (de propósito):** checkout/pagamento online e carrinho (fechamento é pelo WhatsApp).
 
+## Controle total pelo painel (sem mexer em código)
+
+- **Admin → Textos e imagens:** todos os textos, links de botões, imagens, mensagens fixas do WhatsApp e as **cores** do site, organizados por seção (cabeçalho/rodapé, início, Loja, Artes, Serviços, Personalizar, Sobre/Políticas, mensagens do WhatsApp, imagens gerais, cores). Campo em branco = volta ao texto padrão; há “Restaurar padrões” por seção. O catálogo de campos está em `src/lib/content.ts` — para tornar um novo texto editável, basta adicionar uma linha lá.
+- **Produtos, Artes, Serviços, Categorias, Banners, Clientes, Configurações:** conteúdo e imagens de cada área (upload de imagens incluso).
+
 ## 1. Configurar o Supabase
 
 1. Crie um projeto em <https://supabase.com>.
 2. No **SQL Editor**, execute **na ordem** os arquivos de `supabase/migrations/`:
-   `20260101000000_schema.sql` → `…0100_rls.sql` → `…0200_functions.sql` → `…0300_storage.sql` → `…0400_clients_banners.sql` → `…0500_initial_content.sql`
+   `20260101000000_schema.sql` → `…0100_rls.sql` → `…0200_functions.sql` → `…0300_storage.sql` → `…0400_clients_banners.sql` → `…0500_initial_content.sql` → `…0600_site_content.sql`
    (a última carrega o conteúdo do site anterior: endereço, telefone, horário, formas de pagamento, 2 banners promocionais e a lista de clientes — tudo editável no painel)
    (ou, com a Supabase CLI: `supabase link --project-ref SEU_REF && supabase db push`).
 3. *(Opcional)* execute `supabase/seed.sql` para dados de exemplo.

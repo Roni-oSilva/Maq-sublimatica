@@ -7,11 +7,17 @@ const config: Config = {
     extend: {
       colors: {
         // Paleta da marca: preto #171717 + laranja #F25623 (+ lima e creme de apoio)
-        ink: { DEFAULT: "#171717", soft: "#2b2a28", muted: "#6b6761" },
-        brand: { DEFAULT: "#F25623", dark: "#d13f0e", text: "#bf3a0a", light: "#fdebe4" },
-        lime: "#cde82a",
-        cream: "#f1f3dc",
-        paper: "#f8f6f1",
+        // Valores vêm de variáveis CSS, editáveis em Admin → Textos e imagens → Cores.
+        ink: { DEFAULT: "rgb(var(--c-ink) / <alpha-value>)", soft: "rgb(var(--c-ink-soft) / <alpha-value>)", muted: "#6b6761" },
+        brand: {
+          DEFAULT: "rgb(var(--c-brand) / <alpha-value>)",
+          dark: "rgb(var(--c-brand-dark) / <alpha-value>)",
+          text: "rgb(var(--c-brand-text) / <alpha-value>)",
+          light: "rgb(var(--c-brand-light) / <alpha-value>)",
+        },
+        lime: "rgb(var(--c-lime) / <alpha-value>)",
+        cream: "rgb(var(--c-cream) / <alpha-value>)",
+        paper: "rgb(var(--c-paper) / <alpha-value>)",
         line: "#e6e2da",
       },
       fontFamily: {

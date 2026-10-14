@@ -5,14 +5,13 @@ import { PageHero, ProductCard } from "@/components/site/cards";
 import { Button } from "@/components/ui/button";
 import { Input, Select } from "@/components/ui/form";
 import { EmptyState } from "@/components/ui/misc";
-import { getCategories, getProducts, getSettings, type ProductSort } from "@/lib/data";
+import { getCategories, getContent, getProducts, getSettings, type ProductSort } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
-export const metadata: Metadata = {
-  title: "Loja",
-  description: "Catálogo de equipamentos, insumos e materiais para sublimação. Peça pelo WhatsApp.",
-  alternates: { canonical: "/loja" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const c = await getContent();
+  return { title: c.shop_title, description: c.shop_subtitle.slice(0, 160), alternates: { canonical: "/loja" } };
+}
 
 const SORTS: { value: ProductSort; label: string }[] = [
   { value: "relevance", label: "Relevância" },
@@ -26,12 +25,13 @@ type SP = Promise<{ categoria?: string; q?: string; ordem?: string }>;
 export default async function ShopPage({ searchParams }: { searchParams: SP }) {
   const sp = await searchParams;
   const sort = SORTS.some((s) => s.value === sp.ordem) ? (sp.ordem as ProductSort) : "relevance";
-  const [settings, categories, products] = await Promise.all([
+  const [settings, c, categories, products] = await Promise.all([
     getSettings(),
+    getContent(),
     getCategories("product"),
     getProducts({ categorySlug: sp.categoria, q: sp.q, sort }),
   ]);
-  const ctx = { whatsappNumber: settings.whatsapp_number, storeName: settings.store_name };
+  const ctx = { whatsappNumber: settings.whatsapp_number, storeName: settings.store_name, t: c };
   const qs = (cat?: string) => {
     const p = new URLSearchParams();
     if (cat) p.set("categoria", cat);
@@ -44,35 +44,35 @@ export default async function ShopPage({ searchParams }: { searchParams: SP }) {
 
   return (
     <>
-      <PageHero eyebrow="Loja" title="Catálogo de produtos">
-        Escolha o produto e finalize o pedido pelo WhatsApp — disponibilidade, pagamento e frete são confirmados na conversa.
+      <PageHero eyebrow={c.shop_eyebrow} title={c.shop_title} image={c.shop_header_image || null}>
+        {c.shop_subtitle}
       </PageHero>
 
       <div className="container mt-8">
         <form method="get" action="/loja" role="search" className="grid gap-3 rounded-3xl border border-line bg-white p-4 sm:grid-cols-[1fr_auto_auto] sm:items-end">
           {sp.categoria && <input type="hidden" name="categoria" value={sp.categoria} />}
           <div>
-            <label htmlFor="q" className="mb-1.5 block text-sm font-semibold">Buscar por nome</label>
+            <label htmlFor="q" className="mb-1.5 block text-sm font-semibold">{c.shop_search_label}</label>
             <div className="relative">
               <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-muted" aria-hidden />
-              <Input id="q" name="q" defaultValue={sp.q ?? ""} placeholder="Ex.: prensa térmica" className="pl-10" maxLength={80} />
+              <Input id="q" name="q" defaultValue={sp.q ?? ""} placeholder={c.shop_search_placeholder} className="pl-10" maxLength={80} />
             </div>
           </div>
           <div>
-            <label htmlFor="ordem" className="mb-1.5 block text-sm font-semibold">Ordenar por</label>
+            <label htmlFor="ordem" className="mb-1.5 block text-sm font-semibold">{c.shop_sort_label}</label>
             <Select id="ordem" name="ordem" defaultValue={sort}>
               {SORTS.map((s) => (
                 <option key={s.value} value={s.value}>{s.label}</option>
               ))}
             </Select>
           </div>
-          <Button type="submit" variant="dark">Aplicar</Button>
+          <Button type="submit" variant="dark">{c.shop_apply}</Button>
         </form>
 
         {categories.length > 0 && (
           <nav aria-label="Categorias" className="mt-4 flex gap-2 overflow-x-auto pb-1">
             <Link href={qs()} aria-current={!sp.categoria ? "true" : undefined} className={cn("shrink-0 rounded-full border px-4 py-2 text-sm font-semibold", !sp.categoria ? "border-ink bg-ink text-white" : "border-line bg-white hover:border-ink/40")}>
-              Todos
+              {c.shop_all}
             </Link>
             {categories.map((c) => (
               <Link key={c.id} href={qs(c.slug)} aria-current={sp.categoria === c.slug ? "true" : undefined} className={cn("shrink-0 rounded-full border px-4 py-2 text-sm font-semibold", sp.categoria === c.slug ? "border-ink bg-ink text-white" : "border-line bg-white hover:border-ink/40")}>
@@ -88,11 +88,11 @@ export default async function ShopPage({ searchParams }: { searchParams: SP }) {
 
         {products.length === 0 ? (
           <div className="mt-4">
-            <EmptyState title={filtered ? "Nenhum produto encontrado" : "Nenhum produto cadastrado ainda"}>
+            <EmptyState title={filtered ? "Nenhum produto encontrado" : c.shop_empty_title}>
               {filtered ? (
                 <>Tente outra busca ou <Link href="/loja" className="font-semibold text-brand-text underline">limpe os filtros</Link>.</>
               ) : (
-                "Em breve novos produtos. Fale conosco ou peça um orçamento personalizado."
+                c.shop_empty_text
               )}
             </EmptyState>
           </div>

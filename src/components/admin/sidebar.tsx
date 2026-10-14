@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, ClipboardList, ExternalLink, FolderTree, ImageIcon, LayoutDashboard, LogOut, Megaphone, Menu, Package, Palette, Settings, Wrench, X } from "lucide-react";
+import { Building2, ClipboardList, Type, ExternalLink, FolderTree, ImageIcon, LayoutDashboard, LogOut, Megaphone, Menu, Package, Palette, Settings, Wrench, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -16,6 +16,7 @@ const ITEMS = [
   { href: "/admin/servicos", label: "Serviços", icon: Wrench },
   { href: "/admin/banners", label: "Banners", icon: Megaphone },
   { href: "/admin/clientes", label: "Clientes", icon: Building2 },
+  { href: "/admin/conteudo", label: "Textos e imagens", icon: Type },
   { href: "/admin/configuracoes", label: "Configurações", icon: Settings },
 ];
 

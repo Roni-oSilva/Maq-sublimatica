@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { z } from "zod";
 import { assertAdmin } from "@/lib/admin";
+import { CONTENT_GROUPS, validateField } from "@/lib/content";
 import { extensionFor, validateImage } from "@/lib/images";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/public";
@@ -233,6 +234,53 @@ export async function saveBannerAction(_: ActionResult, fd: FormData): Promise<A
     if (error) return fail(dbError(error.message));
     refresh();
     return { ok: true, id: data.id };
+  }) as Promise<ActionResult>;
+}
+
+// ---------- Textos, imagens e cores do site ----------
+export async function saveContentAction(_: ActionResult, fd: FormData): Promise<ActionResult> {
+  return guard(async () => {
+    const { supabase } = await assertAdmin();
+    const group = CONTENT_GROUPS.find((g) => g.id === String(fd.get("_group") ?? ""));
+    if (!group) return fail("Grupo inválido.");
+    const fieldErrors: FieldErrors = {};
+    const upserts: { key: string; value: string }[] = [];
+    const removals: string[] = [];
+    for (const f of group.fields) {
+      const raw = fd.get(f.key);
+      if (typeof raw !== "string") continue;
+      const err = validateField(f, raw);
+      if (err) {
+        fieldErrors[f.key] = err;
+        continue;
+      }
+      const value = raw.replace(/\r\n/g, "\n").trim();
+      if (value === "" || value === f.default) removals.push(f.key);
+      else upserts.push({ key: f.key, value });
+    }
+    if (Object.keys(fieldErrors).length) return fail("Revise os campos destacados.", fieldErrors);
+    if (upserts.length) {
+      const { error } = await supabase.from("site_content").upsert(upserts, { onConflict: "key" });
+      if (error) return fail(dbError(error.message));
+    }
+    if (removals.length) {
+      const { error } = await supabase.from("site_content").delete().in("key", removals);
+      if (error) return fail(dbError(error.message));
+    }
+    refresh();
+    return { ok: true };
+  }) as Promise<ActionResult>;
+}
+
+export async function resetContentGroupAction(groupId: string): Promise<ActionResult> {
+  return guard(async () => {
+    const { supabase } = await assertAdmin();
+    const group = CONTENT_GROUPS.find((g) => g.id === groupId);
+    if (!group) return fail("Grupo inválido.");
+    const { error } = await supabase.from("site_content").delete().in("key", group.fields.map((f) => f.key));
+    if (error) return fail(dbError(error.message));
+    refresh();
+    return { ok: true };
   }) as Promise<ActionResult>;
 }
 

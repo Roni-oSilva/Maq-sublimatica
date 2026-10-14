@@ -1,3 +1,5 @@
+import { cache } from "react";
+import { DEFAULT_CONTENT, mergeContent, type SiteContent } from "./content";
 import { createPublicClient } from "./supabase/public";
 import { escapeLike } from "./utils";
 import {
@@ -21,6 +23,18 @@ function unwrap<T>(res: { data: T | null; error: { message: string } | null }, f
   if (res.error) throw new Error(res.error.message);
   return res.data ?? fallback;
 }
+
+/** Textos, links, imagens e cores editáveis (padrões + valores salvos). Nunca derruba o site. */
+export const getContent = cache(async (): Promise<SiteContent> => {
+  const db = createPublicClient();
+  if (!db) return DEFAULT_CONTENT;
+  const { data, error } = await db.from("site_content").select("key, value");
+  if (error) {
+    console.error("[site_content]", error.message);
+    return DEFAULT_CONTENT;
+  }
+  return mergeContent(data);
+});
 
 export async function getSettings(): Promise<StoreSettings> {
   const db = createPublicClient();

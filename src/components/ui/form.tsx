@@ -67,7 +67,7 @@ export function Field({
 export function Checkbox({ label, className, ...props }: InputHTMLAttributes<HTMLInputElement> & { label: string }) {
   return (
     <label className={cn("flex min-h-11 cursor-pointer items-center gap-3 text-sm font-medium", className)}>
-      <input type="checkbox" className="h-5 w-5 rounded border-line accent-[#F25623]" {...props} />
+      <input type="checkbox" className="h-5 w-5 rounded border-line accent-brand" {...props} />
       {label}
     </label>
   );

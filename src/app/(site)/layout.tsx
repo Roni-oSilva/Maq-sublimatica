@@ -4,12 +4,13 @@ import { Header } from "@/components/site/header";
 import { ScrollProgress } from "@/components/site/motion";
 import { RevealObserver } from "@/components/site/reveal";
 import { WhatsAppLink } from "@/components/site/whatsapp-buttons";
-import { getSettings } from "@/lib/data";
+import { getContent, getSettings } from "@/lib/data";
+import { navItems } from "@/components/site/nav";
 
 export const revalidate = 60;
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const settings = await getSettings();
+  const [settings, c] = await Promise.all([getSettings(), getContent()]);
   return (
     <>
       <a href="#conteudo" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2">
@@ -20,11 +21,13 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         logoUrl={settings.logo_url}
         whatsappNumber={settings.whatsapp_number}
         defaultMessage={settings.default_whatsapp_message}
+        nav={navItems(c)}
+        whatsappLabel={c.header_whatsapp_label}
       />
       <ScrollProgress />
       <RevealObserver />
       <main id="conteudo" className="animate-fade-up">{children}</main>
-      <Footer settings={settings} />
+      <Footer settings={settings} t={c} />
       {settings.whatsapp_number && (
         <div className="pulse-ring fixed bottom-4 right-4 z-30 rounded-full sm:bottom-6 sm:right-6">
           <WhatsAppLink

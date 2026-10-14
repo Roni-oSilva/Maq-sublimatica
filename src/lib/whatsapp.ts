@@ -1,3 +1,4 @@
+import { DEFAULT_CONTENT, fill } from "./content";
 import { formatBRL } from "./utils";
 
 export type PhoneResult = { ok: true; value: string } | { ok: false; error: string };
@@ -43,6 +44,8 @@ function oneLine(text: string, max: number): string {
   return flat.length > max ? `${flat.slice(0, max - 1).trimEnd()}…` : flat;
 }
 
+const store = (i: { storeName?: string }) => i.storeName ?? "Maq Sublimática";
+
 function withProtocol(lines: string[], protocol?: string | null): string {
   if (protocol) lines.push(`Protocolo: ${protocol}`);
   return lines.join("\n");
@@ -50,6 +53,9 @@ function withProtocol(lines: string[], protocol?: string | null): string {
 
 export type ProductMessageInput = {
   storeName?: string;
+  /** Frases editáveis no painel; aceitam {loja}. */
+  intro?: string;
+  closing?: string;
   name: string;
   categoryName?: string | null;
   price: number | null;
@@ -60,19 +66,21 @@ export type ProductMessageInput = {
 
 export function buildProductMessage(i: ProductMessageInput, protocol?: string | null): string {
   const lines = [
-    `Olá! Tenho interesse neste produto da ${i.storeName ?? "Maq Sublimática"}.`,
+    fill(i.intro ?? DEFAULT_CONTENT.msg_product_intro, { loja: store(i) }),
     `Produto: ${i.name}.`,
   ];
   if (i.categoryName) lines.push(`Categoria: ${i.categoryName}.`);
   lines.push(`Preço anunciado: ${priceLine(i.price, i.priceOnRequest)}`);
   if (i.specifications?.trim()) lines.push(`Especificações: ${oneLine(i.specifications, 400)}`);
-  lines.push("Gostaria de confirmar a disponibilidade, as condições de pagamento e o valor do frete.");
+  lines.push(fill(i.closing ?? DEFAULT_CONTENT.msg_product_closing, { loja: store(i) }));
   lines.push(`Link do produto: ${i.url}`);
   return withProtocol(lines, protocol);
 }
 
 export type ArtworkMessageInput = {
   storeName?: string;
+  intro?: string;
+  closing?: string;
   name: string;
   code: string;
   price: number | null;
@@ -82,11 +90,11 @@ export type ArtworkMessageInput = {
 export function buildArtworkMessage(i: ArtworkMessageInput, protocol?: string | null): string {
   return withProtocol(
     [
-      `Olá! Tenho interesse na seguinte arte da ${i.storeName ?? "Maq Sublimática"}.`,
+      fill(i.intro ?? DEFAULT_CONTENT.msg_artwork_intro, { loja: store(i) }),
       `Arte: ${i.name}`,
       `Código: ${i.code}`,
       `Preço anunciado: ${i.priceOnRequest || i.price === null ? "Sob consulta" : formatBRL(i.price)}`,
-      "Gostaria de saber mais sobre a disponibilidade, os formatos de arquivo e as possibilidades de personalização.",
+      fill(i.closing ?? DEFAULT_CONTENT.msg_artwork_closing, { loja: store(i) }),
     ],
     protocol,
   );
@@ -94,6 +102,8 @@ export function buildArtworkMessage(i: ArtworkMessageInput, protocol?: string | 
 
 export type ServiceMessageInput = {
   storeName?: string;
+  intro?: string;
+  closing?: string;
   name: string;
   price: number | null;
   priceOnRequest: boolean;
@@ -102,16 +112,18 @@ export type ServiceMessageInput = {
 
 export function buildServiceMessage(i: ServiceMessageInput, protocol?: string | null): string {
   const lines = [
-    `Olá! Gostaria de solicitar atendimento para o serviço "${i.name}" da ${i.storeName ?? "Maq Sublimática"}.`,
+    fill(i.intro ?? DEFAULT_CONTENT.msg_service_intro, { loja: store(i), servico: i.name }),
     `Valor anunciado: ${i.priceOnRequest || i.price === null ? "Sob consulta" : formatBRL(i.price)}`,
   ];
   if (i.leadTime?.trim()) lines.push(`Prazo informado: ${i.leadTime.trim()}`);
-  lines.push("Gostaria de receber informações sobre valores, prazo de produção e condições de pagamento.");
+  lines.push(fill(i.closing ?? DEFAULT_CONTENT.msg_service_closing, { loja: store(i), servico: i.name }));
   return withProtocol(lines, protocol);
 }
 
 export type QuoteMessageInput = {
   storeName?: string;
+  intro?: string;
+  closing?: string;
   name: string;
   phone?: string | null;
   productType: string;
@@ -124,7 +136,7 @@ export type QuoteMessageInput = {
 
 export function buildQuoteMessage(i: QuoteMessageInput, protocol?: string | null): string {
   const lines = [
-    `Olá! Gostaria de solicitar um orçamento personalizado com a ${i.storeName ?? "Maq Sublimática"}.`,
+    fill(i.intro ?? DEFAULT_CONTENT.msg_quote_intro, { loja: store(i) }),
     `Nome: ${i.name}`,
     `Produto ou serviço: ${i.productType}`,
   ];
@@ -134,6 +146,6 @@ export function buildQuoteMessage(i: QuoteMessageInput, protocol?: string | null
   lines.push("Descrição da personalização:", i.description.trim());
   if (i.details?.trim()) lines.push("Cores, tamanhos, materiais e outros detalhes:", i.details.trim());
   if (i.referenceUrl?.trim()) lines.push("Referência:", i.referenceUrl.trim());
-  lines.push("Gostaria de receber informações sobre preço, prazo de produção e condições de pagamento.");
+  lines.push(fill(i.closing ?? DEFAULT_CONTENT.msg_quote_closing, { loja: store(i) }));
   return withProtocol(lines, protocol);
 }

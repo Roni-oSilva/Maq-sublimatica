@@ -7,7 +7,9 @@ import { cn, formatPrice } from "@/lib/utils";
 import { MediaImage } from "./media";
 import { OrderButton } from "./whatsapp-buttons";
 
-type Ctx = { whatsappNumber: string | null; storeName: string };
+import type { SiteContent } from "@/lib/content";
+
+export type Ctx = { whatsappNumber: string | null; storeName: string; t: SiteContent };
 
 export function isProductAvailable(p: Pick<Product, "available" | "track_stock" | "stock_quantity">): boolean {
   return p.available && !(p.track_stock && (p.stock_quantity ?? 0) <= 0);
@@ -45,13 +47,15 @@ export function ProductCard({ product, ctx }: { product: Product; ctx: Ctx }) {
         <div className="mt-4 grid gap-2">
           <OrderButton
             whatsappNumber={ctx.whatsappNumber}
-            label={product.price_on_request || product.price === null ? "Solicitar valor" : "Pedir pelo WhatsApp"}
+            label={product.price_on_request || product.price === null ? ctx.t.product_quote_label : ctx.t.product_order_label}
             payload={{
               kind: "product",
               id: product.id,
               path: href,
               input: {
                 storeName: ctx.storeName,
+                intro: ctx.t.msg_product_intro,
+                closing: ctx.t.msg_product_closing,
                 name: product.name,
                 categoryName: product.category?.name ?? null,
                 price: product.price,
@@ -61,7 +65,7 @@ export function ProductCard({ product, ctx }: { product: Product; ctx: Ctx }) {
             }}
           />
           <Link href={href} className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>
-            Ver detalhes
+            {ctx.t.product_details_label}
           </Link>
         </div>
       </div>
@@ -84,12 +88,14 @@ export function ArtworkCard({ artwork, ctx }: { artwork: Artwork; ctx: Ctx }) {
         <OrderButton
           className="mt-4"
           whatsappNumber={ctx.whatsappNumber}
-          label="Tenho interesse"
+          label={ctx.t.artwork_order_label}
           payload={{
             kind: "artwork",
             id: artwork.id,
             input: {
               storeName: ctx.storeName,
+              intro: ctx.t.msg_artwork_intro,
+              closing: ctx.t.msg_artwork_closing,
               name: artwork.name,
               code: artwork.code,
               price: artwork.price,
@@ -135,12 +141,14 @@ export function ServiceCard({ service, ctx }: { service: Service; ctx: Ctx }) {
           <OrderButton
             className="mt-4 w-full"
             whatsappNumber={ctx.whatsappNumber}
-            label="Solicitar atendimento"
+            label={ctx.t.service_order_label}
             payload={{
               kind: "service",
               id: service.id,
               input: {
                 storeName: ctx.storeName,
+                intro: ctx.t.msg_service_intro,
+                closing: ctx.t.msg_service_closing,
                 name: service.name,
                 price: service.price,
                 priceOnRequest: service.price_on_request,
@@ -192,9 +200,15 @@ export function SectionHeader({
   );
 }
 
-export function PageHero({ eyebrow, title, children }: { eyebrow: string; title: string; children?: React.ReactNode }) {
+export function PageHero({ eyebrow, title, image, children }: { eyebrow: string; title: string; image?: string | null; children?: React.ReactNode }) {
   return (
     <section className="grain relative overflow-hidden rounded-b-[2.5rem] bg-ink text-white">
+      {image && (
+        <>
+          <div className="absolute inset-0" aria-hidden><MediaImage src={image} alt="" sizes="100vw" priority /></div>
+          <div className="absolute inset-0 bg-ink/75" aria-hidden />
+        </>
+      )}
       <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/3 skew-x-[-14deg] translate-x-16 bg-brand sm:block" aria-hidden />
       <div className="pointer-events-none absolute bottom-0 right-[30%] hidden h-3 w-24 bg-lime sm:block" aria-hidden />
       <div className="container relative py-12 sm:py-16 animate-fade-up">

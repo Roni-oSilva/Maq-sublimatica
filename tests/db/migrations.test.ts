@@ -128,6 +128,25 @@ describe("clientes, banners e conteúdo inicial", () => {
   });
 });
 
+describe("site_content", () => {
+  it("visitante lê, não escreve; admin escreve; chave inválida é rejeitada", async () => {
+    await as("authenticated", ADMIN, async () => {
+      await db.query("insert into public.site_content (key, value) values ('hero_line1', 'Olá mundo')");
+      await expect(db.query("insert into public.site_content (key, value) values ('Chave Inválida', 'x')")).rejects.toThrow();
+    });
+    await as("anon", null, async () => {
+      const r = await db.query<{ value: string }>("select value from public.site_content where key = 'hero_line1'");
+      expect(r.rows[0].value).toBe("Olá mundo");
+      await expect(db.query("update public.site_content set value = 'x'")).rejects.toThrow(/permission denied/);
+    });
+    await as("authenticated", USER, async () => {
+      const r = await db.query("update public.site_content set value = 'hack' returning key");
+      expect(r.rows).toHaveLength(0);
+      await expect(db.query("insert into public.site_content (key, value) values ('abc', 'x')")).rejects.toThrow(/row-level security/);
+    });
+  });
+});
+
 describe("constraints", () => {
   it("exige preço quando não é sob consulta", async () => {
     await as("postgres", null, async () => {

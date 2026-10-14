@@ -10,18 +10,21 @@ import { buildWhatsappUrl } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
 import { useScrolled } from "./motion";
-import { NAV } from "./nav";
 
 export function Header({
   storeName,
   logoUrl,
   whatsappNumber,
   defaultMessage,
+  nav,
+  whatsappLabel,
 }: {
   storeName: string;
   logoUrl: string | null;
   whatsappNumber: string | null;
   defaultMessage: string;
+  nav: { href: string; label: string }[];
+  whatsappLabel: string;
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -42,7 +45,7 @@ export function Header({
 
         <nav aria-label="Principal" className="hidden lg:block">
           <ul className="flex items-center gap-1">
-            {NAV.map((item) => (
+            {nav.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
@@ -70,7 +73,7 @@ export function Header({
               className="inline-flex h-10 items-center gap-2 rounded-full bg-[#128c4a] px-3.5 text-sm font-semibold text-white transition hover:bg-[#0e7a3f]"
             >
               <MessageCircle className="h-5 w-5" aria-hidden />
-              <span className="hidden md:inline">WhatsApp</span>
+              <span className="hidden md:inline">{whatsappLabel}</span>
             </a>
           )}
           <button
@@ -89,7 +92,7 @@ export function Header({
       {open && (
         <nav id="menu-mobile" aria-label="Menu mobile" className="border-t border-line bg-white lg:hidden">
           <ul className="container grid gap-1 py-3">
-            {NAV.map((item) => (
+            {nav.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}

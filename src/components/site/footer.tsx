@@ -1,7 +1,7 @@
 import { Clock, ExternalLink, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 import type { StoreSettings } from "@/lib/types";
-import { NAV } from "./nav";
+import { navItems } from "./nav";
 import { Logo } from "./logo";
 import { WhatsAppLink } from "./whatsapp-buttons";
 
@@ -12,7 +12,7 @@ const SOCIAL_LABELS: Record<string, string> = {
   youtube: "YouTube",
 };
 
-export function Footer({ settings }: { settings: StoreSettings }) {
+export function Footer({ settings, t }: { settings: StoreSettings; t: Record<string, string> }) {
   const c = settings.contact_information;
   const payments = (settings.payment_methods ?? "").split("\n").map((m) => m.trim()).filter(Boolean);
   const socials = Object.entries(settings.social_links).filter(([, v]) => v);
@@ -30,15 +30,17 @@ export function Footer({ settings }: { settings: StoreSettings }) {
             <Logo light className="h-11 w-auto" />
           )}
           <p className="mt-4 text-sm leading-relaxed">
-            Equipamentos, insumos, artes e serviços de sublimação e personalização. Pedidos e orçamentos pelo WhatsApp.
+            {t.footer_about}
           </p>
-          <WhatsAppLink number={settings.whatsapp_number} message={settings.default_whatsapp_message} className="mt-5" label="Rodapé" />
+          <WhatsAppLink number={settings.whatsapp_number} message={settings.default_whatsapp_message} className="mt-5" label="Rodapé">
+            {t.footer_whatsapp_label}
+          </WhatsAppLink>
         </div>
 
         <nav aria-label="Rodapé">
-          <h2 className="font-display text-lg uppercase tracking-wide text-brand">Navegação</h2>
+          <h2 className="font-display text-lg uppercase tracking-wide text-brand">{t.footer_nav_title}</h2>
           <ul className="mt-4 space-y-2 text-sm">
-            {NAV.map((n) => (
+            {navItems(t).map((n) => (
               <li key={n.href}>
                 <Link href={n.href} className="hover:text-white">
                   {n.label}
@@ -49,7 +51,7 @@ export function Footer({ settings }: { settings: StoreSettings }) {
         </nav>
 
         <div>
-          <h2 className="font-display text-lg uppercase tracking-wide text-brand">Contato</h2>
+          <h2 className="font-display text-lg uppercase tracking-wide text-brand">{t.footer_contact_title}</h2>
           <ul className="mt-4 space-y-3 text-sm">
             {c.phone && (
               <li className="flex gap-2">
@@ -79,7 +81,7 @@ export function Footer({ settings }: { settings: StoreSettings }) {
         </div>
 
         <div>
-          <h2 className="font-display text-lg uppercase tracking-wide text-brand">Redes e políticas</h2>
+          <h2 className="font-display text-lg uppercase tracking-wide text-brand">{t.footer_social_title}</h2>
           {socials.length > 0 && (
             <ul className="mt-4 flex flex-wrap gap-2">
               {socials.map(([key, url]) => (
@@ -99,12 +101,12 @@ export function Footer({ settings }: { settings: StoreSettings }) {
           <ul className="mt-4 space-y-2 text-sm">
             <li>
               <Link href="/politicas" className="hover:text-white">
-                Políticas da loja
+                {t.footer_policies_label}
               </Link>
             </li>
             <li>
               <Link href="/personalizar" className="hover:text-white">
-                Solicitar orçamento
+                {t.footer_quote_label}
               </Link>
             </li>
           </ul>
@@ -113,18 +115,18 @@ export function Footer({ settings }: { settings: StoreSettings }) {
       {payments.length > 0 && (
         <div className="border-t border-white/10 py-6">
           <div className="container flex flex-col items-center gap-3 text-center">
-            <h2 className="font-display text-lg uppercase tracking-wide text-brand">Formas de pagamento aceitas</h2>
+            <h2 className="font-display text-lg uppercase tracking-wide text-brand">{t.footer_payments_title}</h2>
             <ul className="flex flex-wrap justify-center gap-2">
               {payments.map((m) => (
                 <li key={m} className="rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-sm font-semibold text-cream transition hover:-translate-y-0.5 hover:bg-white/10">{m}</li>
               ))}
             </ul>
-            <p className="text-xs text-white/50">Pagamento e frete combinados com a nossa equipe no atendimento.</p>
+            <p className="text-xs text-white/50">{t.footer_payments_note}</p>
           </div>
         </div>
       )}
       <div className="border-t border-white/10 py-5 text-center text-xs text-white/60">
-        © {new Date().getFullYear()} {settings.store_name}. Todos os direitos reservados.
+        © {new Date().getFullYear()} {settings.store_name}. {t.footer_copyright}
       </div>
     </footer>
   );

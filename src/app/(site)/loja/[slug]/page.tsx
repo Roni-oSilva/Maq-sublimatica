@@ -6,7 +6,7 @@ import { isProductAvailable, PriceTag, ProductCard, SectionHeader } from "@/comp
 import { Gallery } from "@/components/site/gallery";
 import { OrderButton } from "@/components/site/whatsapp-buttons";
 import { Badge } from "@/components/ui/misc";
-import { getProductBySlug, getProducts, getSettings } from "@/lib/data";
+import { getContent, getProductBySlug, getProducts, getSettings } from "@/lib/data";
 import { siteUrl } from "@/lib/utils";
 
 export const revalidate = 60;
@@ -45,13 +45,13 @@ function parseSpecs(text: string | null): { label?: string; value: string }[] {
 
 export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
-  const [product, settings] = await Promise.all([getProductBySlug(slug), getSettings()]);
+  const [product, settings, c] = await Promise.all([getProductBySlug(slug), getSettings(), getContent()]);
   if (!product) notFound();
 
   const related = product.category_id
     ? (await getProducts({ categorySlug: product.category?.slug, limit: 5 })).filter((p) => p.id !== product.id).slice(0, 4)
     : [];
-  const ctx = { whatsappNumber: settings.whatsapp_number, storeName: settings.store_name };
+  const ctx = { whatsappNumber: settings.whatsapp_number, storeName: settings.store_name, t: c };
   const available = isProductAvailable(product);
   const specs = parseSpecs(product.specifications);
   const images = [product.image_url, ...product.images.map((i) => i.image_url)].filter((u): u is string => Boolean(u));
@@ -114,13 +114,15 @@ export default async function ProductPage({ params }: Props) {
             className="mt-6 w-full sm:w-auto"
             size="lg"
             whatsappNumber={ctx.whatsappNumber}
-            label={product.price_on_request || product.price === null ? "Solicitar valor pelo WhatsApp" : "Pedir pelo WhatsApp"}
+            label={product.price_on_request || product.price === null ? c.product_quote_label : c.product_order_label}
             payload={{
               kind: "product",
               id: product.id,
               path,
               input: {
                 storeName: ctx.storeName,
+                intro: c.msg_product_intro,
+                closing: c.msg_product_closing,
                 name: product.name,
                 categoryName: product.category?.name ?? null,
                 price: product.price,
@@ -130,18 +132,18 @@ export default async function ProductPage({ params }: Props) {
             }}
           />
           <p className="mt-3 text-xs text-ink-muted">
-            O WhatsApp abrirá com a mensagem pronta. Você confirma o envio por lá; disponibilidade, pagamento e frete são combinados na conversa.
+            {c.product_note}
           </p>
 
           {product.description && (
             <section className="mt-8">
-              <h2 className="text-lg font-bold">Descrição</h2>
+              <h2 className="text-2xl">{c.product_desc_title}</h2>
               <p className="mt-2 whitespace-pre-line leading-relaxed text-ink-soft">{product.description}</p>
             </section>
           )}
           {specs.length > 0 && (
             <section className="mt-8">
-              <h2 className="text-lg font-bold">Especificações técnicas</h2>
+              <h2 className="text-2xl">{c.product_specs_title}</h2>
               <dl className="mt-3 divide-y divide-line overflow-hidden rounded-xl border border-line bg-white text-sm">
                 {specs.map((s, i) => (
                   <div key={i} className="grid grid-cols-[minmax(0,40%)_1fr] gap-3 px-4 py-2.5">
@@ -157,7 +159,7 @@ export default async function ProductPage({ params }: Props) {
 
       {related.length > 0 && (
         <section className="mt-16">
-          <SectionHeader title="Produtos relacionados" href="/loja" />
+          <SectionHeader title={c.product_related_title} href="/loja" hrefLabel={c.see_all} />
           <div className="grid grid-cols-1 gap-5 min-[480px]:grid-cols-2 lg:grid-cols-4">
             {related.map((p) => (
               <ProductCard key={p.id} product={p} ctx={ctx} />

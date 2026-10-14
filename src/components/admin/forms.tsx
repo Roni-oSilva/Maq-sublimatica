@@ -3,7 +3,7 @@
 import { ImagePlus, Loader2, Trash2, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { createContext, useActionState, useContext, useEffect, useRef, useState, useTransition } from "react";
+import { createContext, startTransition, useActionState, useContext, useEffect, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { uploadImageAction, type ActionResult } from "@/app/admin/actions";
 import { Button } from "@/components/ui/button";
@@ -45,7 +45,15 @@ export function ActionForm({
 
   return (
     <ErrorsCtx.Provider value={state.fieldErrors ?? {}}>
-      <form action={formAction} className={className ?? "space-y-5"}>
+      {/* Envio manual: o React 19 limpa formulários após <form action>, o que apagaria o que a pessoa digitou quando o servidor rejeita um campo. */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const fd = new FormData(e.currentTarget);
+          startTransition(() => formAction(fd));
+        }}
+        className={className ?? "space-y-5"}
+      >
         {children}
         <div className="flex items-center gap-3 pt-2">
           <Button type="submit" disabled={pending}>
@@ -165,6 +173,21 @@ export function GalleryField({ name = "gallery", folder, defaultValue = [] }: { 
       </div>
       <p className="mt-1 text-xs text-ink-muted">Até 10 imagens. A ordem é a de envio.</p>
     </div>
+  );
+}
+
+/** Seletor de cor com campo hexadecimal sincronizado. */
+export function ColorField({ name, label, hint, defaultValue }: { name: string; label: string; hint?: string; defaultValue: string }) {
+  const [value, setValue] = useState(defaultValue);
+  const valid = /^#[0-9a-fA-F]{6}$/.test(value);
+  return (
+    <F name={name} label={label} hint={hint}>
+      <div className="flex items-center gap-3">
+        <input type="color" aria-label={`${label} (seletor)`} value={valid ? value : defaultValue} onChange={(e) => setValue(e.target.value)} className="h-11 w-14 cursor-pointer rounded-xl border border-line bg-white p-1" />
+        <input id={name} name={name} value={value} onChange={(e) => setValue(e.target.value)} maxLength={7} spellCheck={false} className="h-11 w-32 rounded-2xl border border-line bg-white px-4 font-mono text-sm" />
+        <span className="h-8 w-8 rounded-full border border-line" style={{ background: valid ? value : "transparent" }} aria-hidden />
+      </div>
+    </F>
   );
 }
 
