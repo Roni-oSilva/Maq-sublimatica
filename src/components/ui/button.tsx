@@ -4,11 +4,11 @@ import { forwardRef, type ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition disabled:pointer-events-none disabled:opacity-50 active:scale-[.98]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-bold transition disabled:pointer-events-none disabled:opacity-50 active:scale-[.98]",
   {
     variants: {
       variant: {
-        primary: "bg-brand text-white shadow-sm hover:bg-brand-dark",
+        primary: "bg-brand text-ink shadow-sm hover:bg-[#ff6a38]",
         dark: "bg-ink text-white hover:bg-ink-soft",
         whatsapp: "bg-[#128c4a] text-white shadow-sm hover:bg-[#0e7a3f]",
         outline: "border border-line bg-white text-ink hover:border-ink/30 hover:bg-paper",

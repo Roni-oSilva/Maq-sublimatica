@@ -1,6 +1,7 @@
-import { ArrowRight, Brush, Layers, MessageCircle, PackageCheck, Palette, Printer, Sparkles } from "lucide-react";
+import { ArrowRight, Brush, Coffee, Frame, Layers, MessageCircle, PackageCheck, Palette, Printer, Shirt, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { ArtworkCard, ProductCard, SectionHeader, ServiceCard } from "@/components/site/cards";
+import { Chevrons } from "@/components/site/logo";
 import { MediaImage } from "@/components/site/media";
 import { WhatsAppLink } from "@/components/site/whatsapp-buttons";
 import { buttonVariants } from "@/components/ui/button";
@@ -38,18 +39,27 @@ export default async function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-ink text-white">
-        <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-brand/40 blur-3xl" aria-hidden />
-        <div className="pointer-events-none absolute -bottom-32 left-1/3 h-80 w-80 rounded-full bg-cyan-brand/30 blur-3xl" aria-hidden />
-        <div className="container relative grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-2">
+      <section className="grain relative overflow-hidden bg-ink text-white">
+        <div className="pointer-events-none absolute -right-32 top-0 hidden h-full w-1/2 skew-x-[-12deg] bg-gradient-to-b from-brand/25 to-transparent lg:block" aria-hidden />
+        <div className="container relative grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-[1.15fr_1fr]">
           <div className="animate-fade-up">
-            <p className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-cyan-300">
+            <p className="inline-flex items-center gap-2 bg-lime px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-ink">
               <Sparkles className="h-3.5 w-3.5" aria-hidden /> Sublimação & personalização
             </p>
-            <h1 className="mt-5 text-4xl font-extrabold leading-[1.08] sm:text-5xl lg:text-6xl">
-              {hero?.title ?? "Tudo para sublimar e personalizar do seu jeito"}
-            </h1>
-            <p className="mt-5 max-w-xl text-lg text-white/75">
+            {hero ? (
+              <h1 className="mt-5 text-[clamp(2.75rem,8vw,5.75rem)] leading-[0.95] text-cream">
+                <span className="text-brand italic">{hero.title.split(" ")[0]}</span> {hero.title.split(" ").slice(1).join(" ")}
+              </h1>
+            ) : (
+              <h1 className="mt-5 text-[clamp(2.75rem,8vw,5.75rem)] leading-[0.95] text-cream">
+                <span className="block text-brand italic">Tudo para</span>
+                <span className="block">
+                  sublimar <span className="font-script text-[1.15em] normal-case text-lime">e</span>
+                </span>
+                <span className="block">personalizar</span>
+              </h1>
+            )}
+            <p className="mt-6 max-w-xl text-lg text-white/75">
               {hero?.subtitle ??
                 "Equipamentos, insumos, artes prontas e serviços sob medida. Escolha o que precisa e feche seu pedido direto no WhatsApp."}
             </p>
@@ -61,37 +71,56 @@ export default async function HomePage() {
               >
                 {hero?.cta_label ?? "Conhecer a loja"} <ArrowRight className="h-5 w-5" aria-hidden />
               </Link>
-              <Link href="/personalizar" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "border-white/25 bg-transparent text-white hover:bg-white/10")}>
+              <Link href="/personalizar" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "border-cream/40 bg-transparent text-cream hover:bg-cream/10")}>
                 Pedir orçamento
               </Link>
             </div>
           </div>
-          <div className="relative mx-auto hidden aspect-square w-full max-w-md lg:block" aria-hidden={!hero?.image_url}>
+
+          <div className="relative mx-auto hidden w-full max-w-md md:block lg:max-w-none" aria-hidden={!hero?.image_url}>
             {hero?.image_url ? (
-              <div className="relative h-full w-full overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
-                <MediaImage src={hero.image_url} alt={hero.title} sizes="448px" priority />
+              <div className="relative aspect-square overflow-hidden border-2 border-cream/20">
+                <MediaImage src={hero.image_url} alt={hero.title} sizes="480px" priority />
               </div>
             ) : (
-              <div className="grid h-full w-full grid-cols-2 gap-4">
-                {["bg-cyan-brand", "bg-brand", "bg-amber-400", "bg-white"].map((c, i) => (
-                  <div key={c} className={cn("rounded-3xl opacity-90 shadow-xl", c, i % 3 === 0 ? "rounded-tl-[4rem]" : "rounded-br-[4rem]")} />
-                ))}
+              <div className="grid aspect-square grid-cols-2 grid-rows-[1fr_auto_1fr] gap-3">
+                <div className="flex items-center justify-center bg-brand"><Coffee className="h-24 w-24 text-ink" strokeWidth={1.5} /></div>
+                <div className="flex items-center justify-center bg-cream"><Shirt className="h-24 w-24 text-ink" strokeWidth={1.5} /></div>
+                <div className="col-span-2 flex items-center justify-between bg-lime px-5 py-3 text-ink">
+                  <span className="font-display text-2xl uppercase">Do seu jeito</span>
+                  <Chevrons className="h-7 w-auto" color="#171717" />
+                </div>
+                <div className="flex items-center justify-center border-2 border-cream/40"><Frame className="h-24 w-24 text-cream" strokeWidth={1.5} /></div>
+                <div className="flex items-center justify-center bg-brand/90"><span className="font-script text-5xl text-ink">feito pra você</span></div>
               </div>
             )}
           </div>
         </div>
       </section>
 
+      {/* Faixa */}
+      <div className="overflow-hidden bg-brand py-3 text-ink" aria-hidden>
+        <div className="flex w-max animate-marquee gap-8 whitespace-nowrap font-display text-xl uppercase">
+          {[0, 1].map((k) => (
+            <div key={k} className="flex gap-8">
+              {["Sublimação", "Personalização", "Canecas", "Camisetas", "Quadros", "Brindes", "Artes prontas"].map((w) => (
+                <span key={`${k}-${w}`} className="flex items-center gap-8">{w} <Sparkles className="h-4 w-4" /></span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Benefícios */}
       <section className="border-b border-line bg-white" aria-label="Diferenciais">
         <ul className="container grid gap-6 py-8 sm:grid-cols-2 lg:grid-cols-4">
           {BENEFITS.map(({ icon: Icon, title, text }) => (
             <li key={title} className="flex gap-3">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-light text-brand">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center bg-ink text-lime">
                 <Icon className="h-5 w-5" aria-hidden />
               </span>
               <div>
-                <h2 className="text-sm font-bold">{title}</h2>
+                <h2 className="font-sans text-sm font-bold normal-case tracking-normal">{title}</h2>
                 <p className="mt-0.5 text-sm text-ink-muted">{text}</p>
               </div>
             </li>
@@ -116,7 +145,7 @@ export default async function HomePage() {
                 <div className="relative">
                   <h3 className="text-xl font-extrabold">{b.title}</h3>
                   {b.subtitle && <p className="mt-1 text-sm text-white/80">{b.subtitle}</p>}
-                  <span className="mt-2 inline-block text-sm font-semibold text-cyan-300">{b.cta_label ?? "Saiba mais"} →</span>
+                  <span className="mt-2 inline-block text-sm font-semibold text-lime">{b.cta_label ?? "Saiba mais"} →</span>
                 </div>
               </Link>
             ))}
@@ -134,9 +163,9 @@ export default async function HomePage() {
                 <li key={c.id}>
                   <Link
                     href={`/loja?categoria=${c.slug}`}
-                    className="card-lift flex h-full items-center gap-3 rounded-2xl border border-line bg-white p-4"
+                    className="card-lift group flex h-full items-center gap-3 rounded-2xl border border-line bg-white p-4"
                   >
-                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-light text-brand">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-light text-brand-text">
                       <Icon className="h-6 w-6" aria-hidden />
                     </span>
                     <span className="text-sm font-bold leading-tight">{c.name}</span>
@@ -200,11 +229,12 @@ export default async function HomePage() {
 
       {/* CTA final */}
       <section className="container mt-20">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand to-ink p-8 text-white sm:p-12">
-          <h2 className="max-w-xl text-3xl font-extrabold">Não encontrou o que procura?</h2>
-          <p className="mt-3 max-w-xl text-white/85">Conte para nós o que você quer produzir ou personalizar e receba um orçamento pelo WhatsApp.</p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/personalizar" className={cn(buttonVariants({ variant: "outline", size: "lg" }), "border-0")}>
+        <div className="grain relative overflow-hidden bg-brand p-8 text-ink sm:p-12">
+          <Chevrons className="absolute -right-4 top-6 hidden h-32 w-auto opacity-20 sm:block" color="#171717" />
+          <h2 className="max-w-2xl text-4xl leading-none sm:text-6xl">Não encontrou o que procura?</h2>
+          <p className="mt-4 max-w-xl text-lg font-medium">Conte para nós o que você quer produzir ou personalizar e receba um orçamento pelo WhatsApp.</p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Link href="/personalizar" className={cn(buttonVariants({ variant: "dark", size: "lg" }))}>
               Solicitar orçamento
             </Link>
             <WhatsAppLink number={settings.whatsapp_number} message={settings.default_whatsapp_message} size="lg" label="Chamada final da página inicial" />

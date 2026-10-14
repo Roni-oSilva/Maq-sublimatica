@@ -36,7 +36,7 @@ export function AdminSidebar({ email, storeName }: { email: string; storeName: s
               href={href}
               onClick={() => setOpen(false)}
               aria-current={active(href) ? "page" : undefined}
-              className={cn("flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-semibold", active(href) ? "bg-white text-ink" : "text-white/80 hover:bg-white/10")}
+              className={cn("flex min-h-11 items-center gap-3 rounded-xl px-3 text-sm font-semibold", active(href) ? "bg-brand text-ink" : "text-white/80 hover:bg-white/10")}
             >
               <Icon className="h-4 w-4" aria-hidden /> {label}
             </Link>

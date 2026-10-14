@@ -37,7 +37,7 @@ export function ProductCard({ product, ctx }: { product: Product; ctx: Ctx }) {
       <div className="flex flex-1 flex-col p-4">
         {product.category && <p className="text-xs font-semibold uppercase tracking-wide text-ink-muted">{product.category.name}</p>}
         <h3 className="mt-1 line-clamp-2 min-h-[2.75rem] text-base font-bold leading-snug">
-          <Link href={href} className="hover:text-brand">
+          <Link href={href} className="hover:text-brand-text">
             {product.name}
           </Link>
         </h3>
@@ -172,7 +172,7 @@ export function SectionHeader({
         <h2 className="section-title mt-1">{title}</h2>
       </div>
       {href && (
-        <Link href={href} className="text-sm font-semibold text-brand hover:underline">
+        <Link href={href} className="text-sm font-semibold text-brand-text hover:underline">
           {hrefLabel} →
         </Link>
       )}
@@ -182,13 +182,13 @@ export function SectionHeader({
 
 export function PageHero({ eyebrow, title, children }: { eyebrow: string; title: string; children?: React.ReactNode }) {
   return (
-    <section className="relative overflow-hidden bg-ink text-white">
-      <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-brand/40 blur-3xl" aria-hidden />
-      <div className="pointer-events-none absolute -bottom-24 left-10 h-60 w-60 rounded-full bg-cyan-brand/30 blur-3xl" aria-hidden />
+    <section className="grain relative overflow-hidden bg-ink text-white">
+      <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/3 skew-x-[-14deg] translate-x-16 bg-brand sm:block" aria-hidden />
+      <div className="pointer-events-none absolute bottom-0 right-[30%] hidden h-3 w-24 bg-lime sm:block" aria-hidden />
       <div className="container relative py-12 sm:py-16">
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-300">{eyebrow}</p>
-        <h1 className="mt-2 max-w-2xl text-3xl font-extrabold sm:text-4xl">{title}</h1>
-        {children && <div className="mt-3 max-w-2xl text-white/75">{children}</div>}
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-lime">{eyebrow}</p>
+        <h1 className="mt-2 max-w-2xl text-4xl leading-[1.02] text-cream sm:text-6xl">{title}</h1>
+        {children && <div className="mt-4 max-w-xl text-white/75 sm:max-w-2xl">{children}</div>}
       </div>
     </section>
   );

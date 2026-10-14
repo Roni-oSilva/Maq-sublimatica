@@ -16,12 +16,18 @@ export function Footer({ settings }: { settings: StoreSettings }) {
   const c = settings.contact_information;
   const socials = Object.entries(settings.social_links).filter(([, v]) => v);
   return (
-    <footer className="mt-24 bg-ink text-white/80">
+    <footer className="grain mt-24 bg-ink text-white/80">
+      <div className="h-2 bg-brand" aria-hidden />
       <div className="container grid gap-10 py-14 md:grid-cols-4">
         <div className="md:col-span-1">
-          <div className="flex items-center gap-2.5 font-display text-xl font-extrabold text-white">
-            <Logo /> {settings.store_name}
-          </div>
+          {settings.logo_url ? (
+            <span className="inline-flex rounded-xl bg-cream p-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={settings.logo_url} alt={settings.store_name} className="h-9 w-auto max-w-[180px] object-contain" />
+            </span>
+          ) : (
+            <Logo light className="h-11 w-auto" />
+          )}
           <p className="mt-4 text-sm leading-relaxed">
             Equipamentos, insumos, artes e serviços de sublimação e personalização. Pedidos e orçamentos pelo WhatsApp.
           </p>
@@ -29,7 +35,7 @@ export function Footer({ settings }: { settings: StoreSettings }) {
         </div>
 
         <nav aria-label="Rodapé">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-white">Navegação</h2>
+          <h2 className="font-display text-lg uppercase tracking-wide text-brand">Navegação</h2>
           <ul className="mt-4 space-y-2 text-sm">
             {NAV.map((n) => (
               <li key={n.href}>
@@ -42,7 +48,7 @@ export function Footer({ settings }: { settings: StoreSettings }) {
         </nav>
 
         <div>
-          <h2 className="text-sm font-bold uppercase tracking-wider text-white">Contato</h2>
+          <h2 className="font-display text-lg uppercase tracking-wide text-brand">Contato</h2>
           <ul className="mt-4 space-y-3 text-sm">
             {c.phone && (
               <li className="flex gap-2">
@@ -72,7 +78,7 @@ export function Footer({ settings }: { settings: StoreSettings }) {
         </div>
 
         <div>
-          <h2 className="text-sm font-bold uppercase tracking-wider text-white">Redes e políticas</h2>
+          <h2 className="font-display text-lg uppercase tracking-wide text-brand">Redes e políticas</h2>
           {socials.length > 0 && (
             <ul className="mt-4 flex flex-wrap gap-2">
               {socials.map(([key, url]) => (

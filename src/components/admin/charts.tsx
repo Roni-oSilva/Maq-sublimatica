@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import type { MonthlyStat } from "@/lib/types";
 import { monthLabel } from "@/lib/utils";
 
-const COLORS = { registered: "#14122b", confirmed: "#0a7f9c", completed: "#128c4a", quotes: "#c2185b", clicks: "#b45309" };
+const COLORS = { registered: "#171717", confirmed: "#F25623", completed: "#4d7c0f", quotes: "#F25623", clicks: "#8a8478" };
 
 function ChartCard({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
   return (

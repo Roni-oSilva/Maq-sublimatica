@@ -29,7 +29,7 @@ export default async function ArtworksAdminPage() {
                 <td className={td}>
                   <div className="flex items-center gap-3">
                     <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-paper">{a.image_url && <Image src={a.image_url} alt="" fill sizes="48px" className="object-cover" unoptimized />}</div>
-                    <Link href={`/admin/artes/${a.id}`} className="font-semibold hover:text-brand">{a.name}</Link>
+                    <Link href={`/admin/artes/${a.id}`} className="font-semibold hover:text-brand-text">{a.name}</Link>
                   </div>
                 </td>
                 <td className={`${td} font-mono`}>{a.code}</td>

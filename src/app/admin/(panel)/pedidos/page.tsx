@@ -135,7 +135,7 @@ export default async function OrdersAdminPage({ searchParams }: { searchParams: 
                         <div className="sm:col-span-2"><dt className="font-bold">Descrição</dt><dd className="whitespace-pre-line">{(d as Quote).description}</dd></div>
                         {(d as Quote).details && <div className="sm:col-span-2"><dt className="font-bold">Detalhes</dt><dd className="whitespace-pre-line">{(d as Quote).details}</dd></div>}
                         {(d as Quote).reference_url && (
-                          <div className="sm:col-span-2"><dt className="font-bold">Referência</dt><dd><a className="break-all text-brand underline" href={(d as Quote).reference_url!} target="_blank" rel="noopener noreferrer nofollow">{(d as Quote).reference_url}</a></dd></div>
+                          <div className="sm:col-span-2"><dt className="font-bold">Referência</dt><dd><a className="break-all text-brand-text underline" href={(d as Quote).reference_url!} target="_blank" rel="noopener noreferrer nofollow">{(d as Quote).reference_url}</a></dd></div>
                         )}
                       </dl>
                     )}

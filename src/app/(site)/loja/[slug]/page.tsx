@@ -82,11 +82,11 @@ export default async function ProductPage({ params }: Props) {
     <div className="container py-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <nav aria-label="Trilha" className="mb-6 flex flex-wrap items-center gap-1 text-sm text-ink-muted">
-        <Link href="/loja" className="hover:text-brand">Loja</Link>
+        <Link href="/loja" className="hover:text-brand-text">Loja</Link>
         {product.category && (
           <>
             <ChevronRight className="h-4 w-4" aria-hidden />
-            <Link href={`/loja?categoria=${product.category.slug}`} className="hover:text-brand">{product.category.name}</Link>
+            <Link href={`/loja?categoria=${product.category.slug}`} className="hover:text-brand-text">{product.category.name}</Link>
           </>
         )}
         <ChevronRight className="h-4 w-4" aria-hidden />

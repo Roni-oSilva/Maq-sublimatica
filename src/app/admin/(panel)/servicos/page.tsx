@@ -29,7 +29,7 @@ export default async function ServicesAdminPage() {
                 <td className={td}>
                   <div className="flex items-center gap-3">
                     <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-paper">{s.image_url && <Image src={s.image_url} alt="" fill sizes="48px" className="object-cover" unoptimized />}</div>
-                    <Link href={`/admin/servicos/${s.id}`} className="font-semibold hover:text-brand">{s.name}</Link>
+                    <Link href={`/admin/servicos/${s.id}`} className="font-semibold hover:text-brand-text">{s.name}</Link>
                   </div>
                 </td>
                 <td className={td}>{s.category?.name ?? "—"}</td>

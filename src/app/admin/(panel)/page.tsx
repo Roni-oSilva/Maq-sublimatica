@@ -7,7 +7,7 @@ import type { DashboardCounters, MonthlyStat } from "@/lib/types";
 
 export const metadata = { title: "Dashboard" };
 
-function Stat({ label, value, hint, icon: Icon, href, tone = "text-brand bg-brand-light" }: { label: string; value: number | string; hint?: string; icon: React.ElementType; href?: string; tone?: string }) {
+function Stat({ label, value, hint, icon: Icon, href, tone = "text-brand-text bg-brand-light" }: { label: string; value: number | string; hint?: string; icon: React.ElementType; href?: string; tone?: string }) {
   const body = (
     <div className="flex h-full items-start gap-3 rounded-2xl border border-line bg-white p-4 shadow-sm transition hover:shadow-md">
       <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${tone}`}>

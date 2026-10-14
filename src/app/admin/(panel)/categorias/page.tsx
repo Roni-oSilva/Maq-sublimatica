@@ -25,7 +25,7 @@ export default async function CategoriesAdminPage() {
           <tbody className="divide-y divide-line">
             {items.map((c) => (
               <tr key={c.id}>
-                <td className={`${td} font-semibold`}><Link href={`/admin/categorias/${c.id}`} className="hover:text-brand">{c.name}</Link></td>
+                <td className={`${td} font-semibold`}><Link href={`/admin/categorias/${c.id}`} className="hover:text-brand-text">{c.name}</Link></td>
                 <td className={td}>{KIND[c.kind]}</td>
                 <td className={`${td} font-mono text-xs`}>{c.slug}</td>
                 <td className={td}><Badge tone={c.active ? "success" : "neutral"}>{c.active ? "Ativa" : "Inativa"}</Badge></td>

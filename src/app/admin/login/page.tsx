@@ -8,9 +8,9 @@ export const metadata: Metadata = { title: "Entrar — Administração", robots:
 export default async function LoginPage({ searchParams }: { searchParams: Promise<{ next?: string; erro?: string }> }) {
   const sp = await searchParams;
   return (
-    <div className="flex min-h-screen items-center justify-center bg-ink p-4">
+    <div className="admin-area flex min-h-screen items-center justify-center bg-ink p-4">
       <div className="w-full max-w-sm rounded-3xl bg-white p-7 shadow-2xl">
-        <Logo className="h-12 w-12" />
+        <Logo className="h-12 w-auto" />
         <h1 className="mt-4 text-2xl font-extrabold">Área administrativa</h1>
         <p className="mt-1 text-sm text-ink-muted">Acesso restrito a administradores.</p>
         {sp.erro === "forbidden" && (

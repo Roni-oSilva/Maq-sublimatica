@@ -40,7 +40,7 @@ export default async function ArtworksPage({ searchParams }: { searchParams: Pro
         {artworks.length === 0 ? (
           <div className="mt-6">
             <EmptyState title="Nenhuma arte disponível no momento">
-              Precisa de uma arte exclusiva? <Link href="/personalizar" className="font-semibold text-brand underline">Peça um orçamento</Link>.
+              Precisa de uma arte exclusiva? <Link href="/personalizar" className="font-semibold text-brand-text underline">Peça um orçamento</Link>.
             </EmptyState>
           </div>
         ) : (

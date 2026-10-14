@@ -28,7 +28,7 @@ export default async function BannersAdminPage() {
                 <td className={td}>
                   <div className="flex items-center gap-3">
                     <div className="relative h-12 w-16 overflow-hidden rounded-lg bg-paper">{b.image_url && <Image src={b.image_url} alt="" fill sizes="64px" className="object-cover" unoptimized />}</div>
-                    <Link href={`/admin/banners/${b.id}`} className="font-semibold hover:text-brand">{b.title}</Link>
+                    <Link href={`/admin/banners/${b.id}`} className="font-semibold hover:text-brand-text">{b.title}</Link>
                   </div>
                 </td>
                 <td className={td}>{b.display_order}</td>

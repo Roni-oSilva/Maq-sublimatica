@@ -28,15 +28,14 @@ export function Header({
   const wa = whatsappNumber ? buildWhatsappUrl(whatsappNumber, defaultMessage) : null;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line bg-white/90 backdrop-blur">
-      <div className="container flex h-16 items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-2.5 font-display text-lg font-extrabold" aria-label={`${storeName} — página inicial`}>
+    <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
+      <div className="container flex h-[72px] items-center justify-between gap-4">
+        <Link href="/" className="flex shrink-0 items-center" aria-label={`${storeName} — página inicial`}>
           {logoUrl ? (
-            <Image src={logoUrl} alt="" width={40} height={40} className="h-10 w-10 rounded-lg object-contain" />
+            <Image src={logoUrl} alt={storeName} width={160} height={40} className="h-10 w-auto max-w-[180px] object-contain" />
           ) : (
-            <Logo />
+            <Logo className="h-9 w-auto sm:h-10" />
           )}
-          <span className="hidden sm:inline">{storeName}</span>
         </Link>
 
         <nav aria-label="Principal" className="hidden lg:block">
@@ -48,7 +47,7 @@ export function Header({
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className={cn(
                     "rounded-lg px-3.5 py-2 text-sm font-semibold transition hover:bg-ink/5",
-                    isActive(item.href) ? "bg-brand-light text-brand-dark" : "text-ink-soft",
+                    isActive(item.href) ? "bg-ink text-white" : "text-ink-soft",
                   )}
                 >
                   {item.label}
@@ -96,7 +95,7 @@ export function Header({
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className={cn(
                     "flex min-h-12 items-center rounded-xl px-4 text-base font-semibold",
-                    isActive(item.href) ? "bg-brand-light text-brand-dark" : "hover:bg-ink/5",
+                    isActive(item.href) ? "bg-ink text-white" : "hover:bg-ink/5",
                   )}
                 >
                   {item.label}

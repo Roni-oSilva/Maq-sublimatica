@@ -37,7 +37,7 @@ export default async function ProductsAdminPage() {
                         {p.image_url && <Image src={p.image_url} alt="" fill sizes="48px" className="object-cover" unoptimized />}
                       </div>
                       <div>
-                        <Link href={`/admin/produtos/${p.id}`} className="font-semibold hover:text-brand">{p.name}</Link>
+                        <Link href={`/admin/produtos/${p.id}`} className="font-semibold hover:text-brand-text">{p.name}</Link>
                         <p className="text-xs text-ink-muted">/loja/{p.slug}</p>
                       </div>
                     </div>

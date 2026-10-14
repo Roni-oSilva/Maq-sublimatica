@@ -90,7 +90,7 @@ export default async function ShopPage({ searchParams }: { searchParams: SP }) {
           <div className="mt-4">
             <EmptyState title={filtered ? "Nenhum produto encontrado" : "Nenhum produto cadastrado ainda"}>
               {filtered ? (
-                <>Tente outra busca ou <Link href="/loja" className="font-semibold text-brand underline">limpe os filtros</Link>.</>
+                <>Tente outra busca ou <Link href="/loja" className="font-semibold text-brand-text underline">limpe os filtros</Link>.</>
               ) : (
                 "Em breve novos produtos. Fale conosco ou peça um orçamento personalizado."
               )}

@@ -51,7 +51,7 @@ export function Field({
     <div className={className}>
       <Label htmlFor={htmlFor}>
         {label}
-        {required && <span className="text-brand" aria-hidden> *</span>}
+        {required && <span className="text-brand-text" aria-hidden> *</span>}
       </Label>
       {children}
       {hint && !error && <p className="mt-1 text-xs text-ink-muted">{hint}</p>}
@@ -67,7 +67,7 @@ export function Field({
 export function Checkbox({ label, className, ...props }: InputHTMLAttributes<HTMLInputElement> & { label: string }) {
   return (
     <label className={cn("flex min-h-11 cursor-pointer items-center gap-3 text-sm font-medium", className)}>
-      <input type="checkbox" className="h-5 w-5 rounded border-line accent-[#c2185b]" {...props} />
+      <input type="checkbox" className="h-5 w-5 rounded border-line accent-[#F25623]" {...props} />
       {label}
     </label>
   );

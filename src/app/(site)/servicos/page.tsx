@@ -28,7 +28,7 @@ export default async function ServicesPage() {
       <div className="container mt-10 space-y-12">
         {services.length === 0 ? (
           <EmptyState title="Serviços em breve">
-            Enquanto isso, <Link href="/personalizar" className="font-semibold text-brand underline">descreva o que você precisa</Link> e receba um orçamento.
+            Enquanto isso, <Link href="/personalizar" className="font-semibold text-brand-text underline">descreva o que você precisa</Link> e receba um orçamento.
           </EmptyState>
         ) : (
           [...groups.entries()].map(([name, list]) => (
