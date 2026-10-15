@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import { loginAction, type ActionResult } from "../actions";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,9 @@ export function LoginForm({ next }: { next: string }) {
       <Button type="submit" className="w-full" disabled={pending}>
         {pending && <Spinner />} Entrar
       </Button>
+      <p className="text-center text-sm">
+        <Link href="/admin/esqueci-senha" className="font-semibold text-brand-text hover:underline">Esqueci minha senha</Link>
+      </p>
     </form>
   );
 }

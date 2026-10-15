@@ -54,6 +54,14 @@ Outros comandos: `npm run build`, `npm start`, `npm run typecheck`, `npm test`.
 - **Banco (PGlite):** aplica as migrações reais em um Postgres em memória (com stubs de `auth`/`storage`) e verifica RLS, constraints, `register_order`/`register_quote`, cálculo de total no servidor, série mensal com zeros e bloqueio de não-admins.
 - **Unidade:** mensagens e links do WhatsApp (codificação, sob consulta, protocolo), validação do número, schemas Zod, upload de imagens, formatação.
 
+## Senha do administrador
+
+- **Esqueci minha senha:** na tela de login do `/admin`. O sistema envia um e-mail com um link para criar a nova senha.
+  Para o link funcionar, no Supabase vá em **Authentication → URL Configuration**: em **Site URL** coloque o endereço do site e, em **Redirect URLs**, adicione `https://SEU-SITE/**`.
+- **Trocar a senha logado:** Admin → **Minha conta e senha** (pede a senha atual).
+- O Supabase limita o envio de e-mails no plano gratuito (poucos por hora). Para uso intenso, configure um SMTP próprio em Authentication → Emails.
+- Alternativa sem e-mail: Supabase → Authentication → Users → ⋯ → redefinir a senha do usuário.
+
 ## Notas operacionais
 
 - Os gráficos usam `admin_monthly_stats` (tabelas reais). “Confirmados/Concluídos” refletem o **status atual** dos pedidos criados em cada mês.

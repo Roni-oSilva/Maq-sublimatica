@@ -227,6 +227,20 @@ export const recordUpdateSchema = z.object({
   total_amount: money.optional(),
 });
 
+export const PASSWORD_MIN = 8;
+
+/** Nova senha + confirmação (mínimo 8 caracteres, com letra e número). */
+export const newPasswordSchema = z
+  .object({
+    password: z
+      .string({ message: "Informe a nova senha." })
+      .min(PASSWORD_MIN, `A senha deve ter ao menos ${PASSWORD_MIN} caracteres.`)
+      .max(72, "A senha deve ter no máximo 72 caracteres.")
+      .refine((v) => /[A-Za-z]/.test(v) && /\d/.test(v), "Use letras e números na senha."),
+    confirm: z.string(),
+  })
+  .refine((v) => v.password === v.confirm, { path: ["confirm"], message: "As senhas não conferem." });
+
 export function ensureSlug(slug: string | undefined, name: string): string {
   return slugify(slug && slug.trim() ? slug : name) || "item";
 }

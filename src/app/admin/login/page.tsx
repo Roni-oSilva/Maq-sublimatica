@@ -16,6 +16,11 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         {sp.erro === "forbidden" && (
           <p role="alert" className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-800">Sua conta não tem permissão de administrador.</p>
         )}
+        {sp.erro === "link" && (
+          <p role="alert" className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-800">
+            Link inválido ou expirado. Peça um novo em “Esqueci minha senha”.
+          </p>
+        )}
         {!isSupabaseConfigured() && (
           <p role="alert" className="mt-4 rounded-xl bg-amber-50 p-3 text-sm text-amber-900">
             Supabase não configurado. Defina as variáveis de ambiente (veja o README).

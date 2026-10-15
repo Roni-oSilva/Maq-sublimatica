@@ -1,6 +1,7 @@
 "use server";
 
 import { randomUUID } from "node:crypto";
+import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { z } from "zod";
@@ -16,6 +17,7 @@ import {
   clientSchema,
   ensureSlug,
   flattenErrors,
+  newPasswordSchema,
   productSchema,
   recordUpdateSchema,
   serviceSchema,
@@ -77,6 +79,54 @@ export async function loginAction(_: ActionResult, fd: FormData): Promise<Action
   }
   const next = String(fd.get("next") ?? "");
   redirect(next.startsWith("/admin") && !next.startsWith("//") ? next : "/admin");
+}
+
+/** Envia o e-mail de redefinição. Sempre responde “ok” para não revelar se o e-mail existe. */
+export async function requestPasswordResetAction(_: ActionResult, fd: FormData): Promise<ActionResult> {
+  if (!isSupabaseConfigured()) return fail("Supabase não configurado (variáveis de ambiente ausentes).");
+  const email = String(fd.get("email") ?? "").trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return fail("Informe um e-mail válido.");
+  const base = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") || (await headers()).get("origin") || "";
+  const supabase = await createServerSupabase();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${base}/admin/auth/confirm?next=/admin/redefinir-senha`,
+  });
+  if (error) console.error("[resetPasswordForEmail]", error.message);
+  if (error && /rate limit|too many|seconds/i.test(error.message)) {
+    return fail("Muitas tentativas. Aguarde alguns minutos e tente de novo.");
+  }
+  return { ok: true };
+}
+
+/** Define a nova senha após clicar no link do e-mail (a sessão de recuperação já está ativa). */
+export async function resetPasswordAction(_: ActionResult, fd: FormData): Promise<ActionResult> {
+  const parsed = newPasswordSchema.safeParse({ password: fd.get("password"), confirm: fd.get("confirm") });
+  if (!parsed.success) return fail("Revise os campos destacados.", flattenErrors(parsed.error));
+  const supabase = await createServerSupabase();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return fail("O link expirou. Peça um novo em “Esqueci minha senha”.");
+  const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
+  if (error) return fail(/same|different/i.test(error.message) ? "A nova senha deve ser diferente da atual." : "Não foi possível alterar a senha. Tente novamente.");
+  redirect("/admin");
+}
+
+/** Troca de senha dentro do painel: exige a senha atual. */
+export async function changePasswordAction(_: ActionResult, fd: FormData): Promise<ActionResult> {
+  return guard(async () => {
+    const { supabase, user } = await assertAdmin();
+    const current = String(fd.get("current") ?? "");
+    const parsed = newPasswordSchema.safeParse({ password: fd.get("password"), confirm: fd.get("confirm") });
+    if (!current) return fail("Informe a senha atual.", { current: "Informe a senha atual." });
+    if (!parsed.success) return fail("Revise os campos destacados.", flattenErrors(parsed.error));
+    if (parsed.data.password === current) return fail("A nova senha deve ser diferente da atual.", { password: "Escolha uma senha diferente da atual." });
+    const check = await supabase.auth.signInWithPassword({ email: user.email ?? "", password: current });
+    if (check.error) return fail("A senha atual está incorreta.", { current: "Senha atual incorreta." });
+    const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
+    if (error) return fail("Não foi possível alterar a senha. Tente novamente.");
+    return { ok: true };
+  }) as Promise<ActionResult>;
 }
 
 export async function logoutAction() {

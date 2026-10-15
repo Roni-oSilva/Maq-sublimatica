@@ -92,3 +92,15 @@ describe("validação de imagens", () => {
     expect(validateImage(png).ok).toBe(true);
   });
 });
+
+import { newPasswordSchema } from "@/lib/validation";
+
+describe("nova senha", () => {
+  it("exige 8+ caracteres, letras e números, e confirmação igual", () => {
+    expect(newPasswordSchema.safeParse({ password: "abc12", confirm: "abc12" }).success).toBe(false);
+    expect(newPasswordSchema.safeParse({ password: "somenteletras", confirm: "somenteletras" }).success).toBe(false);
+    expect(newPasswordSchema.safeParse({ password: "12345678", confirm: "12345678" }).success).toBe(false);
+    expect(newPasswordSchema.safeParse({ password: "senha1234", confirm: "senha9999" }).success).toBe(false);
+    expect(newPasswordSchema.safeParse({ password: "Maq@2026ok", confirm: "Maq@2026ok" }).success).toBe(true);
+  });
+});
