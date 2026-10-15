@@ -54,6 +54,31 @@ beforeAll(async () => {
       ('44444444-4444-4444-4444-444444444444', 'Inativo', 'inativo', 10, false);`);
 }, 60_000);
 
+describe("setup-completo.sql", () => {
+  it("está atualizado em relação às migrações (rode `npm run db:bundle`)", async () => {
+    const { buildBundle } = await import("../../scripts/bundle-sql.mjs");
+    expect(readFileSync(join(process.cwd(), "supabase/setup-completo.sql"), "utf8")).toBe(buildBundle());
+  });
+
+  it("roda inteiro, de uma vez, em um banco limpo", async () => {
+    const fresh = new PGlite();
+    await fresh.exec(`
+      create role anon nologin; create role authenticated nologin;
+      create schema auth; create schema storage;
+      create table auth.users (id uuid primary key);
+      create function auth.uid() returns uuid language sql stable as $$ select null::uuid $$;
+      create table storage.buckets (id text primary key, name text, public boolean, file_size_limit bigint, allowed_mime_types text[]);
+      create table storage.objects (id uuid default gen_random_uuid(), bucket_id text, name text);
+      alter table storage.objects enable row level security;
+      grant usage on schema public, auth, storage to anon, authenticated;
+    `);
+    await fresh.exec(readFileSync(join(process.cwd(), "supabase/setup-completo.sql"), "utf8"));
+    const r = await fresh.query<{ n: number }>("select count(*)::int as n from public.clients");
+    expect(r.rows[0].n).toBe(5);
+    await fresh.close();
+  });
+});
+
 describe("RLS", () => {
   it("visitante lê só produtos ativos", async () => {
     await as("anon", null, async () => {

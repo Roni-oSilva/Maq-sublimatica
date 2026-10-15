@@ -20,10 +20,7 @@ Loja profissional (Next.js 15 + TypeScript + Tailwind + Supabase) em que **todo 
 ## 1. Configurar o Supabase
 
 1. Crie um projeto em <https://supabase.com>.
-2. No **SQL Editor**, execute **na ordem** os arquivos de `supabase/migrations/`:
-   `20260101000000_schema.sql` → `…0100_rls.sql` → `…0200_functions.sql` → `…0300_storage.sql` → `…0400_clients_banners.sql` → `…0500_initial_content.sql` → `…0600_site_content.sql`
-   (a última carrega o conteúdo do site anterior: endereço, telefone, horário, formas de pagamento, 2 banners promocionais e a lista de clientes — tudo editável no painel)
-   (ou, com a Supabase CLI: `supabase link --project-ref SEU_REF && supabase db push`).
+2. No **SQL Editor** (menu lateral), clique em **New query**, cole **todo** o conteúdo do arquivo `supabase/setup-completo.sql` e clique em **Run**. Ele junta todas as migrações (tabelas, segurança, funções, imagens, clientes, conteúdo inicial). Rode uma vez só. (Alternativa avançada: aplicar os arquivos de `supabase/migrations/` na ordem numérica; regenere o arquivo único com `npm run db:bundle`.)
 3. *(Opcional)* execute `supabase/seed.sql` para dados de exemplo.
 4. **Authentication → Users → Add user**: crie o administrador (e-mail + senha). Em **Authentication → Providers → Email**, desative “Allow new users to sign up” (o painel não tem cadastro público).
 5. Autorize esse usuário como administrador (SQL Editor):
