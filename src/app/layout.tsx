@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Anton, Poppins, Yellowtail } from "next/font/google";
 import { Toaster } from "sonner";
+import { AuthLinkHandler } from "@/components/auth-link-handler";
 import { themeVars } from "@/lib/content";
 import { getContent, getSettings } from "@/lib/data";
 import { siteUrl } from "@/lib/utils";
@@ -30,6 +31,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="pt-BR" className={`${sans.variable} ${display.variable} ${script.variable}`} style={style} {...(c.placeholder_image ? { "data-ph-custom": "" } : {})}>
       <body className="min-h-screen font-sans">
+        <AuthLinkHandler />
         {children}
         <Toaster position="top-center" richColors closeButton />
       </body>
