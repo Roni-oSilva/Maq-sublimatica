@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { DEFAULT_CONTENT, mergeContent, type SiteContent } from "./content";
 import { createPublicClient } from "./supabase/public";
@@ -25,7 +26,7 @@ function unwrap<T>(res: { data: T | null; error: { message: string } | null }, f
 }
 
 /** Textos, links, imagens e cores editáveis (padrões + valores salvos). Nunca derruba o site. */
-export const getContent = cache(async (): Promise<SiteContent> => {
+async function getContentRaw(): Promise<SiteContent> {
   const db = createPublicClient();
   if (!db) return DEFAULT_CONTENT;
   const { data, error } = await db.from("site_content").select("key, value");
@@ -34,9 +35,9 @@ export const getContent = cache(async (): Promise<SiteContent> => {
     return DEFAULT_CONTENT;
   }
   return mergeContent(data);
-});
+}
 
-export async function getSettings(): Promise<StoreSettings> {
+async function getSettingsRaw(): Promise<StoreSettings> {
   const db = createPublicClient();
   if (!db) return DEFAULT_SETTINGS;
   const res = await db.from("store_settings").select("*").eq("id", 1).maybeSingle();
@@ -44,19 +45,19 @@ export async function getSettings(): Promise<StoreSettings> {
   return row ? ({ ...DEFAULT_SETTINGS, ...row } as StoreSettings) : DEFAULT_SETTINGS;
 }
 
-export async function getBanners(): Promise<Banner[]> {
+async function getBannersRaw(): Promise<Banner[]> {
   const db = createPublicClient();
   if (!db) return [];
   return unwrap(await db.from("banners").select("*").eq("active", true).order("display_order").order("created_at"), []);
 }
 
-export async function getClients(): Promise<Client[]> {
+async function getClientsRaw(): Promise<Client[]> {
   const db = createPublicClient();
   if (!db) return [];
   return unwrap(await db.from("clients").select("*").eq("active", true).order("display_order").order("created_at"), []);
 }
 
-export async function getCategories(kind: CategoryKind = "product"): Promise<Category[]> {
+async function getCategoriesRaw(kind: CategoryKind = "product"): Promise<Category[]> {
   const db = createPublicClient();
   if (!db) return [];
   return unwrap(
@@ -67,8 +68,10 @@ export async function getCategories(kind: CategoryKind = "product"): Promise<Cat
 
 export type ProductSort = "relevance" | "price_asc" | "price_desc" | "newest";
 
-export async function getProducts(opts: {
+async function getProductsRaw(opts: {
   categorySlug?: string;
+  /** Id da categoria já conhecido: evita a consulta extra para achar o slug. */
+  categoryId?: string;
   q?: string;
   sort?: ProductSort;
   featured?: boolean;
@@ -77,8 +80,8 @@ export async function getProducts(opts: {
   const db = createPublicClient();
   if (!db) return [];
 
-  let categoryId: string | undefined;
-  if (opts.categorySlug) {
+  let categoryId: string | undefined = opts.categoryId;
+  if (!categoryId && opts.categorySlug) {
     const cat = unwrap(
       await db.from("categories").select("id").eq("kind", "product").eq("slug", opts.categorySlug).eq("active", true).maybeSingle(),
       null,
@@ -109,23 +112,21 @@ export async function getProducts(opts: {
   return unwrap(await query, []) as Product[];
 }
 
-export async function getProductBySlug(slug: string): Promise<(Product & { images: ProductImage[] }) | null> {
+async function getProductBySlugRaw(slug: string): Promise<(Product & { images: ProductImage[] }) | null> {
   const db = createPublicClient();
   if (!db) return null;
-  const product = unwrap(
-    await db.from("products").select(PRODUCT_SELECT).eq("slug", slug).eq("active", true).maybeSingle(),
+  // Produto, categoria e galeria em UMA consulta (antes eram duas, em sequência).
+  const row = unwrap(
+    await db.from("products").select(`${PRODUCT_SELECT}, images:product_images(*)`).eq("slug", slug).eq("active", true).maybeSingle(),
     null,
-  ) as Product | null;
-  if (!product) return null;
-  const images = unwrap(
-    await db.from("product_images").select("*").eq("product_id", product.id).order("display_order"),
-    [],
-  ) as ProductImage[];
-  return { ...product, images };
+  ) as (Product & { images?: ProductImage[] }) | null;
+  if (!row) return null;
+  const images = [...(row.images ?? [])].sort((x, y) => x.display_order - y.display_order);
+  return { ...row, images };
 }
 
 /** Mais procurados = mais cliques/pedidos recentes; completa com os destaques. */
-export async function getPopularProducts(limit = 4): Promise<Product[]> {
+async function getPopularProductsRaw(limit = 4): Promise<Product[]> {
   const db = createPublicClient();
   if (!db) return [];
   const ids = unwrap(await db.rpc("popular_products", { p_limit: limit }), [] as string[]) as string[];
@@ -135,12 +136,12 @@ export async function getPopularProducts(limit = 4): Promise<Product[]> {
     popular = ids.map((id) => rows.find((r) => r.id === id)).filter((p): p is Product => Boolean(p));
   }
   if (popular.length >= limit) return popular;
-  const featured = await getProducts({ featured: true, limit: limit * 2 });
+  const featured = await getProductsRaw({ featured: true, limit: limit * 2 });
   const seen = new Set(popular.map((p) => p.id));
   return [...popular, ...featured.filter((p) => !seen.has(p.id))].slice(0, limit);
 }
 
-export async function getArtworks(opts: { categorySlug?: string; q?: string; limit?: number } = {}): Promise<Artwork[]> {
+async function getArtworksRaw(opts: { categorySlug?: string; q?: string; limit?: number } = {}): Promise<Artwork[]> {
   const db = createPublicClient();
   if (!db) return [];
   let query = db.from("artworks").select("*, category:categories(id, name, slug)").eq("active", true);
@@ -158,7 +159,7 @@ export async function getArtworks(opts: { categorySlug?: string; q?: string; lim
   return unwrap(await query, []) as Artwork[];
 }
 
-export async function getServices(): Promise<Service[]> {
+async function getServicesRaw(): Promise<Service[]> {
   const db = createPublicClient();
   if (!db) return [];
   return unwrap(
@@ -166,3 +167,27 @@ export async function getServices(): Promise<Service[]> {
     [],
   ) as Service[];
 }
+
+
+// ---------------------------------------------------------------------------
+// Cache: as leituras públicas são iguais para todos os visitantes, então ficam guardadas
+// por 60 s (em vez de consultar o Supabase a cada visita). O painel invalida a tag "site"
+// ao salvar qualquer coisa, então as mudanças aparecem na hora.
+// ---------------------------------------------------------------------------
+export const SITE_CACHE_TAG = "site";
+export const SITE_CACHE_SECONDS = 60;
+
+function cached<A extends unknown[], R>(name: string, fn: (...args: A) => Promise<R>) {
+  return unstable_cache(fn, ["site-data", name], { revalidate: SITE_CACHE_SECONDS, tags: [SITE_CACHE_TAG] });
+}
+
+export const getContent = cache(cached("content", getContentRaw));
+export const getSettings = cache(cached("settings", getSettingsRaw));
+export const getBanners = cached("banners", getBannersRaw);
+export const getClients = cached("clients", getClientsRaw);
+export const getCategories = cached("categories", getCategoriesRaw);
+export const getProducts = cached("products", getProductsRaw);
+export const getProductBySlug = cached("product-by-slug", getProductBySlugRaw);
+export const getPopularProducts = cached("popular", getPopularProductsRaw);
+export const getArtworks = cached("artworks", getArtworksRaw);
+export const getServices = cached("services", getServicesRaw);

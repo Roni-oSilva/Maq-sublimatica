@@ -11,6 +11,11 @@ import { siteUrl } from "@/lib/utils";
 
 export const revalidate = 60;
 
+/** Sem pré-gerar nada no build: cada produto vira página estática na 1ª visita e é renovada a cada 60 s. */
+export async function generateStaticParams() {
+  return [];
+}
+
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -49,7 +54,7 @@ export default async function ProductPage({ params }: Props) {
   if (!product) notFound();
 
   const related = product.category_id
-    ? (await getProducts({ categorySlug: product.category?.slug, limit: 5 })).filter((p) => p.id !== product.id).slice(0, 4)
+    ? (await getProducts({ categoryId: product.category_id, limit: 5 })).filter((p) => p.id !== product.id).slice(0, 4)
     : [];
   const ctx = { whatsappNumber: settings.whatsapp_number, storeName: settings.store_name, t: c };
   const available = isProductAvailable(product);

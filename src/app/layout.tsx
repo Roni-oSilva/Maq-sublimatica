@@ -7,7 +7,7 @@ import { getContent, getSettings } from "@/lib/data";
 import { siteUrl } from "@/lib/utils";
 import "./globals.css";
 
-const sans = Poppins({ subsets: ["latin"], variable: "--font-sans", display: "swap", weight: ["400", "500", "600", "700", "800"] });
+const sans = Poppins({ subsets: ["latin"], variable: "--font-sans", display: "swap", weight: ["400", "500", "600", "700"] });
 const display = Anton({ subsets: ["latin"], variable: "--font-display", display: "swap", weight: "400" });
 const script = Yellowtail({ subsets: ["latin"], variable: "--font-script", display: "swap", weight: "400" });
 

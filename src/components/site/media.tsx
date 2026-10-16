@@ -45,7 +45,7 @@ export function MediaImage({
       fill
       sizes={sizes}
       priority={priority}
-      unoptimized={!isOwnStorage(src)}
+      unoptimized={!src.startsWith("/") && !isOwnStorage(src)}
       className={cn(fit === "cover" ? "object-cover" : "object-contain", className)}
     />
   );

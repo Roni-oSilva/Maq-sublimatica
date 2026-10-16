@@ -26,7 +26,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       />
       <ScrollProgress />
       <RevealObserver />
-      <main id="conteudo" className="animate-fade-up">{children}</main>
+      <main id="conteudo">{children}</main>
       <Footer settings={settings} t={c} />
       {settings.whatsapp_number && (
         <div className="pulse-ring fixed bottom-4 right-4 z-30 rounded-full sm:bottom-6 sm:right-6">

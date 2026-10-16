@@ -53,8 +53,8 @@ export default async function HomePage() {
             )}
             {!heroImage && (
               <>
-                <div className="orb -left-24 top-10 h-80 w-80 bg-brand/35" aria-hidden />
-                <div className="orb -right-10 bottom-0 h-72 w-72 bg-lime/20 [animation-delay:-6s]" aria-hidden />
+                <div className="orb -left-32 -top-10 h-[28rem] w-[28rem] text-brand" aria-hidden />
+                <div className="orb -bottom-24 -right-24 h-96 w-96 text-lime opacity-25" aria-hidden />
                 <Parallax className="pointer-events-none absolute inset-0 hidden lg:block" >
                   <div data-depth="1.2" className="absolute left-[7%] top-[34%]"><div className="float-a flex h-36 w-36 items-center justify-center rounded-[2rem] bg-brand"><Coffee className="h-16 w-16 text-ink" strokeWidth={1.5} /></div></div>
                   <div data-depth="0.7" className="absolute bottom-[9%] left-[8%]"><div className="float-b flex h-28 w-28 items-center justify-center rounded-[1.75rem] bg-cream"><Shirt className="h-12 w-12 text-ink" strokeWidth={1.5} /></div></div>

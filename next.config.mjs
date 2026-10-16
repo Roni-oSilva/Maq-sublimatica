@@ -15,7 +15,10 @@ const nextConfig = {
     serverActions: { bodySizeLimit: "5mb" },
   },
   async headers() {
+    const assetCache = [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }];
     return [
+      { source: "/clients/:path*", headers: assetCache },
+      { source: "/(logo|logo-light|logo-mark).png", headers: assetCache },
       {
         source: "/(.*)",
         headers: [

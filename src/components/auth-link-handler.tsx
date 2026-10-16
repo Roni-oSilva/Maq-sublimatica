@@ -1,6 +1,5 @@
 "use client";
 
-import { createBrowserClient } from "@supabase/ssr";
 import { useEffect } from "react";
 
 /**
@@ -29,11 +28,11 @@ export function AuthLinkHandler() {
       const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
       if (!url || !key) return;
-      createBrowserClient(url, key)
-        .auth.setSession({ access_token: access, refresh_token: refresh })
-        .then(({ error }) => {
-          window.location.replace(error ? "/admin/login?erro=link" : "/admin/redefinir-senha");
-        });
+      // Importação sob demanda: a biblioteca do Supabase só é baixada neste caso raro.
+      import("@supabase/ssr")
+        .then(({ createBrowserClient }) => createBrowserClient(url, key).auth.setSession({ access_token: access, refresh_token: refresh }))
+        .then(({ error }) => window.location.replace(error ? "/admin/login?erro=link" : "/admin/redefinir-senha"))
+        .catch(() => window.location.replace("/admin/login?erro=link"));
       return;
     }
 

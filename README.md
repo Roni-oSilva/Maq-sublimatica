@@ -54,6 +54,13 @@ Outros comandos: `npm run build`, `npm start`, `npm run typecheck`, `npm test`.
 - **Banco (PGlite):** aplica as migrações reais em um Postgres em memória (com stubs de `auth`/`storage`) e verifica RLS, constraints, `register_order`/`register_quote`, cálculo de total no servidor, série mensal com zeros e bloqueio de não-admins.
 - **Unidade:** mensagens e links do WhatsApp (codificação, sob consulta, protocolo), validação do número, schemas Zod, upload de imagens, formatação.
 
+## Desempenho
+
+- As leituras públicas do Supabase ficam em cache por 60 s (`src/lib/data.ts`) e o painel invalida o cache ao salvar, então as mudanças aparecem na hora.
+- `vercel.json` fixa as funções na região `gru1` (São Paulo), a mesma região recomendada para o Supabase. Se o seu projeto Supabase estiver em outra região, ajuste esse valor.
+- Páginas de produto são geradas sob demanda e ficam estáticas (renovam a cada 60 s). Imagens passam pelo otimizador do Next (WebP e tamanho certo).
+- Dica: envie fotos de produto com até ~1.500 px de largura; o limite de 4 MB é só um teto.
+
 ## Diagnóstico da instalação
 
 Abra `/admin/diagnostico` (sem precisar de login): a página confere, de cima para baixo, as variáveis de ambiente, a conexão com o Supabase, se o banco foi instalado e se existe um administrador, e diz como resolver cada item. Ela nunca mostra chaves nem dados do banco.

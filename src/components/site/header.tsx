@@ -33,7 +33,7 @@ export function Header({
   const wa = whatsappNumber ? buildWhatsappUrl(whatsappNumber, defaultMessage) : null;
 
   return (
-    <header className={cn("sticky top-0 z-40 border-b bg-white/95 backdrop-blur transition-shadow duration-300", scrolled ? "border-transparent shadow-lg shadow-ink/10" : "border-line")}>
+    <header className={cn("sticky top-0 z-40 border-b bg-white transition-shadow duration-300", scrolled ? "border-transparent shadow-lg shadow-ink/10" : "border-line")}>
       <div className={cn("container flex items-center justify-between gap-4 transition-all duration-300", scrolled ? "h-14" : "h-[72px]")}>
         <Link href="/" className="flex shrink-0 items-center" aria-label={`${storeName} — página inicial`}>
           {logoUrl ? (

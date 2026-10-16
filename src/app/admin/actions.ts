@@ -2,7 +2,7 @@
 
 import { randomUUID } from "node:crypto";
 import { headers } from "next/headers";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import type { z } from "zod";
 import { assertAdmin } from "@/lib/admin";
@@ -45,6 +45,7 @@ function dbError(message: string): string {
 }
 
 function refresh() {
+  revalidateTag("site"); // cache das consultas públicas (src/lib/data.ts)
   revalidatePath("/", "layout");
 }
 
