@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
 /** Renova a sessão e bloqueia /admin para quem não está autenticado. */
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const isLogin = ["/admin/login", "/admin/esqueci-senha", "/admin/auth/confirm"].includes(pathname);
+  const isLogin = ["/admin/login", "/admin/esqueci-senha", "/admin/auth/confirm", "/admin/diagnostico"].includes(pathname);
 
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return isLogin ? NextResponse.next() : NextResponse.redirect(new URL("/admin/login", request.url));

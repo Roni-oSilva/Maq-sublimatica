@@ -27,6 +27,9 @@ export function LoginForm({ next }: { next: string }) {
       <p className="text-center text-sm">
         <Link href="/admin/esqueci-senha" className="font-semibold text-brand-text hover:underline">Esqueci minha senha</Link>
       </p>
+      <p className="text-center text-xs text-ink-muted">
+        Problemas para entrar? <Link href="/admin/diagnostico" className="font-semibold underline">Ver diagnóstico</Link>
+      </p>
     </form>
   );
 }

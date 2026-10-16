@@ -153,6 +153,15 @@ describe("clientes, banners e conteúdo inicial", () => {
   });
 });
 
+describe("setup_status", () => {
+  it("informa apenas se há administrador e configurações, inclusive para visitantes", async () => {
+    await as("anon", null, async () => {
+      const r = await db.query<{ s: { has_admin: boolean; has_settings: boolean } }>("select public.setup_status() as s");
+      expect(r.rows[0].s).toEqual({ has_admin: true, has_settings: true });
+    });
+  });
+});
+
 describe("site_content", () => {
   it("visitante lê, não escreve; admin escreve; chave inválida é rejeitada", async () => {
     await as("authenticated", ADMIN, async () => {

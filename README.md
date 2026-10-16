@@ -54,6 +54,10 @@ Outros comandos: `npm run build`, `npm start`, `npm run typecheck`, `npm test`.
 - **Banco (PGlite):** aplica as migrações reais em um Postgres em memória (com stubs de `auth`/`storage`) e verifica RLS, constraints, `register_order`/`register_quote`, cálculo de total no servidor, série mensal com zeros e bloqueio de não-admins.
 - **Unidade:** mensagens e links do WhatsApp (codificação, sob consulta, protocolo), validação do número, schemas Zod, upload de imagens, formatação.
 
+## Diagnóstico da instalação
+
+Abra `/admin/diagnostico` (sem precisar de login): a página confere, de cima para baixo, as variáveis de ambiente, a conexão com o Supabase, se o banco foi instalado e se existe um administrador, e diz como resolver cada item. Ela nunca mostra chaves nem dados do banco.
+
 ## Senha do administrador
 
 - **Esqueci minha senha:** na tela de login do `/admin`. O sistema envia um e-mail com um link para criar a nova senha.
