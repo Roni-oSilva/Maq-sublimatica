@@ -49,7 +49,7 @@ export default async function ShopPage({ searchParams }: { searchParams: SP }) {
       </PageHero>
 
       <div className="container mt-8">
-        <form method="get" action="/loja" role="search" className="grid gap-3 rounded-3xl border border-line bg-white p-4 sm:grid-cols-[1fr_auto_auto] sm:items-end">
+        <form method="get" action="/loja" role="search" className="grid gap-3 rounded-3xl glass p-4 sm:grid-cols-[1fr_auto_auto] sm:items-end">
           {sp.categoria && <input type="hidden" name="categoria" value={sp.categoria} />}
           <div>
             <label htmlFor="q" className="mb-1.5 block text-sm font-semibold">{c.shop_search_label}</label>

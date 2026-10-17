@@ -124,7 +124,7 @@ export function QuoteForm({ whatsappNumber, storeName, texts: tx }: { whatsappNu
   }
 
   return (
-    <form onSubmit={submit} noValidate className="space-y-5 rounded-3xl border border-line bg-white p-5 shadow-sm sm:p-8">
+    <form onSubmit={submit} noValidate className="space-y-5 rounded-3xl glass p-5 shadow-sm sm:p-8">
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label={tx.name} htmlFor="customerName" required error={err("customerName")}>
           <Input id="customerName" name="customerName" autoComplete="name" value={values.customerName} onChange={set("customerName")} maxLength={120} {...aria("customerName")} />

@@ -20,7 +20,7 @@ export function Badge({ className, tone, ...props }: React.HTMLAttributes<HTMLSp
 }
 
 export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("rounded-3xl border border-line bg-white shadow-sm", className)} {...props} />;
+  return <div className={cn("rounded-3xl glass shadow-sm", className)} {...props} />;
 }
 
 export function EmptyState({ title, children, icon }: { title: string; children?: React.ReactNode; icon?: React.ReactNode }) {

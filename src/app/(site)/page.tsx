@@ -122,7 +122,7 @@ export default async function HomePage() {
 
       {/* Benefícios */}
       <section className="container mt-6" aria-label="Diferenciais">
-        <ul className="grid gap-6 rounded-[2rem] border border-white bg-white/70 p-6 shadow-sm sm:grid-cols-2 sm:p-8 lg:grid-cols-4">
+        <ul className="grid gap-6 rounded-[2rem] glass p-6 shadow-sm sm:grid-cols-2 sm:p-8 lg:grid-cols-4">
           {BENEFITS.map(({ icon: Icon, title, text }) => (
             <li key={title} data-reveal="scale" className="group flex gap-3">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-ink/10 bg-white text-ink transition group-hover:animate-wiggle group-hover:bg-brand group-hover:text-ink">
@@ -197,7 +197,7 @@ export default async function HomePage() {
                 <li key={c.id} data-reveal>
                   <Link
                     href={`/loja?categoria=${c.slug}`}
-                    className="card-lift group flex h-full items-center gap-3 rounded-3xl border border-line bg-white p-4"
+                    className="card-lift glass group flex h-full items-center gap-3 rounded-3xl p-4"
                   >
                     <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-light text-brand-text">
                       <Icon className="h-6 w-6" aria-hidden />
@@ -324,7 +324,7 @@ export default async function HomePage() {
                   {[0, 1].map((copy) => (
                     <ul key={copy} className="flex gap-4" aria-hidden={copy === 1}>
                       {track.map((c, i) => (
-                        <li key={`${copy}-${i}`} className="group flex h-28 w-56 shrink-0 items-center justify-center rounded-3xl border border-line bg-white px-4 transition duration-300 hover:-translate-y-1 hover:border-brand hover:shadow-lg sm:h-32 sm:w-72">
+                        <li key={`${copy}-${i}`} className="group flex h-28 w-56 shrink-0 items-center justify-center rounded-3xl glass px-4 transition duration-300 hover:-translate-y-1 hover:border-brand hover:shadow-lg sm:h-32 sm:w-72">
                           {c.logo_url ? (
                             <span className="relative block h-full w-full">
                               <MediaImage src={c.logo_url} alt={copy === 0 ? c.name : ""} fit="contain" sizes="240px" className="p-5 transition duration-300 group-hover:scale-105" />

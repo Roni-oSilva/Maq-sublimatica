@@ -86,7 +86,7 @@ export function Header({
     <header className="sticky top-3 z-40 px-3 pt-3 sm:px-5" style={{ height: HEADER_OFFSET }}>
       <div
         className={cn(
-          "mx-auto flex h-14 max-w-[1280px] items-center justify-between gap-3 rounded-full border bg-white/90 pl-5 pr-2 transition-shadow duration-300",
+          "mx-auto flex h-14 max-w-[1280px] items-center justify-between gap-3 rounded-full border bg-white/60 backdrop-blur-xl pl-5 pr-2 transition-shadow duration-300",
           scrolled ? "border-line shadow-[0_12px_32px_-14px_rgba(23,23,23,0.35)]" : "border-white shadow-[0_4px_18px_-12px_rgba(23,23,23,0.25)]",
         )}
       >
@@ -166,7 +166,7 @@ export function Header({
       )}
 
       {open && (
-        <nav id="menu-mobile" aria-label="Menu mobile" className="mx-auto mt-2 max-w-[1280px] rounded-3xl border border-line bg-white p-2 shadow-xl lg:hidden">
+        <nav id="menu-mobile" aria-label="Menu mobile" className="mx-auto mt-2 max-w-[1280px] rounded-3xl glass p-2 shadow-xl lg:hidden">
           <ul className="grid gap-1">
             {nav.map((item) => (
               <li key={item.href}>
