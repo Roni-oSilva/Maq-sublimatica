@@ -4,7 +4,7 @@ import { Menu, MessageCircle, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { trackGeneralClickAction } from "@/app/actions/public";
 import { buildWhatsappUrl } from "@/lib/whatsapp";
 import { cn } from "@/lib/utils";
@@ -33,6 +33,53 @@ export function Header({
   const [open, setOpen] = useState(false);
   const scrolled = useScrolled(24);
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+  const isHome = pathname === "/";
+  const slotRef = useRef<HTMLAnchorElement>(null);
+  const flyRef = useRef<HTMLAnchorElement>(null);
+  const [flying, setFlying] = useState(false);
+
+  // Na home, a logo começa grande no hero e, ao rolar, "volta" para o canto do menu.
+  useEffect(() => {
+    if (!isHome) {
+      setFlying(false);
+      return;
+    }
+    if (!flying) {
+      setFlying(true);
+      return;
+    }
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const slot = slotRef.current;
+      const fly = flyRef.current;
+      if (!slot || !fly) return;
+      const r = slot.getBoundingClientRect();
+      const p = Math.min(Math.max(window.scrollY / 170, 0), 1);
+      const e = 1 - Math.pow(1 - p, 3);
+      const bigW = Math.min(window.innerWidth * 0.72, 340);
+      const s = 1 + (bigW / r.width - 1) * (1 - e);
+      const x0 = (window.innerWidth - bigW) / 2;
+      const y0 = 92;
+      const x = x0 + (r.left - x0) * e;
+      const y = y0 + (r.top - y0) * e;
+      fly.style.width = `${r.width}px`;
+      fly.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
+      fly.style.opacity = "1";
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [isHome, flying]);
+
   const wa = whatsappNumber ? buildWhatsappUrl(whatsappNumber, defaultMessage) : null;
 
   return (
@@ -43,7 +90,13 @@ export function Header({
           scrolled ? "border-line shadow-[0_12px_32px_-14px_rgba(23,23,23,0.35)]" : "border-white shadow-[0_4px_18px_-12px_rgba(23,23,23,0.25)]",
         )}
       >
-        <Link href="/" className="flex shrink-0 items-center" aria-label={`${storeName} — página inicial`}>
+        <Link
+          ref={slotRef}
+          href="/"
+          className={cn("flex shrink-0 items-center", flying && "invisible")}
+          aria-label={`${storeName} — página inicial`}
+          tabIndex={flying ? -1 : undefined}
+        >
           {logoUrl ? (
             <Image src={logoUrl} alt={storeName} width={160} height={40} className="h-8 w-auto max-w-[170px] object-contain" />
           ) : (
@@ -96,6 +149,21 @@ export function Header({
           </button>
         </div>
       </div>
+
+      {flying && (
+        <Link
+          ref={flyRef}
+          href="/"
+          aria-label={`${storeName} — página inicial`}
+          className="fixed left-0 top-0 z-50 block origin-top-left opacity-0 will-change-transform"
+        >
+          {logoUrl ? (
+            <Image src={logoUrl} alt={storeName} width={160} height={40} className="h-auto w-full object-contain" />
+          ) : (
+            <Logo className="h-auto w-full" />
+          )}
+        </Link>
+      )}
 
       {open && (
         <nav id="menu-mobile" aria-label="Menu mobile" className="mx-auto mt-2 max-w-[1280px] rounded-3xl border border-line bg-white p-2 shadow-xl lg:hidden">

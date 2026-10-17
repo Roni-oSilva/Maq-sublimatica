@@ -45,7 +45,7 @@ export default async function HomePage() {
     <>
       {/* Hero: cartão claro com o menu flutuante, nome gigante e produto sobreposto */}
       <section className="mx-3 sm:mx-5" aria-label="Destaque">
-        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-[2rem] border border-white bg-gradient-to-b from-white via-paper to-paper-2 pb-8 pt-28 shadow-[0_30px_70px_-45px_rgba(23,23,23,0.45)] sm:rounded-[2.75rem] sm:pb-10 sm:pt-32 lg:pb-0">
+        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-[2rem] border border-white bg-gradient-to-b from-white via-paper to-paper-2 pb-8 pt-48 shadow-[0_30px_70px_-45px_rgba(23,23,23,0.45)] sm:rounded-[2.75rem] sm:pb-10 sm:pt-52 lg:pb-0">
           {/* curvas suaves de fundo */}
           <div className="pointer-events-none absolute -left-40 top-1/3 h-[34rem] w-[60rem] rounded-[50%] border border-ink/[0.05]" aria-hidden />
           <div className="pointer-events-none absolute -right-52 top-1/4 h-[40rem] w-[56rem] rounded-[50%] border border-ink/[0.05]" aria-hidden />
