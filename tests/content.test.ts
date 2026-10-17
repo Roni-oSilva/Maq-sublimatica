@@ -16,11 +16,11 @@ describe("catálogo de conteúdo editável", () => {
 
   it("mescla valores salvos sobre os padrões e ignora chaves desconhecidas ou vazias", () => {
     const c = mergeContent([
-      { key: "hero_line1", value: "Oi gente" },
+      { key: "hero_tagline", value: "Oi gente" },
       { key: "nav_shop", value: "" },
       { key: "chave_inexistente", value: "x" },
     ]);
-    expect(c.hero_line1).toBe("Oi gente");
+    expect(c.hero_tagline).toBe("Oi gente");
     expect(c.nav_shop).toBe(DEFAULT_CONTENT.nav_shop);
     expect("chave_inexistente" in c).toBe(false);
     expect(mergeContent(null)).toEqual(DEFAULT_CONTENT);
@@ -35,7 +35,7 @@ describe("catálogo de conteúdo editável", () => {
     expect(validateField(f("hero_image"), "http://inseguro/a.png")).not.toBeNull();
     expect(validateField(f("color_brand"), "#0a7f9c")).toBeNull();
     expect(validateField(f("color_brand"), "azul")).not.toBeNull();
-    expect(validateField(f("hero_line1"), "x".repeat(500))).not.toBeNull();
+    expect(validateField(f("hero_tagline"), "x".repeat(500))).not.toBeNull();
   });
 
   it("fill substitui apenas variáveis conhecidas", () => {

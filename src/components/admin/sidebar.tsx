@@ -29,7 +29,7 @@ export function AdminSidebar({ email, storeName }: { email: string; storeName: s
   const nav = (
     <nav aria-label="Painel administrativo" className="flex h-full flex-col">
       <div className="px-4 pb-4 pt-5">
-        <p className="font-display text-lg font-extrabold text-white">{storeName}</p>
+        <p className="font-sans text-lg font-extrabold text-white">{storeName}</p>
         <p className="text-xs text-white/60">Painel administrativo</p>
       </div>
       <ul className="flex-1 space-y-1 px-3">
@@ -63,7 +63,7 @@ export function AdminSidebar({ email, storeName }: { email: string; storeName: s
   return (
     <>
       <div className="sticky top-0 z-40 flex h-14 items-center justify-between bg-ink px-4 text-white lg:hidden">
-        <span className="font-display font-extrabold">{storeName} · Admin</span>
+        <span className="font-sans font-extrabold">{storeName} · Admin</span>
         <button type="button" aria-label={open ? "Fechar menu" : "Abrir menu"} aria-expanded={open} onClick={() => setOpen(!open)} className="rounded-lg p-2 hover:bg-white/10">
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>

@@ -18,12 +18,12 @@ const config: Config = {
         lime: "rgb(var(--c-lime) / <alpha-value>)",
         cream: "rgb(var(--c-cream) / <alpha-value>)",
         paper: "rgb(var(--c-paper) / <alpha-value>)",
+        "paper-2": "rgb(var(--c-paper-2) / <alpha-value>)",
         line: "#e6e2da",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
-        display: ["var(--font-display)", "Impact", "ui-sans-serif", "sans-serif"],
-        script: ["var(--font-script)", "cursive"],
+        display: ["var(--font-display)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       keyframes: {
         "fade-up": { from: { opacity: "0", transform: "translateY(14px)" }, to: { opacity: "1", transform: "none" } },

@@ -18,7 +18,7 @@ export function isProductAvailable(p: Pick<Product, "available" | "track_stock" 
 export function PriceTag({ price, onRequest, className }: { price: number | null; onRequest: boolean; className?: string }) {
   const unknown = onRequest || price === null;
   return (
-    <p className={cn("font-display font-extrabold", unknown ? "text-base text-ink-muted" : "text-xl text-ink", className)}>
+    <p className={cn("font-sans font-extrabold", unknown ? "text-base text-ink-muted" : "text-xl text-ink", className)}>
       {formatPrice(price, onRequest)}
     </p>
   );
@@ -163,13 +163,13 @@ export function ServiceCard({ service, ctx }: { service: Service; ctx: Ctx }) {
 }
 
 /** Destaca a última palavra do título em itálico laranja. */
-export function AccentTitle({ text, onDark }: { text: string; onDark?: boolean }) {
+export function AccentTitle({ text, onDark, cream }: { text: string; onDark?: boolean; cream?: boolean }) {
   const words = text.trim().split(" ");
   if (words.length < 2) return <>{text}</>;
   const last = words.pop();
   return (
     <>
-      {words.join(" ")} <span className={onDark ? "accent-on-dark" : "accent"}>{last}</span>
+      {words.join(" ")} <span className={cream ? "text-white" : onDark ? "accent-on-dark" : "accent"}>{last}</span>
     </>
   );
 }
@@ -202,19 +202,21 @@ export function SectionHeader({
 
 export function PageHero({ eyebrow, title, image, children }: { eyebrow: string; title: string; image?: string | null; children?: React.ReactNode }) {
   return (
-    <section className="grain relative overflow-hidden rounded-b-[2.5rem] bg-ink text-white">
-      {image && (
-        <>
-          <div className="absolute inset-0" aria-hidden><MediaImage src={image} alt="" sizes="100vw" priority /></div>
-          <div className="absolute inset-0 bg-ink/75" aria-hidden />
-        </>
-      )}
-      <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/3 skew-x-[-14deg] translate-x-16 bg-brand sm:block" aria-hidden />
-      <div className="pointer-events-none absolute bottom-0 right-[30%] hidden h-3 w-24 bg-lime sm:block" aria-hidden />
-      <div className="container relative py-12 sm:py-16 animate-fade-up">
-        <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-lime"><span className="h-[3px] w-7 rounded-full bg-lime" aria-hidden />{eyebrow}</p>
-        <h1 className="mt-3 max-w-3xl text-5xl text-cream sm:text-7xl"><AccentTitle text={title} onDark /></h1>
-        {children && <div className="mt-4 max-w-xl text-white/75 sm:max-w-2xl">{children}</div>}
+    <section className="mx-3 sm:mx-5" aria-label={eyebrow}>
+      <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-[2rem] border border-white bg-gradient-to-b from-white to-paper-2/60 px-6 pb-10 pt-28 shadow-[0_24px_60px_-40px_rgba(23,23,23,0.35)] sm:rounded-[2.5rem] sm:px-12 sm:pb-14 sm:pt-32">
+        {image && (
+          <>
+            <div className="absolute inset-0" aria-hidden><MediaImage src={image} alt="" sizes="100vw" priority /></div>
+            <div className="absolute inset-0 bg-white/80" aria-hidden />
+          </>
+        )}
+        <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full border border-ink/[0.06]" aria-hidden />
+        <div className="pointer-events-none absolute -right-8 -top-8 h-72 w-72 rounded-full border border-ink/[0.05]" aria-hidden />
+        <div className="relative animate-fade-up">
+          <p className="inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white/70 px-3.5 py-1 text-xs font-medium text-ink-soft"><span className="h-1.5 w-1.5 rounded-full bg-brand" aria-hidden />{eyebrow}</p>
+          <h1 className="mt-4 max-w-3xl text-[clamp(1.6rem,5.2vw,3.4rem)]"><AccentTitle text={title} /></h1>
+          {children && <div className="mt-4 max-w-xl text-base text-ink-soft sm:text-lg">{children}</div>}
+        </div>
       </div>
     </section>
   );

@@ -17,7 +17,7 @@ export function Footer({ settings, t }: { settings: StoreSettings; t: Record<str
   const payments = (settings.payment_methods ?? "").split("\n").map((m) => m.trim()).filter(Boolean);
   const socials = Object.entries(settings.social_links).filter(([, v]) => v);
   return (
-    <footer className="grain mt-24 overflow-hidden rounded-t-[2.5rem] bg-ink text-white/80">
+    <footer className="mt-24 overflow-hidden rounded-t-[2.5rem] bg-ink text-white/80">
       <div className="h-2 bg-brand" aria-hidden />
       <div className="container grid gap-10 py-14 md:grid-cols-4">
         <div className="md:col-span-1">
@@ -38,7 +38,7 @@ export function Footer({ settings, t }: { settings: StoreSettings; t: Record<str
         </div>
 
         <nav aria-label="Rodapé">
-          <h2 className="font-display text-lg uppercase tracking-wide text-brand">{t.footer_nav_title}</h2>
+          <h2 className="font-display text-xs uppercase tracking-[0.12em] text-brand">{t.footer_nav_title}</h2>
           <ul className="mt-4 space-y-2 text-sm">
             {navItems(t).map((n) => (
               <li key={n.href}>
@@ -51,7 +51,7 @@ export function Footer({ settings, t }: { settings: StoreSettings; t: Record<str
         </nav>
 
         <div>
-          <h2 className="font-display text-lg uppercase tracking-wide text-brand">{t.footer_contact_title}</h2>
+          <h2 className="font-display text-xs uppercase tracking-[0.12em] text-brand">{t.footer_contact_title}</h2>
           <ul className="mt-4 space-y-3 text-sm">
             {c.phone && (
               <li className="flex gap-2">
@@ -81,7 +81,7 @@ export function Footer({ settings, t }: { settings: StoreSettings; t: Record<str
         </div>
 
         <div>
-          <h2 className="font-display text-lg uppercase tracking-wide text-brand">{t.footer_social_title}</h2>
+          <h2 className="font-display text-xs uppercase tracking-[0.12em] text-brand">{t.footer_social_title}</h2>
           {socials.length > 0 && (
             <ul className="mt-4 flex flex-wrap gap-2">
               {socials.map(([key, url]) => (
@@ -115,7 +115,7 @@ export function Footer({ settings, t }: { settings: StoreSettings; t: Record<str
       {payments.length > 0 && (
         <div className="border-t border-white/10 py-6">
           <div className="container flex flex-col items-center gap-3 text-center">
-            <h2 className="font-display text-lg uppercase tracking-wide text-brand">{t.footer_payments_title}</h2>
+            <h2 className="font-display text-xs uppercase tracking-[0.12em] text-brand">{t.footer_payments_title}</h2>
             <ul className="flex flex-wrap justify-center gap-2">
               {payments.map((m) => (
                 <li key={m} className="rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-sm font-semibold text-cream transition hover:-translate-y-0.5 hover:bg-white/10">{m}</li>

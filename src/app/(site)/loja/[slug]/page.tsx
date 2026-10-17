@@ -84,7 +84,7 @@ export default async function ProductPage({ params }: Props) {
   };
 
   return (
-    <div className="container py-8">
+    <div className="container pb-8 pt-28">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
       <nav aria-label="Trilha" className="mb-6 flex flex-wrap items-center gap-1 text-sm text-ink-muted">
         <Link href="/loja" className="hover:text-brand-text">Loja</Link>

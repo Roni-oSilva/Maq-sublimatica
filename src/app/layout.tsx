@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Anton, Poppins, Yellowtail } from "next/font/google";
+import { Michroma, Poppins } from "next/font/google";
 import { Toaster } from "sonner";
 import { AuthLinkHandler } from "@/components/auth-link-handler";
 import { themeVars } from "@/lib/content";
@@ -8,8 +8,7 @@ import { siteUrl } from "@/lib/utils";
 import "./globals.css";
 
 const sans = Poppins({ subsets: ["latin"], variable: "--font-sans", display: "swap", weight: ["400", "500", "600", "700"] });
-const display = Anton({ subsets: ["latin"], variable: "--font-display", display: "swap", weight: "400" });
-const script = Yellowtail({ subsets: ["latin"], variable: "--font-script", display: "swap", weight: "400" });
+const display = Michroma({ subsets: ["latin"], variable: "--font-display", display: "swap", weight: "400" });
 
 export const viewport: Viewport = { themeColor: "#171717", width: "device-width", initialScale: 1 };
 
@@ -29,7 +28,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const c = await getContent();
   const style = { ...themeVars(c), ...(c.placeholder_image ? { "--ph-image": `url("${c.placeholder_image.replace(/["\\()]/g, "")}")` } : {}) } as React.CSSProperties;
   return (
-    <html lang="pt-BR" className={`${sans.variable} ${display.variable} ${script.variable}`} style={style} {...(c.placeholder_image ? { "data-ph-custom": "" } : {})}>
+    <html lang="pt-BR" className={`${sans.variable} ${display.variable}`} style={style} {...(c.placeholder_image ? { "data-ph-custom": "" } : {})}>
       <body className="min-h-screen font-sans">
         <AuthLinkHandler />
         {children}

@@ -11,6 +11,9 @@ import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
 import { useScrolled } from "./motion";
 
+/** Altura reservada pelo cabeçalho (pílula + respiro). As páginas começam por baixo dele. */
+export const HEADER_OFFSET = "4.25rem";
+
 export function Header({
   storeName,
   logoUrl,
@@ -28,18 +31,23 @@ export function Header({
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const scrolled = useScrolled();
+  const scrolled = useScrolled(24);
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
   const wa = whatsappNumber ? buildWhatsappUrl(whatsappNumber, defaultMessage) : null;
 
   return (
-    <header className={cn("sticky top-0 z-40 border-b bg-white transition-shadow duration-300", scrolled ? "border-transparent shadow-lg shadow-ink/10" : "border-line")}>
-      <div className={cn("container flex items-center justify-between gap-4 transition-all duration-300", scrolled ? "h-14" : "h-[72px]")}>
+    <header className="sticky top-3 z-40 px-3 pt-3 sm:px-5" style={{ height: HEADER_OFFSET }}>
+      <div
+        className={cn(
+          "mx-auto flex h-14 max-w-[1280px] items-center justify-between gap-3 rounded-full border bg-white/90 pl-5 pr-2 transition-shadow duration-300",
+          scrolled ? "border-line shadow-[0_12px_32px_-14px_rgba(23,23,23,0.35)]" : "border-white shadow-[0_4px_18px_-12px_rgba(23,23,23,0.25)]",
+        )}
+      >
         <Link href="/" className="flex shrink-0 items-center" aria-label={`${storeName} — página inicial`}>
           {logoUrl ? (
-            <Image src={logoUrl} alt={storeName} width={160} height={40} className="h-10 w-auto max-w-[180px] object-contain" />
+            <Image src={logoUrl} alt={storeName} width={160} height={40} className="h-8 w-auto max-w-[170px] object-contain" />
           ) : (
-            <Logo className={cn("w-auto transition-all duration-300", scrolled ? "h-8" : "h-9 sm:h-10")} />
+            <Logo className="h-8 w-auto" />
           )}
         </Link>
 
@@ -51,8 +59,8 @@ export function Header({
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className={cn(
-                    "rounded-full px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5 hover:bg-ink/5",
-                    isActive(item.href) ? "bg-ink text-white" : "text-ink-soft",
+                    "rounded-full px-4 py-2 text-sm font-medium transition hover:text-ink",
+                    isActive(item.href) ? "bg-ink/[0.06] font-semibold text-ink" : "text-ink-soft",
                   )}
                 >
                   {item.label}
@@ -70,15 +78,15 @@ export function Header({
               rel="noopener noreferrer"
               aria-label="Falar no WhatsApp"
               onClick={() => void trackGeneralClickAction({ label: "Cabeçalho" })}
-              className="inline-flex h-10 items-center gap-2 rounded-full bg-[#128c4a] px-3.5 text-sm font-semibold text-white transition hover:bg-[#0e7a3f]"
+              className="inline-flex h-10 items-center gap-2 rounded-full bg-ink px-5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-ink-soft"
             >
-              <MessageCircle className="h-5 w-5" aria-hidden />
-              <span className="hidden md:inline">{whatsappLabel}</span>
+              <MessageCircle className="h-4 w-4" aria-hidden />
+              <span className="hidden sm:inline">{whatsappLabel}</span>
             </a>
           )}
           <button
             type="button"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line lg:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white lg:hidden"
             aria-expanded={open}
             aria-controls="menu-mobile"
             aria-label={open ? "Fechar menu" : "Abrir menu"}
@@ -90,8 +98,8 @@ export function Header({
       </div>
 
       {open && (
-        <nav id="menu-mobile" aria-label="Menu mobile" className="border-t border-line bg-white lg:hidden">
-          <ul className="container grid gap-1 py-3">
+        <nav id="menu-mobile" aria-label="Menu mobile" className="mx-auto mt-2 max-w-[1280px] rounded-3xl border border-line bg-white p-2 shadow-xl lg:hidden">
+          <ul className="grid gap-1">
             {nav.map((item) => (
               <li key={item.href}>
                 <Link

@@ -2,11 +2,12 @@ import { ArrowRight, ArrowUpRight, BadgePercent, Brush, Clock, Coffee, Frame, La
 import Link from "next/link";
 import { AccentTitle, ArtworkCard, ProductCard, SectionHeader, ServiceCard } from "@/components/site/cards";
 import { Chevrons } from "@/components/site/logo";
-import { Parallax } from "@/components/site/motion";
+import { HeroMug } from "@/components/site/hero-mug";
 import { MediaImage } from "@/components/site/media";
 import { WhatsAppLink } from "@/components/site/whatsapp-buttons";
 import { buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/misc";
+import { fill } from "@/lib/content";
 import { getArtworks, getBanners, getCategories, getClients, getContent, getPopularProducts, getProducts, getServices, getSettings } from "@/lib/data";
 import { isSupabaseConfigured } from "@/lib/supabase/public";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,7 @@ export default async function HomePage() {
   const ctx = { whatsappNumber: settings.whatsapp_number, storeName: settings.store_name, t: c };
   const hero = banners.find((b) => b.placement === "hero");
   const heroImage = hero?.image_url ?? (c.hero_image || null);
+  const wordmark = (c.hero_wordmark || settings.store_name).toUpperCase().split(" ");
   const promos = banners.filter((b) => b.placement === "promo");
   const BENEFITS = [
     { icon: Store, title: c.benefit1_title, text: c.benefit1_text },
@@ -41,79 +43,89 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Hero: moldura branca com painel arredondado, menu e botão integrados */}
-      <section className="mx-3 mt-3 sm:mx-5 sm:mt-5" aria-label="Destaque">
-        <div className="relative rounded-[2rem] bg-white p-2.5 shadow-sm sm:rounded-[2.75rem] sm:p-3.5">
-          <div className="grain relative flex min-h-[560px] items-center justify-center overflow-hidden rounded-[1.5rem] bg-ink text-white sm:min-h-[640px] sm:rounded-[2.25rem] lg:min-h-[700px]">
-            {heroImage && (
-              <>
-                <div className="absolute inset-0" aria-hidden><MediaImage src={heroImage} alt="" sizes="100vw" priority /></div>
-                <div className="absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/45 to-ink/80" aria-hidden />
-              </>
-            )}
-            {!heroImage && (
-              <>
-                <div className="orb -left-32 -top-10 h-[28rem] w-[28rem] text-brand" aria-hidden />
-                <div className="orb -bottom-24 -right-24 h-96 w-96 text-lime opacity-25" aria-hidden />
-                <Parallax className="pointer-events-none absolute inset-0 hidden lg:block" >
-                  <div data-depth="1.2" className="absolute left-[7%] top-[34%]"><div className="float-a flex h-36 w-36 items-center justify-center rounded-[2rem] bg-brand"><Coffee className="h-16 w-16 text-ink" strokeWidth={1.5} /></div></div>
-                  <div data-depth="0.7" className="absolute bottom-[9%] left-[8%]"><div className="float-b flex h-28 w-28 items-center justify-center rounded-[1.75rem] bg-cream"><Shirt className="h-12 w-12 text-ink" strokeWidth={1.5} /></div></div>
-                  <div data-depth="0.9" className="absolute right-[8%] top-[30%]"><div className="float-c flex h-32 w-32 items-center justify-center rounded-[2rem] border-2 border-cream/40"><Frame className="h-14 w-14 text-cream" strokeWidth={1.5} /></div></div>
-                  <div data-depth="1.4" className="absolute bottom-[12%] right-[10%]"><div className="float-a rounded-full bg-lime px-6 py-3 text-ink"><span className="font-script text-3xl">{c.hero_tile_script}</span></div></div>
-                </Parallax>
-              </>
-            )}
+      {/* Hero: cartão claro com o menu flutuante, nome gigante e produto sobreposto */}
+      <section className="mx-3 sm:mx-5" aria-label="Destaque">
+        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-[2rem] border border-white bg-gradient-to-b from-white via-paper to-paper-2 pb-8 pt-28 shadow-[0_30px_70px_-45px_rgba(23,23,23,0.45)] sm:rounded-[2.75rem] sm:pb-10 sm:pt-32 lg:pb-0">
+          {/* curvas suaves de fundo */}
+          <div className="pointer-events-none absolute -left-40 top-1/3 h-[34rem] w-[60rem] rounded-[50%] border border-ink/[0.05]" aria-hidden />
+          <div className="pointer-events-none absolute -right-52 top-1/4 h-[40rem] w-[56rem] rounded-[50%] border border-ink/[0.05]" aria-hidden />
 
-            {/* Conteúdo central */}
-            <div className="relative z-10 mx-auto max-w-4xl px-5 py-14 text-center lg:py-20">
-              <p className="pop inline-flex max-w-full items-center gap-2 rounded-full bg-lime px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-ink sm:text-xs sm:tracking-[0.2em]" style={{ "--i": 0 } as React.CSSProperties}>
-                <Sparkles className="h-3.5 w-3.5 shrink-0" aria-hidden /> {c.hero_eyebrow}
-              </p>
-              {hero ? (
-                <h1 className="mt-5 text-[clamp(3rem,9vw,6.75rem)] leading-[0.95] text-cream">
-                  <span className="line"><span className="text-brand italic" style={{ "--i": 1 } as React.CSSProperties}>{hero.title.split(" ")[0]}</span></span>
-                  <span className="line"><span style={{ "--i": 2 } as React.CSSProperties}>{hero.title.split(" ").slice(1).join(" ")}</span></span>
-                </h1>
+          <div className="relative z-10 px-4 text-center sm:px-8">
+            <p className="rise text-base text-ink-soft sm:text-xl" style={{ "--i": 0 } as React.CSSProperties}>
+              {hero?.title ?? c.hero_tagline}
+            </p>
+            <h1
+              className="rise mt-3 whitespace-nowrap text-[clamp(1.2rem,7.6vw,3rem)] leading-[1.05] text-ink sm:text-[clamp(2.4rem,8.6vw,4.6rem)] lg:text-[min(5.7vw,5.6rem)]"
+              style={{ "--i": 1 } as React.CSSProperties}
+            >
+              {wordmark.length > 1 ? (
+                <>
+                  <span className="block text-brand lg:inline">{wordmark[0]}</span> <span className="block lg:inline">{wordmark.slice(1).join(" ")}</span>
+                </>
               ) : (
-                <h1 className="mt-5 text-[clamp(3rem,9vw,6.75rem)] leading-[0.95] text-cream">
-                  <span className="line"><span className="text-brand italic" style={{ "--i": 1 } as React.CSSProperties}>{c.hero_line1}</span></span>
-                  <span className="line">
-                    <span style={{ "--i": 2 } as React.CSSProperties}>
-                      {c.hero_line2} <span className="font-script text-[1.15em] normal-case text-lime">{c.hero_script}</span>
-                    </span>
-                  </span>
-                  <span className="line"><span style={{ "--i": 3 } as React.CSSProperties}>{c.hero_line3}</span></span>
-                </h1>
+                wordmark[0]
               )}
-              <p className="rise mx-auto mt-6 max-w-xl text-base text-white/80 sm:text-lg" style={{ "--i": 4 } as React.CSSProperties}>
-                {hero?.subtitle ?? c.hero_subtitle}
-              </p>
-              <div className="rise mt-8 flex flex-wrap items-center justify-center gap-3" style={{ "--i": 5 } as React.CSSProperties}>
-                <Link
-                  href={hero?.cta_href ?? c.hero_cta_href}
-                  {...(hero?.cta_href?.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  className="shine group relative inline-flex h-14 items-center gap-4 overflow-hidden rounded-full bg-brand py-1.5 pl-7 pr-1.5 text-base font-bold text-ink transition duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/30"
-                >
-                  {hero?.cta_label ?? c.hero_cta_label}
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-ink transition-transform duration-300 group-hover:rotate-45">
-                    <ArrowUpRight className="h-5 w-5" aria-hidden />
-                  </span>
-                </Link>
-                <Link href={c.hero_cta2_href} className={cn(buttonVariants({ variant: "outline", size: "lg" }), "h-14 border-cream/40 bg-transparent px-7 text-cream hover:bg-cream/10")}>
-                  {c.hero_cta2_label}
-                </Link>
+            </h1>
+          </div>
+
+          {/* produto sobreposto ao nome (com brilho laranja atrás) */}
+          <div className="pointer-events-none absolute left-1/2 top-[44%] h-[26rem] w-[26rem] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(var(--c-brand)/0.28),transparent)] sm:h-[34rem] sm:w-[34rem] lg:top-[40%]" aria-hidden />
+          <div className="pop relative z-20 mx-auto -mt-2 w-[82%] max-w-[560px] sm:-mt-6 lg:-mt-14" style={{ "--i": 3 } as React.CSSProperties}>
+            {heroImage ? (
+              <div className="relative aspect-[4/3]">
+                <MediaImage src={heroImage} alt={hero?.title ?? settings.store_name} fit="contain" sizes="(min-width: 1024px) 560px, 80vw" priority />
               </div>
+            ) : (
+              <HeroMug className="float-a h-auto w-full drop-shadow-[0_30px_30px_rgba(23,23,23,0.18)]" />
+            )}
+          </div>
+
+          {/* rodapé do cartão: texto + botão (esquerda) | categorias + link (direita) */}
+          <div className="relative z-30 mx-auto mt-4 grid max-w-[1180px] gap-8 px-6 sm:px-10 lg:absolute lg:inset-x-0 lg:bottom-12 lg:mt-0 lg:grid-cols-2 lg:items-end lg:gap-0 lg:px-14">
+            <div className="rise mx-auto max-w-xs text-center lg:mx-0 lg:text-left" style={{ "--i": 4 } as React.CSSProperties}>
+              <p className="text-sm leading-relaxed text-ink-soft">{hero?.subtitle ?? c.hero_subtitle}</p>
+              <Link
+                href={hero?.cta_href ?? c.hero_cta_href}
+                {...(hero?.cta_href?.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                className="shine group relative mt-4 inline-flex h-12 items-center gap-3 overflow-hidden rounded-full bg-brand py-1.5 pl-6 pr-1.5 text-sm font-bold text-ink transition duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand/30"
+              >
+                {hero?.cta_label ?? c.hero_cta_label}
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-white transition-transform duration-300 group-hover:rotate-45">
+                  <ArrowUpRight className="h-4 w-4" aria-hidden />
+                </span>
+              </Link>
+            </div>
+
+            <div className="rise flex flex-col items-center gap-3 lg:items-end" style={{ "--i": 5 } as React.CSSProperties}>
+              {categories.length > 0 && (
+                <ul className="flex flex-wrap justify-center gap-2 lg:max-w-[16rem] lg:justify-end">
+                  {categories.slice(0, 3).map((cat, i) => (
+                    <li key={cat.id}>
+                      <Link
+                        href={`/loja?categoria=${cat.slug}`}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-ink/25 bg-white/60 px-3.5 py-1.5 text-xs font-medium text-ink transition hover:-translate-y-0.5 hover:border-ink hover:bg-white"
+                      >
+                        {i === 0 ? <Store className="h-3.5 w-3.5 text-brand-text" aria-hidden /> : <span className="h-1.5 w-1.5 rounded-full bg-brand" aria-hidden />}
+                        {cat.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <Link href={c.hero_cta2_href} className="link-draw pb-0.5 text-sm font-semibold text-ink decoration-brand">
+                {c.hero_cta2_label}
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
       {/* Benefícios */}
-      <section className="border-b border-line bg-white" aria-label="Diferenciais">
-        <ul className="container grid gap-6 py-8 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="container mt-6" aria-label="Diferenciais">
+        <ul className="grid gap-6 rounded-[2rem] border border-white bg-white/70 p-6 shadow-sm sm:grid-cols-2 sm:p-8 lg:grid-cols-4">
           {BENEFITS.map(({ icon: Icon, title, text }) => (
             <li key={title} data-reveal="scale" className="group flex gap-3">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-ink text-lime transition group-hover:animate-wiggle group-hover:bg-brand group-hover:text-ink">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-ink/10 bg-white text-ink transition group-hover:animate-wiggle group-hover:bg-brand group-hover:text-ink">
                 <Icon className="h-5 w-5" aria-hidden />
               </span>
               <div>
@@ -162,7 +174,7 @@ export default async function HomePage() {
                     </>
                   )}
                   <div className={cn("relative z-10", b.image_url && "text-white")}>
-                    <h3 className="max-w-md font-display text-4xl font-normal uppercase leading-[0.98] tracking-tight sm:text-5xl">{b.title}</h3>
+                    <h3 className="max-w-md font-display text-xl font-normal uppercase leading-[1.2] tracking-wide sm:text-2xl">{b.title}</h3>
                     {b.subtitle && <p className="mt-3 max-w-sm text-base font-medium opacity-90">{b.subtitle}</p>}
                     <span className={cn("mt-5 inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-bold transition group-hover:gap-3", dark && !b.image_url ? "bg-lime text-ink" : "bg-ink text-white")}>
                       {b.cta_label ?? "Saiba mais"} <ArrowRight className="h-4 w-4" aria-hidden />
@@ -249,6 +261,55 @@ export default async function HomePage() {
         </div>
       )}
 
+      {/* Mascote */}
+      <section id="mascote" className="container mt-20 scroll-mt-24" aria-label="Mascote Myck">
+        <div data-reveal className="relative grid items-center gap-6 overflow-hidden rounded-[2.5rem] border border-white bg-gradient-to-br from-white via-paper to-paper-2 p-6 shadow-[0_30px_70px_-50px_rgba(23,23,23,0.45)] sm:p-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-10 lg:p-14">
+          <div className="relative mx-auto flex w-full max-w-md items-end justify-center pt-8 lg:pt-0">
+            <div className="pointer-events-none absolute left-1/2 top-1/2 h-[88%] w-[88%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(var(--c-brand)/0.55),rgb(var(--c-brand)/0.18)_70%,transparent)]" aria-hidden />
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -top-2 left-1/2 -translate-x-1/2 select-none whitespace-nowrap font-display text-[clamp(3.2rem,15vw,6.5rem)] leading-none text-transparent opacity-70 [-webkit-text-stroke:2px_rgb(var(--c-brand))]"
+            >
+              {c.mascot_name}
+            </span>
+            <div className="float-b relative aspect-[1370/2122] w-[min(78%,19rem)] drop-shadow-[0_24px_24px_rgba(23,23,23,0.22)]">
+              <MediaImage src={c.mascot_image || "/mascote-myck.png"} alt={`${c.mascot_name}, o mascote da ${settings.store_name}`} fit="contain" sizes="(min-width: 1024px) 304px, 70vw" />
+            </div>
+          </div>
+
+          <div className="text-center lg:text-left">
+            <p className="inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white/70 px-3.5 py-1 text-xs font-medium text-ink-soft">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand" aria-hidden />
+              {c.mascot_eyebrow}
+            </p>
+            <h2 className="mt-4 text-2xl sm:text-4xl"><AccentTitle text={c.mascot_title} /></h2>
+            <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-ink-soft lg:mx-0 lg:text-lg">{fill(c.mascot_text, { loja: settings.store_name })}</p>
+            <ul className="mt-5 flex flex-wrap justify-center gap-2 lg:justify-start" aria-label="Cores CMYK do mascote">
+              {[
+                ["Ciano", "#00aeef"],
+                ["Magenta", "#ec008c"],
+                ["Amarelo", "#ffe600"],
+                ["Preto", "#171717"],
+              ].map(([name, hex]) => (
+                <li key={name} className="inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white/70 px-3 py-1 text-xs font-medium">
+                  <span className="h-3.5 w-3.5 rounded-full border border-ink/10" style={{ background: hex }} aria-hidden />
+                  {name}
+                </li>
+              ))}
+            </ul>
+            <Link
+              href={c.mascot_cta_href}
+              className="shine group relative mt-7 inline-flex h-12 items-center gap-3 overflow-hidden rounded-full bg-brand py-1.5 pl-6 pr-1.5 text-sm font-bold text-ink transition duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand/30"
+            >
+              {c.mascot_cta_label}
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-white transition-transform duration-300 group-hover:rotate-45">
+                <ArrowUpRight className="h-4 w-4" aria-hidden />
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {clients.length > 0 && (
         <section className="mt-20" aria-label="Nossos clientes">
           <div className="container">
@@ -269,7 +330,7 @@ export default async function HomePage() {
                               <MediaImage src={c.logo_url} alt={copy === 0 ? c.name : ""} fit="contain" sizes="240px" className="p-5 transition duration-300 group-hover:scale-105" />
                             </span>
                           ) : (
-                            <span className="text-center font-display text-2xl uppercase leading-none text-ink-muted transition group-hover:text-ink">{c.name}</span>
+                            <span className="text-center font-display text-sm uppercase leading-tight text-ink-muted transition group-hover:text-ink">{c.name}</span>
                           )}
                         </li>
                       ))}
@@ -284,10 +345,11 @@ export default async function HomePage() {
 
       {/* CTA final */}
       <section className="container mt-20">
-        <div data-reveal="scale" className="grain relative overflow-hidden rounded-[2.5rem] bg-brand p-8 text-ink sm:p-12">
-          <Chevrons className="float-b absolute -right-4 top-6 hidden h-32 w-auto text-ink opacity-20 sm:block" />
-          <h2 className="max-w-2xl text-5xl sm:text-7xl"><AccentTitle text={c.cta_title} onDark /></h2>
-          <p className="mt-4 max-w-xl text-lg font-medium">{c.cta_text}</p>
+        <div data-reveal="scale" className="relative overflow-hidden rounded-[2.5rem] bg-brand p-8 text-ink sm:p-14">
+          <div className="pointer-events-none absolute -right-20 -top-20 h-80 w-80 rounded-full border border-ink/15" aria-hidden />
+          <div className="pointer-events-none absolute -right-6 -top-6 h-80 w-80 rounded-full border border-ink/15" aria-hidden />
+          <h2 className="relative max-w-2xl text-2xl sm:text-4xl"><AccentTitle text={c.cta_title} cream /></h2>
+          <p className="relative mt-4 max-w-xl text-base font-medium text-ink/80 sm:text-lg">{c.cta_text}</p>
           <div className="mt-7 flex flex-wrap gap-3">
             <Link href={c.cta_btn1_href} className={cn(buttonVariants({ variant: "dark", size: "lg" }))}>
               {c.cta_btn1_label}

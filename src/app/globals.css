@@ -5,11 +5,11 @@
 @layer base {
   :root {
     --c-brand: 242 86 35; --c-brand-dark: 198 70 29; --c-brand-light: 253 238 232; --c-brand-text: 191 58 10;
-    --c-ink: 23 23 23; --c-ink-soft: 49 49 49; --c-lime: 205 232 42; --c-cream: 241 243 220; --c-paper: 248 246 241;
+    --c-ink: 23 23 23; --c-ink-soft: 49 49 49; --c-lime: 205 232 42; --c-cream: 241 243 220; --c-paper: 250 248 241; --c-paper-2: 241 232 211;
   }
   html { -webkit-text-size-adjust: 100%; }
-  body { @apply bg-paper text-ink antialiased; font-synthesis-weight: none; line-height: 1.65; font-feature-settings: "kern", "liga"; text-rendering: optimizeLegibility; }
-  h1, h2 { @apply font-display uppercase; font-weight: 400; letter-spacing: -0.005em; line-height: 1; text-wrap: balance; }
+  body { @apply text-ink antialiased; background: linear-gradient(180deg, rgb(var(--c-paper)) 0%, rgb(var(--c-paper-2)) 100%) fixed; font-synthesis-weight: none; line-height: 1.65; font-feature-settings: "kern", "liga"; text-rendering: optimizeLegibility; }
+  h1, h2 { @apply font-display uppercase; font-weight: 400; letter-spacing: 0.01em; line-height: 1.12; text-wrap: balance; }
   h3, h4 { @apply font-sans font-bold; letter-spacing: -0.015em; line-height: 1.25; text-wrap: balance; }
   p { text-wrap: pretty; }
   :focus-visible { @apply outline-none ring-2 ring-brand ring-offset-2 ring-offset-white; }
@@ -19,9 +19,9 @@
 }
 
 @layer components {
-  .section-title { @apply text-4xl sm:text-5xl; }
-  .accent { @apply italic text-brand-text; }
-  .accent-on-dark { @apply italic text-brand; }
+  .section-title { @apply text-2xl sm:text-3xl; }
+  .accent { @apply text-brand-text; }
+  .accent-on-dark { @apply text-brand; }
   .eyebrow { @apply inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.22em] text-brand-text; }
   .eyebrow::before { content: ""; width: 1.75rem; height: 3px; border-radius: 9999px; background: rgb(var(--c-brand)); }
   .card-lift { @apply transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/10; }
@@ -30,7 +30,7 @@
   /* Textura de grão do pôster */
   .grain { position: relative; isolation: isolate; }
   .grain::after {
-    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: .05;
+    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.2 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   }
   .grain > * { position: relative; z-index: 1; }

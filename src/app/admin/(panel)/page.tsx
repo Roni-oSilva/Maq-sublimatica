@@ -15,7 +15,7 @@ function Stat({ label, value, hint, icon: Icon, href, tone = "text-brand-text bg
       </span>
       <div>
         <p className="text-sm font-semibold text-ink-muted">{label}</p>
-        <p className="font-display text-3xl font-extrabold leading-tight">{value}</p>
+        <p className="font-sans text-3xl font-extrabold leading-tight">{value}</p>
         {hint && <p className="mt-0.5 text-xs text-ink-muted">{hint}</p>}
       </div>
     </div>
